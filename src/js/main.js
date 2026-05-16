@@ -1,4 +1,5 @@
 const scriptChunks = [
+  "./src/js/core/i18n.js",
   "./src/js/core/storage.js",
   "./src/js/core/utils.js",
   "./src/js/ui/dom.js",
@@ -40,4 +41,5 @@ for (const chunk of scriptChunks) {
   await loadClassicScript(chunk);
 }
 
+window.NWI18n?.initI18n?.();
 window.NWCheatCodes?.initCheatCodes?.();

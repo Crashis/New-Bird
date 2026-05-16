@@ -59,14 +59,15 @@ let usedQuotes = [];
 let currentQuoteText = '';
 
 function newQuote() {
-  if (usedQuotes.length >= QUOTES.length) usedQuotes = [];
-  let available = QUOTES.filter((_, i) => !usedQuotes.includes(i));
-  let idx = QUOTES.indexOf(available[Math.floor(Math.random() * available.length)]);
+  const pool = (window.NWI18n && window.NWI18n.getQuotes()) || QUOTES;
+  if (usedQuotes.length >= pool.length) usedQuotes = [];
+  let available = pool.filter((_, i) => !usedQuotes.includes(i));
+  let idx = pool.indexOf(available[Math.floor(Math.random() * available.length)]);
   usedQuotes.push(idx);
   const el = document.getElementById('quote');
   el.classList.remove('visible');
   setTimeout(() => {
-    el.textContent = QUOTES[idx];
+    el.textContent = pool[idx];
     el.classList.add('visible');
   }, 350);
 }
@@ -84,7 +85,7 @@ function tick() {
     document.getElementById('hours').textContent = '00';
     document.getElementById('minutes').textContent = '00';
     document.getElementById('seconds').textContent = '00';
-    document.getElementById('quote').textContent = 'Servery jsou offline. Aeternum padlo. Bylo to skutečné.';
+    document.getElementById('quote').textContent = t('countdown.offline');
     document.getElementById('quote').classList.add('visible');
     return;
   }
@@ -117,7 +118,7 @@ function tick() {
   const elapsed = now - LAUNCH;
   const pct = Math.min(100, Math.max(0, (elapsed / total) * 100));
   document.getElementById('progress').style.width = pct.toFixed(2) + '%';
-  document.getElementById('progress-pct').textContent = pct.toFixed(1) + '% prohráno';
+  document.getElementById('progress-pct').textContent = pct.toFixed(1) + t('countdown.pctLost');
 }
 
 function createParticles() {

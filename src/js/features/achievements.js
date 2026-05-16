@@ -34,7 +34,7 @@ function unlockAchievement(id) {
 
   updateEconomyUi();
   renderAchievementsPanel();
-  showUnlockToast('ACHIEVEMENT ODEMČEN', achievement.title, 'achievement');
+  showUnlockToast(t('achievements.toast'), t('ach.' + achievement.id + '.title'), 'achievement');
   checkAchievements();
   return true;
 }
@@ -51,15 +51,17 @@ function renderAchievementsPanel() {
   list.innerHTML = ACHIEVEMENTS.map(achievement => {
     const unlocked = isAchievementUnlocked(achievement.id);
     const reward = Number(achievement.rewardYang) || 0;
+    const titleKey = 'ach.' + achievement.id + '.title';
+    const descKey  = 'ach.' + achievement.id + '.desc';
     return `
       <div class="achievement-card ${unlocked ? 'unlocked' : 'locked'}">
         <div class="achievement-top">
-          <div class="achievement-title">${achievement.title}</div>
-          <div class="achievement-badge">${unlocked ? 'Splněno' : 'Zamčeno'}</div>
+          <div class="achievement-title">${t(titleKey)}</div>
+          <div class="achievement-badge">${unlocked ? t('achievements.unlocked') : t('achievements.locked')}</div>
         </div>
-        <div class="achievement-description">${achievement.description}</div>
+        <div class="achievement-description">${t(descKey)}</div>
         <div class="achievement-bottom">
-          <div class="achievement-reward">+${reward} Yangů</div>
+          <div class="achievement-reward">${t('achievements.reward', { amount: reward })}</div>
         </div>
       </div>
     `;

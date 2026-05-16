@@ -13,7 +13,7 @@ function toggleShop(forceOpen) {
   if (!panel) return;
   const open = typeof forceOpen === 'boolean' ? forceOpen : !panel.classList.contains('active');
   if (open && gameState === 'playing') {
-    activeVoiceLine = 'Shop otevřeš až mimo aktivní let. Amazon nechce refund během boje.';
+    activeVoiceLine = t('panel.shopBlocked');
     activeVoiceLineUntil = performance.now() + 2800;
     return;
   }
@@ -30,7 +30,7 @@ function toggleCheatCodesPanel(forceOpen) {
   if (!panel) return;
   const open = typeof forceOpen === 'boolean' ? forceOpen : !panel.classList.contains('active');
   if (open && gameState === 'playing') {
-    activeVoiceLine = 'Cheat Codes mimo aktivní let. Amazon nemá rád zkratky.';
+    activeVoiceLine = t('panel.cheatsBlocked');
     activeVoiceLineUntil = performance.now() + 2800;
     return;
   }
@@ -43,7 +43,7 @@ function toggleAchievementsPanel(forceOpen) {
   if (!panel) return;
   const open = typeof forceOpen === 'boolean' ? forceOpen : !panel.classList.contains('active');
   if (open && gameState === 'playing') {
-    activeVoiceLine = 'Achievementy si prohlédneš až po přistání. Teď se padá profesionálně.';
+    activeVoiceLine = t('panel.achievementsBlocked');
     activeVoiceLineUntil = performance.now() + 2800;
     return;
   }
@@ -57,7 +57,7 @@ function toggleSettingsPanel(forceOpen) {
   if (!panel) return;
   const open = typeof forceOpen === 'boolean' ? forceOpen : !panel.classList.contains('active');
   if (open && gameState === 'playing') {
-    activeVoiceLine = 'Settings mimo aktivní let. Teď není čas na ladění.';
+    activeVoiceLine = t('panel.settingsBlocked');
     activeVoiceLineUntil = performance.now() + 2800;
     return;
   }

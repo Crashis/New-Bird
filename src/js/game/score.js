@@ -82,7 +82,11 @@ const EVENT_VOICE_LINES = [
 
 function showVoiceLine() {
   if (!settings.voiceLines) return;
-  const pool = eventPhaseActive ? EVENT_VOICE_LINES : VOICE_LINES;
+  const csPool = eventPhaseActive ? EVENT_VOICE_LINES : VOICE_LINES;
+  const enPool = eventPhaseActive
+    ? (window.NWI18n && window.NWI18n.getEventVoiceLines())
+    : (window.NWI18n && window.NWI18n.getVoiceLines());
+  const pool = enPool || csPool;
   const line = pool[Math.floor(Math.random() * pool.length)];
   activeVoiceLine = line;
   activeVoiceLineUntil = performance.now() + 4200;
@@ -91,7 +95,7 @@ function showVoiceLine() {
     try {
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(line);
-      utterance.lang = 'cs-CZ';
+      utterance.lang = window.NWI18n && window.NWI18n.getCurrentLanguage() === 'en' ? 'en-US' : 'cs-CZ';
       utterance.rate = 0.92;
       utterance.pitch = 0.75;
       utterance.volume = 0.45;
@@ -116,7 +120,7 @@ function awardShield() {
       color: Math.random() > 0.4 ? '#80d8ff' : '#f0d080'
     });
   }
-  activeVoiceLine = 'ŠTÍT ZÍSKÁN — jeden náraz přežiješ.';
+  activeVoiceLine = t('event.shieldGained');
   activeVoiceLineUntil = performance.now() + 3600;
 }
 
@@ -127,7 +131,7 @@ function consumeShield(pipe, speed) {
   const framesToClearPipe = remainingPipeDistance / Math.max(0.1, speed);
   shieldPhaseUntil = performance.now() + Math.max(900, framesToClearPipe * 16.7 + 350);
   invincibleUntil = Math.max(invincibleUntil, shieldPhaseUntil);
-  activeVoiceLine = 'ŠTÍT PRASKL — proletěl jsi skrz překážku.';
+  activeVoiceLine = t('event.shieldBroken');
   activeVoiceLineUntil = performance.now() + 3200;
 
   for (let i = 0; i < 44; i++) {

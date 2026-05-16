@@ -333,6 +333,41 @@
     text-transform: uppercase;
   }
 
+  /* ===== TOP-RIGHT ACTIONS CONTAINER ===== */
+  .top-right-actions {
+    position: absolute;
+    top: 0.8rem;
+    right: 0.8rem;
+    z-index: 200;
+    display: flex;
+    gap: 0.45rem;
+    align-items: center;
+  }
+
+  .countdown-top-actions {
+    position: fixed;
+    z-index: 20;
+  }
+
+  /* ===== LANGUAGE BUTTON ===== */
+  .top-action-btn {
+    background: rgba(10,8,6,0.85);
+    border: 1px solid var(--gold-dark);
+    color: var(--gold);
+    font-family: 'Cinzel', serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 0.5rem 0.9rem;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.25s;
+  }
+  .top-action-btn:hover {
+    background: rgba(201,168,76,0.12);
+    border-color: var(--gold);
+  }
+
   /* ===== FULLSCREEN BUTTON ===== */
   .fullscreen-btn {
     position: absolute;
@@ -354,6 +389,10 @@
   .fullscreen-btn:hover {
     background: rgba(201,168,76,0.12);
     border-color: var(--gold);
+  }
+  /* When fullscreen btn is inside the container, remove absolute positioning */
+  .top-right-actions .fullscreen-btn {
+    position: static;
   }
 
   .game-canvas-wrap {

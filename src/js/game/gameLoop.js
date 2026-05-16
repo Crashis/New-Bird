@@ -73,8 +73,9 @@ function endGame() {
   }
   document.getElementById('gameBest').textContent = bestScore;
   document.getElementById('finalScore').textContent = score;
+  const deathPool = (window.NWI18n && window.NWI18n.getDeathQuotes()) || DEATH_QUOTES;
   document.getElementById('deathQuote').textContent =
-    DEATH_QUOTES[Math.floor(Math.random() * DEATH_QUOTES.length)];
+    deathPool[Math.floor(Math.random() * deathPool.length)];
   document.getElementById('gameOverPanel').classList.add('active');
 }
 
@@ -92,8 +93,8 @@ function winGame() {
     walletAwardedThisRun = true;
     wallets += 1;
     saveEconomy();
-    showUnlockToast('+1 Peněženka', 'První výplata z Aeterna.', 'wallet');
-    activeVoiceLine = '+1 Peněženka za záchranu Aeterna';
+    showUnlockToast(t('event.walletWon'), t('event.walletWonSub'), 'wallet');
+    activeVoiceLine = t('event.walletVoice');
     activeVoiceLineUntil = performance.now() + 3600;
   }
   updateEconomyUi();
@@ -111,8 +112,9 @@ function winGame() {
   }
   // Show win panel
   document.getElementById('winFinalScore').textContent = score;
+  const winPool = (window.NWI18n && window.NWI18n.getWinQuotes()) || WIN_QUOTES;
   document.getElementById('winQuote').textContent =
-    WIN_QUOTES[Math.floor(Math.random() * WIN_QUOTES.length)];
+    winPool[Math.floor(Math.random() * winPool.length)];
   document.getElementById('winPanel').classList.add('active');
 }
 
@@ -247,7 +249,7 @@ function drawScore() {
   ctx.shadowBlur = 10;
   ctx.font = 'bold 17px "Cinzel", serif';
   ctx.fillStyle = '#f0d080';
-  ctx.fillText(`Yangy ${yang}  ·  Peněženky ${wallets}`, canvas.width / 2, 98);
+  ctx.fillText(t('canvas.yang', { yang, wallets }), canvas.width / 2, 98);
 
   const invincibleLeft = Math.ceil((invincibleUntil - performance.now()) / 100) / 10;
   let statusY = 130;
@@ -255,7 +257,7 @@ function drawScore() {
     ctx.shadowBlur = 16;
     ctx.font = 'bold 20px "Cinzel", serif';
     ctx.fillStyle = '#f0d080';
-    ctx.fillText(`NESMRTELNOST ${invincibleLeft.toFixed(1)}s`, canvas.width / 2, statusY);
+    ctx.fillText(t('canvas.invincible', { time: invincibleLeft.toFixed(1) }), canvas.width / 2, statusY);
     statusY += 30;
   }
   const doubleYangLeft = Math.ceil((doubleYangUntil - performance.now()) / 100) / 10;
@@ -263,7 +265,7 @@ function drawScore() {
     ctx.shadowBlur = 16;
     ctx.font = 'bold 20px "Cinzel", serif';
     ctx.fillStyle = '#80f0c0';
-    ctx.fillText(`DOUBLE YANG ${doubleYangLeft.toFixed(1)}s`, canvas.width / 2, statusY);
+    ctx.fillText(t('canvas.doubleYang', { time: doubleYangLeft.toFixed(1) }), canvas.width / 2, statusY);
     statusY += 30;
   }
   const nerfLeft = Math.ceil((amazonNerfUntil - performance.now()) / 100) / 10;
@@ -272,10 +274,10 @@ function drawScore() {
     ctx.font = 'bold 20px "Cinzel", serif';
     if (amazonNerfSpeedMult < 1) {
       ctx.fillStyle = '#80c8ff';
-      ctx.fillText(`AMAZON SLOW ${nerfLeft.toFixed(1)}s`, canvas.width / 2, statusY);
+      ctx.fillText(t('canvas.amazonSlow', { time: nerfLeft.toFixed(1) }), canvas.width / 2, statusY);
     } else {
       ctx.fillStyle = '#ff8a8a';
-      ctx.fillText(`AMAZON SPEED ${nerfLeft.toFixed(1)}s`, canvas.width / 2, statusY);
+      ctx.fillText(t('canvas.amazonSpeed', { time: nerfLeft.toFixed(1) }), canvas.width / 2, statusY);
     }
     statusY += 30;
   }
@@ -283,7 +285,7 @@ function drawScore() {
     ctx.shadowBlur = 16;
     ctx.font = 'bold 20px "Cinzel", serif';
     ctx.fillStyle = '#80d8ff';
-    ctx.fillText('ŠTÍT AKTIVNÍ 1/1', canvas.width / 2, statusY);
+    ctx.fillText(t('canvas.shield'), canvas.width / 2, statusY);
   }
   if (activeVoiceLine && performance.now() < activeVoiceLineUntil) {
     ctx.shadowBlur = 18;
@@ -370,7 +372,7 @@ function quitGameFromMainMenu() {
   }
   setTimeout(() => {
     if (!window.closed) {
-      showUnlockToast('ZAVŘENÍ ZÁLOŽKY', 'Prohlížeč mi to zatrhl. Zavři záložku ručně.', 'default');
+      showUnlockToast(t('quit.tabClose'), t('quit.tabCloseMsg'), 'default');
     }
   }, 120);
 }

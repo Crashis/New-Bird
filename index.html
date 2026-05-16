@@ -20,13 +20,18 @@
 <body>
 
 <div class="particles" id="particles"></div>
-<button class="fullscreen-btn countdown-fullscreen-btn" id="countdownFullscreenBtn" onclick="toggleFullscreen()">&#x26F6; Fullscreen</button>
+
+<!-- Countdown page: top-right actions (language + fullscreen) -->
+<div class="top-right-actions countdown-top-actions">
+  <button class="language-btn top-action-btn" id="countdownLangBtn" onclick="toggleLanguage()">CZ</button>
+  <button class="fullscreen-btn countdown-fullscreen-btn" id="countdownFullscreenBtn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
+</div>
 
 <div class="container">
   <span class="crown-icon">⚔️</span>
-  <p class="subtitle-top">Amazonian Chronicles — Konec věků</p>
+  <p class="subtitle-top" data-i18n="countdown.subtitle">Amazonian Chronicles — Konec věků</p>
   <h1 class="main-title">New World: Aeternum</h1>
-  <p class="sub-title">Odpočítávání do věčné tmy</p>
+  <p class="sub-title" data-i18n="countdown.sub">Odpočítávání do věčné tmy</p>
 
   <div class="divider-ornament">
     <div class="diamond"></div>
@@ -37,19 +42,19 @@
   <div class="countdown-grid">
     <div class="time-block">
       <span class="time-number" id="days">--</span>
-      <span class="time-label">Dní</span>
+      <span class="time-label" data-i18n="countdown.days">Dní</span>
     </div>
     <div class="time-block">
       <span class="time-number" id="hours">--</span>
-      <span class="time-label">Hodin</span>
+      <span class="time-label" data-i18n="countdown.hours">Hodin</span>
     </div>
     <div class="time-block">
       <span class="time-number" id="minutes">--</span>
-      <span class="time-label">Minut</span>
+      <span class="time-label" data-i18n="countdown.minutes">Minut</span>
     </div>
     <div class="time-block seconds-block">
       <span class="time-number" id="seconds">--</span>
-      <span class="time-label">Sekund</span>
+      <span class="time-label" data-i18n="countdown.seconds">Sekund</span>
     </div>
   </div>
 
@@ -57,43 +62,48 @@
     <div class="progress-bar-fill" id="progress" style="width:0%"></div>
   </div>
   <div class="progress-label">
-    <span>Launch: 28. 9. 2021</span>
+    <span data-i18n="countdown.launch">Launch: 28. 9. 2021</span>
     <span id="progress-pct">0% prohráno</span>
-    <span>Konec: 31. 1. 2027</span>
+    <span data-i18n="countdown.end">Konec: 31. 1. 2027</span>
   </div>
 
   <div class="divider" style="margin-top:1.8rem;"></div>
 
   <div class="quote-box">
     <span class="quote-icon">"</span>
-    <p class="quote-text" id="quote">Načítám proroctví starověkého Aeterna...</p>
+    <p class="quote-text" id="quote" data-i18n="countdown.loading">Načítám proroctví starověkého Aeterna...</p>
   </div>
 
-  <p class="date-info">
+  <p class="date-info" data-i18n-html="countdown.dateInfo">
     Servery se navždy vypnou <strong>31. ledna 2027 v 00:00 UTC</strong> — Amazon to stvrdil 15. 1. 2026
   </p>
 
-  <button class="refresh-btn" onclick="newQuote()">⚡ Nové proroctví</button>
+  <button class="refresh-btn" onclick="newQuote()" data-i18n="countdown.newQuote">⚡ Nové proroctví</button>
   <p class="server-ip">New World: Aeternum · Server offline · ETA: January 31, 2027 · RIP 2021–2027</p>
 
-  <button class="fight-btn" onclick="openGame()">⚔️ Bojovat proti Amazonu</button>
+  <button class="fight-btn" onclick="openGame()" data-i18n="countdown.fightBtn">⚔️ Bojovat proti Amazonu</button>
 </div>
 
 <!-- ===== HERNÍ OVERLAY ===== -->
 <div class="game-overlay" id="gameOverlay">
-  <!-- Optional background music can be wired here later with a relative asset path. -->
   <audio id="gameMusic" loop preload="none"></audio>
   <div id="unlockToast" class="unlock-toast hidden">
     <div class="unlock-toast-title"></div>
     <div class="unlock-toast-subtitle"></div>
   </div>
-  <button class="fullscreen-btn" id="fullscreenBtn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
-  <div class="game-header">⚔️ Boj o Aeternum ⚔️</div>
+
+  <!-- Game overlay: top-right actions (language + fullscreen) -->
+  <div class="top-right-actions">
+    <button class="language-btn top-action-btn" id="gameLangBtn" onclick="toggleLanguage()">CZ</button>
+    <button class="fullscreen-btn" id="fullscreenBtn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
+  </div>
+
+  <div class="game-header" data-i18n="hud.header">⚔️ Boj o Aeternum ⚔️</div>
   <div class="game-stats">
-    <span>Skóre: <strong id="gameScore">0</strong></span>
-    <span>Rekord: <strong id="gameBest">0</strong></span>
-    <span>Yangy: <strong id="gameYang">0</strong></span>
-    <span>Peněženky: <strong id="gameWallets">0</strong></span>
+    <span><span data-i18n="hud.score">Skóre:</span> <strong id="gameScore">0</strong></span>
+    <span><span data-i18n="hud.best">Rekord:</span> <strong id="gameBest">0</strong></span>
+    <span><span data-i18n="hud.yang">Yangy:</span> <strong id="gameYang">0</strong></span>
+    <span><span data-i18n="hud.wallets">Peněženky:</span> <strong id="gameWallets">0</strong></span>
   </div>
 
   <div class="game-canvas-wrap">
@@ -101,60 +111,60 @@
 
     <!-- Start panel / Main menu -->
     <div class="game-start-panel main-menu" id="startPanel">
-      <div class="menu-kicker">Endless grind simulator</div>
-      <h2 class="game-title">BOJ O AETERNUM</h2>
-      <p class="menu-subtitle">Aeternum čeká. Amazon taky.</p>
+      <div class="menu-kicker" data-i18n="menu.kicker">Endless grind simulator</div>
+      <h2 class="game-title" data-i18n="menu.title">BOJ O AETERNUM</h2>
+      <p class="menu-subtitle" data-i18n="menu.subtitle">Aeternum čeká. Amazon taky.</p>
       <div class="menu-actions">
-        <button class="game-btn primary menu-btn" id="startBtn" onclick="startGame()">⚔ Start</button>
-        <button class="game-btn menu-btn" id="menuShopBtn" onclick="toggleShop()">🛒 Shop</button>
-        <button class="game-btn menu-btn" id="menuSkinsBtn" onclick="toggleSkinsPanel()">🎭 Skiny</button>
-        <button class="game-btn menu-btn" id="menuAchievementsBtn" onclick="toggleAchievementsPanel()">🏆 Achievementy</button>
-        <button class="game-btn menu-btn" id="menuSettingsBtn" onclick="toggleSettingsPanel()">⚙ Settings</button>
-        <button class="game-btn menu-btn" id="menuCheatBtn" onclick="toggleCheatCodesPanel()">⌨ Cheat Codes</button>
-        <button class="game-btn menu-btn menu-quit-btn" id="menuQuitBtn" onclick="quitGameFromMainMenu()">&#x2715; Zav&#345;ít hru</button>
+        <button class="game-btn primary menu-btn" id="startBtn" onclick="startGame()" data-i18n="menu.start">⚔ Start</button>
+        <button class="game-btn menu-btn" id="menuShopBtn" onclick="toggleShop()" data-i18n="menu.shop">🛒 Shop</button>
+        <button class="game-btn menu-btn" id="menuSkinsBtn" onclick="toggleSkinsPanel()" data-i18n="menu.skins">🎭 Skiny</button>
+        <button class="game-btn menu-btn" id="menuAchievementsBtn" onclick="toggleAchievementsPanel()" data-i18n="menu.achievements">🏆 Achievementy</button>
+        <button class="game-btn menu-btn" id="menuSettingsBtn" onclick="toggleSettingsPanel()" data-i18n="menu.settings">⚙ Settings</button>
+        <button class="game-btn menu-btn" id="menuCheatBtn" onclick="toggleCheatCodesPanel()" data-i18n="menu.cheats">⌨ Cheat Codes</button>
+        <button class="game-btn menu-btn menu-quit-btn" id="menuQuitBtn" onclick="quitGameFromMainMenu()" data-i18n="menu.quit">✕ Zavřít hru</button>
       </div>
 
-      <p class="hint menu-quote">Mezerník · Klik · Tap pro skok</p>
+      <p class="hint menu-quote" data-i18n="menu.hint">Mezerník · Klik · Tap pro skok</p>
     </div>
 
     <!-- Game over panel -->
     <div class="game-over-panel" id="gameOverPanel">
-      <h2>Server Disconnected</h2>
-      <div class="new-record" id="newRecord">⚜ NOVÝ REKORD ⚜</div>
+      <h2 data-i18n="gameover.title">Server Disconnected</h2>
+      <div class="new-record" id="newRecord" data-i18n="gameover.newRecord">⚜ NOVÝ REKORD ⚜</div>
       <div class="final-score" id="finalScore">0</div>
       <p class="death-quote" id="deathQuote">Amazon ti vypnul server.</p>
       <div class="game-buttons">
-        <button class="game-btn primary" onclick="startGame()">⚔️ Znovu</button>
-        <button class="game-btn" onclick="returnToMainMenu()">✕ Konec</button>
+        <button class="game-btn primary" onclick="startGame()" data-i18n="gameover.again">⚔️ Znovu</button>
+        <button class="game-btn" onclick="returnToMainMenu()" data-i18n="gameover.end">✕ Konec</button>
       </div>
     </div>
 
     <!-- Win panel -->
     <div class="win-panel" id="winPanel">
-      <h2>⚜ AETERNUM ZACHRÁNĚNO ⚜</h2>
-      <div class="win-subtitle">Servery žijí. Hrdina dohrál.</div>
+      <h2 data-i18n="win.title">⚜ AETERNUM ZACHRÁNĚNO ⚜</h2>
+      <div class="win-subtitle" data-i18n="win.subtitle">Servery žijí. Hrdina dohrál.</div>
       <div class="final-score" id="winFinalScore">20</div>
       <p class="win-quote" id="winQuote">Zachránil jsi servery!</p>
       <div class="game-buttons">
-        <button class="game-btn primary" onclick="continueGame()">▶ Pokračovat (Endless)</button>
-        <button class="game-btn" onclick="startGame()">⚔️ Znovu</button>
-        <button class="game-btn" onclick="returnToMainMenu()">✕ Konec</button>
+        <button class="game-btn primary" onclick="continueGame()" data-i18n="win.continue">▶ Pokračovat (Endless)</button>
+        <button class="game-btn" onclick="startGame()" data-i18n="win.again">⚔️ Znovu</button>
+        <button class="game-btn" onclick="returnToMainMenu()" data-i18n="win.end">✕ Konec</button>
       </div>
     </div>
 
 
     <!-- Shop panel -->
     <div class="shop-panel" id="shopPanel">
-      <h2>🛒 Amazon Shop</h2>
-      <div class="shop-subtitle">Upgrady se ukládají lokálně v prohlížeči. Každý upgrade stojí 100 Yangů.</div>
+      <h2 data-i18n="shop.title">🛒 Amazon Shop</h2>
+      <div class="shop-subtitle" data-i18n="shop.subtitle">Upgrady se ukládají lokálně v prohlížeči. Každý upgrade stojí 100 Yangů.</div>
       <div class="shop-wallet">
-        <span>Yangy: <strong id="shopYang">0</strong></span>
-        <span>Peněženky: <strong id="shopWallets">0</strong></span>
+        <span><span data-i18n="shop.yang">Yangy:</span> <strong id="shopYang">0</strong></span>
+        <span><span data-i18n="shop.wallets">Peněženky:</span> <strong id="shopWallets">0</strong></span>
       </div>
 
       <div class="shop-item">
-        <div class="shop-item-title">🛡 Shield Start</div>
-        <div class="shop-item-desc">Každý nový run začne s jedním štítem. Maximum zůstává 1/1.</div>
+        <div class="shop-item-title" data-i18n="shop.shield.title">🛡 Shield Start</div>
+        <div class="shop-item-desc" data-i18n="shop.shield.desc">Každý nový run začne s jedním štítem. Maximum zůstává 1/1.</div>
         <div class="shop-item-bottom">
           <span class="shop-level" id="shieldStartLevel">Nevlastníš</span>
           <button class="game-btn shop-buy-btn" id="buyShieldStartBtn" onclick="buyShieldStart()">Koupit — 100 Yangů</button>
@@ -162,8 +172,8 @@
       </div>
 
       <div class="shop-item">
-        <div class="shop-item-title">⚜ Delší nesmrtelnost</div>
-        <div class="shop-item-desc">Každý level prodlouží power-up nesmrtelnosti o 0,5 sekundy. Maximum jsou 3 levely.</div>
+        <div class="shop-item-title" data-i18n="shop.inv.title">⚜ Delší nesmrtelnost</div>
+        <div class="shop-item-desc" data-i18n="shop.inv.desc">Každý level prodlouží power-up nesmrtelnosti o 0,5 sekundy. Maximum jsou 3 levely.</div>
         <div class="shop-item-bottom">
           <span class="shop-level" id="invincibilityLevel">Level 0/3</span>
           <button class="game-btn shop-buy-btn" id="buyInvincibilityBtn" onclick="buyInvincibilityUpgrade()">Koupit — 100 Yangů</button>
@@ -171,8 +181,8 @@
       </div>
 
       <div class="shop-item">
-        <div class="shop-item-title">⚡ Delší Double Yang</div>
-        <div class="shop-item-desc">Power-up Double Yang dává po dobu efektu dvojnásobek Yangů. Každý level prodlouží trvání o 2 sekundy. Základ 8s. Maximum 2 levely.</div>
+        <div class="shop-item-title" data-i18n="shop.dy.title">⚡ Delší Double Yang</div>
+        <div class="shop-item-desc" data-i18n="shop.dy.desc">Power-up Double Yang dává po dobu efektu dvojnásobek Yangů. Každý level prodlouží trvání o 2 sekundy. Základ 8s. Maximum 2 levely.</div>
         <div class="shop-item-bottom">
           <span class="shop-level" id="doubleYangLevel">Level 0/2 (8.0s)</span>
           <button class="game-btn shop-buy-btn" id="buyDoubleYangBtn" onclick="buyDoubleYangUpgrade()">Koupit — 100 Yangů</button>
@@ -180,8 +190,8 @@
       </div>
 
       <div class="shop-item">
-        <div class="shop-item-title">👑 Silnější Crown Bonus</div>
-        <div class="shop-item-desc">Power-up koruny okamžitě přičte skóre. Každý level přidá +1 skóre. Základ +1, max 2 levely (+3 skóre).</div>
+        <div class="shop-item-title" data-i18n="shop.crown.title">👑 Silnější Crown Bonus</div>
+        <div class="shop-item-desc" data-i18n="shop.crown.desc">Power-up koruny okamžitě přičte skóre. Každý level přidá +1 skóre. Základ +1, max 2 levely (+3 skóre).</div>
         <div class="shop-item-bottom">
           <span class="shop-level" id="crownBonusLevel">Level 0/2 (+1 skóre)</span>
           <button class="game-btn shop-buy-btn" id="buyCrownBonusBtn" onclick="buyCrownBonusUpgrade()">Koupit — 100 Yangů</button>
@@ -190,14 +200,14 @@
 
       <div class="shop-message" id="shopMessage"></div>
       <div class="game-buttons" style="margin-top:0.4rem;">
-        <button class="game-btn" onclick="toggleShop(false)">✕ Zavřít shop</button>
+        <button class="game-btn" onclick="toggleShop(false)" data-i18n="shop.close">✕ Zavřít shop</button>
       </div>
     </div>
 
     <!-- Skins panel -->
     <div class="shop-panel" id="skinsPanel" style="text-align:center;">
-      <h2>🎭 Výběr postavy</h2>
-      <div class="shop-subtitle">Vyber si skin pro svého hrdinu. Odemykej nové postavy hraním.</div>
+      <h2 data-i18n="skins.title">🎭 Výběr postavy</h2>
+      <div class="shop-subtitle" data-i18n="skins.subtitle">Vyber si skin pro svého hrdinu. Odemykej nové postavy hraním.</div>
 
       <div class="skins-nav">
         <button class="game-btn skin-arrow" onclick="previousSkin()">&#8592;</button>
@@ -213,101 +223,101 @@
 
       <div class="game-buttons" style="margin-top:0.6rem;">
         <button class="game-btn primary" id="skinSelectBtn" onclick="selectCurrentSkin()">Vybrat</button>
-        <button class="game-btn" onclick="toggleSkinsPanel(false)">✕ Zavřít</button>
+        <button class="game-btn" onclick="toggleSkinsPanel(false)" data-i18n="skins.close">✕ Zavřít</button>
       </div>
     </div>
 
     <!-- Achievements panel -->
     <div class="shop-panel achievements-panel" id="achievementsPanel">
       <div class="panel-header">
-        <h2>🏆 Achievementy</h2>
+        <h2 data-i18n="achievements.title">🏆 Achievementy</h2>
         <button class="game-btn panel-close-btn" id="closeAchievementsBtn" onclick="toggleAchievementsPanel(false)">×</button>
       </div>
-      <div class="shop-subtitle">Sběratelské zářezy z Aeterna. Odměny se připíšou automaticky při odemčení.</div>
+      <div class="shop-subtitle" data-i18n="achievements.subtitle">Sběratelské zářezy z Aeterna. Odměny se připíšou automaticky při odemčení.</div>
       <div id="achievementsList" class="achievements-list"></div>
     </div>
 
     <!-- Cheat Codes panel -->
     <div class="shop-panel" id="cheatCodesPanel" style="text-align:center;">
-      <h2>⌨ Cheat Codes</h2>
-      <div class="shop-subtitle">Tady jednou budou skryté zkratky pro otrlé hráče.</div>
-      <div style="margin:1.5rem 0; font-family:'Cinzel Decorative',serif; color:var(--gold-light); font-size:1.05rem; letter-spacing:0.14em;">
+      <h2 data-i18n="cheats.title">⌨ Cheat Codes</h2>
+      <div class="shop-subtitle" data-i18n="cheats.subtitle">Tady jednou budou skryté zkratky pro otrlé hráče.</div>
+      <div style="margin:1.5rem 0; font-family:'Cinzel Decorative',serif; color:var(--gold-light); font-size:1.05rem; letter-spacing:0.14em;" data-i18n="cheats.wip">
         Cheat Codes — Work in progress
       </div>
       <div class="game-buttons" style="margin-top:0.6rem;">
-        <button class="game-btn" onclick="toggleCheatCodesPanel(false)">✕ Zavřít</button>
+        <button class="game-btn" onclick="toggleCheatCodesPanel(false)" data-i18n="cheats.close">✕ Zavřít</button>
       </div>
     </div>
 
     <!-- Settings panel -->
     <div class="shop-panel" id="settingsPanel">
-      <h2>⚙ Settings</h2>
-      <div class="shop-subtitle">Tvoje nastavení se ukládá lokálně v prohlížeči.</div>
+      <h2 data-i18n="settings.title">⚙ Settings</h2>
+      <div class="shop-subtitle" data-i18n="settings.subtitle">Tvoje nastavení se ukládá lokálně v prohlížeči.</div>
 
       <div class="settings-row">
         <div class="label-wrap">
-          <span class="label">Zvuky</span>
-          <span class="hint">Herní SFX — Hmmm, sběr, štít</span>
+          <span class="label" data-i18n="settings.sfx">Zvuky</span>
+          <span class="hint" data-i18n="settings.sfxHint">Herní SFX — Hmmm, sběr, štít</span>
         </div>
         <div class="toggle" id="settingsSfxToggle" onclick="toggleSetting('sfx')"></div>
       </div>
 
       <div class="settings-row">
         <div class="label-wrap">
-          <span class="label">Hudba</span>
-          <span class="hint">Background soundtrack</span>
+          <span class="label" data-i18n="settings.music">Hudba</span>
+          <span class="hint" data-i18n="settings.musicHint">Background soundtrack</span>
         </div>
         <div class="toggle" id="settingsMusicToggle" onclick="toggleSetting('music')"></div>
       </div>
 
       <div class="settings-row">
         <div class="label-wrap">
-          <span class="label">Hlášky</span>
-          <span class="hint">Náhodné voice lines během hry</span>
+          <span class="label" data-i18n="settings.voiceLines">Hlášky</span>
+          <span class="hint" data-i18n="settings.voiceLinesHint">Náhodné voice lines během hry</span>
         </div>
         <div class="toggle" id="settingsVoiceToggle" onclick="toggleSetting('voiceLines')"></div>
       </div>
 
       <div class="settings-row">
         <div class="label-wrap">
-          <span class="label">Efekty</span>
-          <span class="hint">Glow, particles, flash</span>
+          <span class="label" data-i18n="settings.effects">Efekty</span>
+          <span class="hint" data-i18n="settings.effectsHint">Glow, particles, flash</span>
         </div>
         <div class="toggle" id="settingsEffectsToggle" onclick="toggleSetting('effects')"></div>
       </div>
 
-      <div class="settings-footer-quote">Víc si toho nenastavíš ty mamrde</div>
+      <div class="settings-footer-quote" data-i18n="settings.footer">Víc si toho nenastavíš ty mamrde</div>
 
       <div class="game-buttons" style="margin-top:0.6rem;">
-        <button class="game-btn" onclick="toggleSettingsPanel(false)">✕ Zavřít</button>
+        <button class="game-btn" onclick="toggleSettingsPanel(false)" data-i18n="settings.close">✕ Zavřít</button>
       </div>
     </div>
   </div>
 
-  <div class="game-controls">Mezerník · Klik · Tap pro skok</div>
+  <div class="game-controls" data-i18n="hud.controls">Mezerník · Klik · Tap pro skok</div>
 
   <div class="game-buttons">
     <div class="locked-feature">
-      <button class="game-btn" onclick="toggleShop()" title="Otevřít shop">🛒 Shop</button>
-      <div class="shop-wip">Upgrady za Yangy</div>
+      <button class="game-btn" onclick="toggleShop()" title="Otevřít shop" data-i18n="menu.shop">🛒 Shop</button>
+      <div class="shop-wip" data-i18n="bottom.shopHint">Upgrady za Yangy</div>
     </div>
     <div class="locked-feature">
-      <button class="game-btn" onclick="toggleSkinsPanel()" title="Vybrat skin postavy">🎭 Skiny</button>
-      <div class="shop-wip">Výběr postavy</div>
+      <button class="game-btn" onclick="toggleSkinsPanel()" title="Vybrat skin postavy" data-i18n="menu.skins">🎭 Skiny</button>
+      <div class="shop-wip" data-i18n="bottom.skinsHint">Výběr postavy</div>
     </div>
     <div class="locked-feature">
-      <button class="game-btn" onclick="toggleAchievementsPanel()" title="Achievementy">🏆 Achievementy</button>
-      <div class="shop-wip">Odměny za postup</div>
+      <button class="game-btn" onclick="toggleAchievementsPanel()" title="Achievementy" data-i18n="menu.achievements">🏆 Achievementy</button>
+      <div class="shop-wip" data-i18n="bottom.achievementsHint">Odměny za postup</div>
     </div>
     <div class="locked-feature">
-      <button class="game-btn" onclick="toggleCheatCodesPanel()" title="Cheat Codes">⌨ Cheat Codes</button>
-      <div class="shop-wip">Work in progress</div>
+      <button class="game-btn" onclick="toggleCheatCodesPanel()" title="Cheat Codes" data-i18n="menu.cheats">⌨ Cheat Codes</button>
+      <div class="shop-wip" data-i18n="bottom.cheatsHint">Work in progress</div>
     </div>
     <div class="locked-feature">
-      <button class="game-btn" onclick="toggleSettingsPanel()" title="Nastavení">⚙ Settings</button>
-      <div class="shop-wip">Zvuky · Hudba · Efekty</div>
+      <button class="game-btn" onclick="toggleSettingsPanel()" title="Nastavení" data-i18n="menu.settings">⚙ Settings</button>
+      <div class="shop-wip" data-i18n="bottom.settingsHint">Zvuky · Hudba · Efekty</div>
     </div>
-    <button class="game-btn" onclick="closeGame()">✕ Zavřít hru</button>
+    <button class="game-btn" onclick="closeGame()" data-i18n="bottom.close">✕ Zavřít hru</button>
   </div>
 </div>
 

@@ -11,13 +11,13 @@ function activateEventPhase() {
 
   // Aktivační hláška (respektuje Voice toggle).
   if (settings.voiceLines) {
-    activeVoiceLine = 'Fáze 2: už žádné slitování.';
+    activeVoiceLine = t('event.eventPhaseVoice');
     activeVoiceLineUntil = performance.now() + 4200;
     if ('speechSynthesis' in window) {
       try {
         window.speechSynthesis.cancel();
         const utter = new SpeechSynthesisUtterance(activeVoiceLine);
-        utter.lang = 'cs-CZ';
+        utter.lang = window.NWI18n && window.NWI18n.getCurrentLanguage() === 'en' ? 'en-US' : 'cs-CZ';
         utter.rate = 0.92;
         utter.pitch = 0.55;
         utter.volume = 0.55;
@@ -76,7 +76,7 @@ function showEventPhaseToast() {
     toast.className = 'event-phase-toast';
     wrap.appendChild(toast);
   }
-  toast.textContent = 'FÁZE 2 AKTIVOVÁNA';
+  toast.textContent = t('event.eventPhase');
   toast.classList.remove('show');
   // Force reflow so the animation re-triggers if activated repeatedly (debug).
   void toast.offsetWidth;

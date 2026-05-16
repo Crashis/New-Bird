@@ -10,37 +10,52 @@ function updateEconomyUi() {
 
   const shieldLevel = document.getElementById('shieldStartLevel');
   const shieldBtn = document.getElementById('buyShieldStartBtn');
-  if (shieldLevel) shieldLevel.textContent = shieldStartOwned ? 'Vlastníš' : 'Nevlastníš';
+  if (shieldLevel) shieldLevel.textContent = shieldStartOwned ? t('economy.owned') : t('economy.notOwned');
   if (shieldBtn) {
-    shieldBtn.textContent = shieldStartOwned ? 'Koupeno' : 'Koupit — 100 Yangů';
-    shieldBtn.disabled = shieldStartOwned || yang < UPGRADE_COST;
+    const shieldCost = UPGRADE_LEVEL_COSTS[0];
+    shieldBtn.textContent = shieldStartOwned ? t('economy.bought') : t('economy.buyFor', { cost: shieldCost });
+    shieldBtn.disabled = shieldStartOwned || yang < shieldCost;
     shieldBtn.classList.toggle('disabled', shieldBtn.disabled);
   }
 
   const invLevel = document.getElementById('invincibilityLevel');
   const invBtn = document.getElementById('buyInvincibilityBtn');
-  if (invLevel) invLevel.textContent = `Level ${invincibilityLevel}/3 (+${(invincibilityLevel * 0.5).toFixed(1)}s)`;
+  if (invLevel) invLevel.textContent = t('economy.invLevel', {
+    cur: invincibilityLevel,
+    bonus: (invincibilityLevel * 0.5).toFixed(1)
+  });
   if (invBtn) {
-    invBtn.textContent = invincibilityLevel >= 3 ? 'Maximum' : 'Koupit — 100 Yangů';
-    invBtn.disabled = invincibilityLevel >= 3 || yang < UPGRADE_COST;
+    const invCost = UPGRADE_LEVEL_COSTS[invincibilityLevel] || UPGRADE_LEVEL_COSTS[UPGRADE_LEVEL_COSTS.length - 1];
+    invBtn.textContent = invincibilityLevel >= 3 ? t('economy.maximum') : t('economy.buyFor', { cost: invCost });
+    invBtn.disabled = invincibilityLevel >= 3 || yang < invCost;
     invBtn.classList.toggle('disabled', invBtn.disabled);
   }
 
   const dyLevel = document.getElementById('doubleYangLevel');
   const dyBtn = document.getElementById('buyDoubleYangBtn');
-  if (dyLevel) dyLevel.textContent = `Level ${doubleYangLevel}/${DOUBLE_YANG_MAX_LEVEL} (${(getDoubleYangDuration() / 1000).toFixed(1)}s)`;
+  if (dyLevel) dyLevel.textContent = t('economy.dyLevel', {
+    cur: doubleYangLevel,
+    max: DOUBLE_YANG_MAX_LEVEL,
+    dur: (getDoubleYangDuration() / 1000).toFixed(1)
+  });
   if (dyBtn) {
-    dyBtn.textContent = doubleYangLevel >= DOUBLE_YANG_MAX_LEVEL ? 'Maximum' : 'Koupit — 100 Yangů';
-    dyBtn.disabled = doubleYangLevel >= DOUBLE_YANG_MAX_LEVEL || yang < UPGRADE_COST;
+    const dyCost = UPGRADE_LEVEL_COSTS[doubleYangLevel] || UPGRADE_LEVEL_COSTS[UPGRADE_LEVEL_COSTS.length - 1];
+    dyBtn.textContent = doubleYangLevel >= DOUBLE_YANG_MAX_LEVEL ? t('economy.maximum') : t('economy.buyFor', { cost: dyCost });
+    dyBtn.disabled = doubleYangLevel >= DOUBLE_YANG_MAX_LEVEL || yang < dyCost;
     dyBtn.classList.toggle('disabled', dyBtn.disabled);
   }
 
   const cbLevel = document.getElementById('crownBonusLevel');
   const cbBtn = document.getElementById('buyCrownBonusBtn');
-  if (cbLevel) cbLevel.textContent = `Level ${crownBonusLevel}/${CROWN_BONUS_MAX_LEVEL} (+${getCrownBonusValue()} skóre)`;
+  if (cbLevel) cbLevel.textContent = t('economy.crownLevel', {
+    cur: crownBonusLevel,
+    max: CROWN_BONUS_MAX_LEVEL,
+    val: getCrownBonusValue()
+  });
   if (cbBtn) {
-    cbBtn.textContent = crownBonusLevel >= CROWN_BONUS_MAX_LEVEL ? 'Maximum' : 'Koupit — 100 Yangů';
-    cbBtn.disabled = crownBonusLevel >= CROWN_BONUS_MAX_LEVEL || yang < UPGRADE_COST;
+    const cbCost = UPGRADE_LEVEL_COSTS[crownBonusLevel] || UPGRADE_LEVEL_COSTS[UPGRADE_LEVEL_COSTS.length - 1];
+    cbBtn.textContent = crownBonusLevel >= CROWN_BONUS_MAX_LEVEL ? t('economy.maximum') : t('economy.buyFor', { cost: cbCost });
+    cbBtn.disabled = crownBonusLevel >= CROWN_BONUS_MAX_LEVEL || yang < cbCost;
     cbBtn.classList.toggle('disabled', cbBtn.disabled);
   }
 }

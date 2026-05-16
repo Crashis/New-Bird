@@ -24,7 +24,7 @@ function toggleFullscreen() {
 function syncFullscreenButton() {
   const buttons = document.querySelectorAll('#fullscreenBtn, #countdownFullscreenBtn');
   for (const btn of buttons) {
-    btn.textContent = isFullscreen() ? '⛶ Ukončit fullscreen' : '⛶ Fullscreen';
+    btn.textContent = isFullscreen() ? t('btn.exitFullscreen') : t('btn.fullscreen');
   }
   resizeCanvas();
 }

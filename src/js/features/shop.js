@@ -10,54 +10,58 @@ function spendYang(amount) {
 
 function buyShieldStart() {
   if (shieldStartOwned) return;
-  if (!spendYang(UPGRADE_COST)) {
-    showShopMessage('Nemáš dost Yangů. Potřebuješ 100.');
+  const cost = UPGRADE_LEVEL_COSTS[0];
+  if (!spendYang(cost)) {
+    showShopMessage(t('shop.noYangFor', { cost }));
     return;
   }
   shieldStartOwned = true;
   saveEconomy();
   updateEconomyUi();
-  showShopMessage('Shield Start koupen. Další run začne se štítem.');
-  showUnlockToast('UPGRADE ODEMČEN', 'Amazon účetní oddělení nesouhlasí.', 'upgrade');
+  showShopMessage(t('shop.shieldBought'));
+  showUnlockToast(t('toast.upgradeUnlocked'), t('toast.upgradeSubtitle'), 'upgrade');
 }
 
 function buyInvincibilityUpgrade() {
   if (invincibilityLevel >= 3) return;
-  if (!spendYang(UPGRADE_COST)) {
-    showShopMessage('Nemáš dost Yangů. Potřebuješ 100.');
+  const cost = UPGRADE_LEVEL_COSTS[invincibilityLevel] || UPGRADE_LEVEL_COSTS[UPGRADE_LEVEL_COSTS.length - 1];
+  if (!spendYang(cost)) {
+    showShopMessage(t('shop.noYangFor', { cost }));
     return;
   }
   invincibilityLevel++;
   saveEconomy();
   updateEconomyUi();
-  showShopMessage(`Nesmrtelnost prodloužena na ${(2 + invincibilityLevel * 0.5).toFixed(1)}s.`);
-  showUnlockToast('UPGRADE ODEMČEN', 'Amazon účetní oddělení nesouhlasí.', 'upgrade');
+  showShopMessage(t('shop.invExtended', { dur: (2 + invincibilityLevel * 0.5).toFixed(1) }));
+  showUnlockToast(t('toast.upgradeUnlocked'), t('toast.upgradeSubtitle'), 'upgrade');
 }
 
 function buyDoubleYangUpgrade() {
   if (doubleYangLevel >= DOUBLE_YANG_MAX_LEVEL) return;
-  if (!spendYang(UPGRADE_COST)) {
-    showShopMessage('Nemáš dost Yangů. Potřebuješ 100.');
+  const cost = UPGRADE_LEVEL_COSTS[doubleYangLevel] || UPGRADE_LEVEL_COSTS[UPGRADE_LEVEL_COSTS.length - 1];
+  if (!spendYang(cost)) {
+    showShopMessage(t('shop.noYangFor', { cost }));
     return;
   }
   doubleYangLevel++;
   saveEconomy();
   updateEconomyUi();
-  showShopMessage(`Double Yang prodloužen na ${(getDoubleYangDuration() / 1000).toFixed(1)}s.`);
-  showUnlockToast('UPGRADE ODEMČEN', 'Amazon účetní oddělení nesouhlasí.', 'upgrade');
+  showShopMessage(t('shop.dyExtended', { dur: (getDoubleYangDuration() / 1000).toFixed(1) }));
+  showUnlockToast(t('toast.upgradeUnlocked'), t('toast.upgradeSubtitle'), 'upgrade');
 }
 
 function buyCrownBonusUpgrade() {
   if (crownBonusLevel >= CROWN_BONUS_MAX_LEVEL) return;
-  if (!spendYang(UPGRADE_COST)) {
-    showShopMessage('Nemáš dost Yangů. Potřebuješ 100.');
+  const cost = UPGRADE_LEVEL_COSTS[crownBonusLevel] || UPGRADE_LEVEL_COSTS[UPGRADE_LEVEL_COSTS.length - 1];
+  if (!spendYang(cost)) {
+    showShopMessage(t('shop.noYangFor', { cost }));
     return;
   }
   crownBonusLevel++;
   saveEconomy();
   updateEconomyUi();
-  showShopMessage(`Crown Bonus zvýšen na +${getCrownBonusValue()} skóre.`);
-  showUnlockToast('UPGRADE ODEMČEN', 'Amazon účetní oddělení nesouhlasí.', 'upgrade');
+  showShopMessage(t('shop.crownUp', { val: getCrownBonusValue() }));
+  showUnlockToast(t('toast.upgradeUnlocked'), t('toast.upgradeSubtitle'), 'upgrade');
 }
 
 function getInvincibleDurationMs() {
