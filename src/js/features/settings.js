@@ -23,9 +23,10 @@ function toggleSetting(key) {
 function applySettingSideEffects(key) {
   if (key === 'music') {
     if (settings.music) {
-      if (gameState === 'playing') startGameMusic();
+      // Pick the right track for whatever screen / phase we're currently in.
+      updateMusicForState();
     } else {
-      stopGameMusic();
+      stopMusic();
     }
   } else if (key === 'sfx') {
     // No persistent SFX to stop; new ones simply won't play.

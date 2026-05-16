@@ -357,6 +357,7 @@ function openGame() {
   const overlayEl = document.getElementById('gameOverlay');
   overlayEl.classList.add('active');
   overlayEl.classList.add('menu-open');
+  playMenuMusic();
   if (animationId) {
     cancelAnimationFrame(animationId);
     animationId = null;
@@ -505,4 +506,6 @@ function closeGame() {
     animationId = null;
   }
   gameState = 'idle';
+  // Back to the countdown/default screen — return to intro track.
+  playIntroMusic();
 }

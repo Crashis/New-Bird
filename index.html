@@ -86,7 +86,11 @@
 
 <!-- ===== HERNÍ OVERLAY ===== -->
 <div class="game-overlay" id="gameOverlay">
-  <audio id="gameMusic" loop preload="none"></audio>
+  <audio id="gameMusic" loop preload="none">
+    <source src="assets/audio/game-music.mp3" type="audio/mpeg">
+    <source src="assets/audio/game-music.ogg" type="audio/ogg">
+    <source src="assets/audio/game-music.wav" type="audio/wav">
+  </audio>
   <div id="unlockToast" class="unlock-toast hidden">
     <div class="unlock-toast-title"></div>
     <div class="unlock-toast-subtitle"></div>

@@ -15,46 +15,162 @@ function getAudioCtx() {
   return audioCtx;
 }
 
-const MUSIC_VOLUME = 0.16;
-function getGameMusic() {
-  return document.getElementById('gameMusic');
-}
-function startGameMusic() {
-  if (!settings.music) return;
-  const music = getGameMusic();
-  if (!music) return;
-  music.volume = MUSIC_VOLUME;
-  try { music.playbackRate = 1.0; } catch (e) {}
-  music.play().catch(() => {
-    // Browser may block audio until the next user gesture, or the mp3 file may be missing.
-  });
-  // Event phase music tweaks take precedence (volume + playback rate).
-  applyEventPhaseMusic();
-}
-function stopGameMusic() {
-  const music = getGameMusic();
-  if (!music) return;
-  music.pause();
-  music.currentTime = 0;
+// ===== HUDBA: 5 stop podle obrazovky / fáze =====
+// intro = countdown / default screen
+// menu  = hlavní herní menu (overlay aktivní, gameState != 'playing')
+// phase1 = běžící run, score < 20
+// phase2 = po aktivaci event fáze (score 20+), platí i pro frost fázi (score 60)
+// phase3 = po aktivaci void fáze (score 100+ po Bezos modal)
+const MUSIC_TRACKS = {
+  intro:  './assets/audio/intro.mp3',
+  menu:   './assets/audio/game-menu.mp3',
+  phase1: './assets/audio/phase1.mp3',
+  phase2: './assets/audio/phase2.mp3',
+  phase3: './assets/audio/phase3.mp3'
+};
+const MUSIC_VOLUMES = {
+  intro:  0.28,
+  menu:   0.32,
+  phase1: 0.35,
+  phase2: 0.38,
+  phase3: 0.40
+};
+// Kept for compatibility with existing references.
+const MUSIC_VOLUME = MUSIC_VOLUMES.phase1;
+
+const musicPlayers = {};
+let currentMusicKey = null;
+let audioUnlocked = false;
+
+function getMusicPlayer(key) {
+  if (musicPlayers[key]) return musicPlayers[key];
+  const src = MUSIC_TRACKS[key];
+  if (!src) return null;
   try {
-    music.volume = MUSIC_VOLUME;
-    music.playbackRate = 1.0;
-  } catch (e) {}
+    const a = new Audio(src);
+    a.loop = true;
+    a.preload = 'auto';
+    a.volume = MUSIC_VOLUMES[key] || 0.3;
+    // Prevent uncaught error spam if a file is missing or codec unsupported.
+    a.addEventListener('error', () => {}, { once: false });
+    musicPlayers[key] = a;
+    return a;
+  } catch (e) { return null; }
 }
-function applyEventPhaseMusic() {
-  const music = getGameMusic();
-  if (!music) return;
-  if (!settings.music) return;
-  try {
-    if (eventPhaseActive) {
-      music.playbackRate = 1.08;
-      music.volume = Math.min(1, MUSIC_VOLUME * 1.35);
-    } else {
-      music.playbackRate = 1.0;
-      music.volume = MUSIC_VOLUME;
+
+function deriveCurrentMusicKey() {
+  const overlay = document.getElementById('gameOverlay');
+  const inOverlay = overlay && overlay.classList.contains('active');
+  if (!inOverlay) return 'intro';
+  if (typeof gameState === 'undefined' || gameState !== 'playing') return 'menu';
+  if (typeof currentGamePhase !== 'undefined' && currentGamePhase === GAME_PHASES.VOID) return 'phase3';
+  if ((typeof eventPhaseActive !== 'undefined' && eventPhaseActive) ||
+      (typeof currentGamePhase !== 'undefined' && currentGamePhase === GAME_PHASES.FROST)) {
+    return 'phase2';
+  }
+  return 'phase1';
+}
+
+function playMusic(key) {
+  if (!settings.music) {
+    // Remember the intent so toggling music back on restores the right track.
+    currentMusicKey = key;
+    return;
+  }
+  // Same track already running — no-op (avoid restart spam per frame).
+  if (currentMusicKey === key) {
+    const cur = musicPlayers[key];
+    if (cur && !cur.paused) return;
+  }
+  // Stop everything else first to guarantee one track at a time.
+  for (const k of Object.keys(musicPlayers)) {
+    if (k !== key) {
+      try {
+        musicPlayers[k].pause();
+        musicPlayers[k].currentTime = 0;
+      } catch (e) {}
     }
-  } catch (e) {}
+  }
+  currentMusicKey = key;
+  const audio = getMusicPlayer(key);
+  if (!audio) return;
+  try { audio.volume = MUSIC_VOLUMES[key] || 0.3; } catch (e) {}
+  try { audio.playbackRate = 1.0; } catch (e) {}
+  // play() returns a promise that rejects on autoplay block — swallow silently.
+  const p = audio.play();
+  if (p && typeof p.catch === 'function') p.catch(() => {});
 }
+
+function stopMusic() {
+  for (const k of Object.keys(musicPlayers)) {
+    try {
+      musicPlayers[k].pause();
+      musicPlayers[k].currentTime = 0;
+    } catch (e) {}
+  }
+  currentMusicKey = null;
+}
+
+function playIntroMusic() { playMusic('intro'); }
+function playMenuMusic()  { playMusic('menu'); }
+function playPhase2Music() { playMusic('phase2'); }
+function playPhase3Music() { playMusic('phase3'); }
+
+// Compatibility wrappers — existing callsites in gameLoop/eventPhase keep working.
+function startGameMusic() {
+  // Derive the right track for the current screen / phase and play it.
+  playMusic(deriveCurrentMusicKey());
+}
+function stopGameMusic() { stopMusic(); }
+function applyEventPhaseMusic() {
+  // Phase changes (event/frost/void) call this — re-derive and switch.
+  if (!settings.music) return;
+  playMusic(deriveCurrentMusicKey());
+}
+
+// Re-evaluate the appropriate track for the current UI state and play it.
+function updateMusicForState() {
+  if (!settings.music) { stopMusic(); return; }
+  playMusic(deriveCurrentMusicKey());
+}
+
+// Browsers block autoplay until the first user gesture. After the first
+// interaction we kick off the track that matches the current screen.
+function unlockAudioAfterFirstInteraction() {
+  if (audioUnlocked) return;
+  audioUnlocked = true;
+  // Resume WebAudio context too — silent no-op if it doesn't exist yet.
+  if (audioCtx && audioCtx.state === 'suspended') {
+    try { audioCtx.resume().catch(() => {}); } catch (e) {}
+  }
+  if (settings.music) playMusic(currentMusicKey || deriveCurrentMusicKey());
+}
+
+(function initMusicUnlockListeners() {
+  const handler = () => { unlockAudioAfterFirstInteraction(); };
+  const opts = { once: true, passive: true };
+  if (typeof window !== 'undefined') {
+    window.addEventListener('pointerdown', handler, opts);
+    window.addEventListener('keydown', handler, opts);
+    window.addEventListener('touchstart', handler, opts);
+    window.addEventListener('click', handler, opts);
+  }
+})();
+
+// Try to play intro as soon as the DOM is ready. Browsers may block until
+// the first interaction — unlockAudioAfterFirstInteraction() handles that.
+(function tryAutoplayIntro() {
+  const start = () => {
+    if (settings && settings.music && currentMusicKey === null) {
+      playMusic('intro');
+    }
+  };
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start, { once: true });
+  } else {
+    start();
+  }
+})();
 
 function playHmm() {
   if (!settings.sfx) return;

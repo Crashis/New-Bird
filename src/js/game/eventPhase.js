@@ -80,6 +80,9 @@ function activateFrostPhase() {
     overlay.classList.add('phase-frost');
   }
   showPhaseToast(t('milestone.frost.toast'));
+  // Score 60 = visual change only — music key derives to phase2 so this is a no-op
+  // if phase2 is already running, but ensures continuity in edge cases.
+  applyEventPhaseMusic();
 }
 
 function maybeActivateFrostPhase() {
@@ -97,6 +100,7 @@ function activateVoidPhase() {
     overlay.classList.add('phase-void');
   }
   showPhaseToast(t('milestone.void.toast'));
+  applyEventPhaseMusic();
 }
 
 function showPhaseToast(text) {
