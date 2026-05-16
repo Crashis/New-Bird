@@ -857,6 +857,98 @@
     letter-spacing: 0.08em;
   }
 
+  /* ===== SETTINGS PANEL ===== */
+  .settings-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 0.2rem;
+    border-bottom: 1px solid var(--dark-border);
+    font-family: 'Cinzel', serif;
+    color: var(--text-light);
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+  }
+  .settings-row:last-child { border-bottom: none; }
+  .settings-row .label-wrap { display: flex; flex-direction: column; }
+  .settings-row .label { color: var(--gold-light); font-weight: 600; }
+  .settings-row .hint { font-family: 'Lato', sans-serif; color: var(--text-muted); font-size: 0.7rem; letter-spacing: 0.05em; margin-top: 0.15rem; }
+
+  .toggle {
+    position: relative;
+    width: 48px;
+    height: 24px;
+    background: var(--dark-card);
+    border: 1px solid var(--dark-border);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.25s, border-color 0.25s;
+    flex-shrink: 0;
+  }
+  .toggle::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 18px;
+    height: 18px;
+    background: var(--text-muted);
+    border-radius: 50%;
+    transition: left 0.25s, background 0.25s;
+  }
+  .toggle.on { background: rgba(201,168,76,0.22); border-color: var(--gold-dark); }
+  .toggle.on::after { left: 26px; background: var(--gold-light); }
+
+  .settings-footer-quote {
+    margin-top: 0.9rem;
+    padding-top: 0.7rem;
+    border-top: 1px solid var(--dark-border);
+    font-family: 'Cinzel Decorative', serif;
+    color: var(--red-accent);
+    font-size: 0.78rem;
+    text-align: center;
+    letter-spacing: 0.12em;
+    font-style: italic;
+    opacity: 0.85;
+  }
+
+  /* ===== FULLSCREEN BUTTON ===== */
+  .fullscreen-btn {
+    position: absolute;
+    top: 0.8rem;
+    right: 0.8rem;
+    z-index: 200;
+    background: rgba(10,8,6,0.85);
+    border: 1px solid var(--gold-dark);
+    color: var(--gold);
+    font-family: 'Cinzel', serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 0.5rem 0.9rem;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.25s;
+  }
+  .fullscreen-btn:hover {
+    background: rgba(201,168,76,0.12);
+    border-color: var(--gold);
+  }
+
+  .game-canvas-wrap {
+    max-width: 100%;
+  }
+  #gameCanvas {
+    max-width: min(100vw - 1rem, 1000px);
+    max-height: calc(100vh - 240px);
+  }
+  .game-overlay:fullscreen { padding: 0.4rem; }
+  .game-overlay:-webkit-full-screen { padding: 0.4rem; }
+  .game-overlay:fullscreen #gameCanvas {
+    max-width: min(100vw - 0.8rem, calc((100vh - 200px) * 1.282));
+    max-height: calc(100vh - 200px);
+  }
+
   .skin-arrow {
     font-size: 1.1rem;
     padding: 0.5rem 1.1rem;
@@ -928,6 +1020,7 @@
 <div class="game-overlay" id="gameOverlay">
   <!-- Optional background music: put a legally owned file named new-world-soundtrack.mp3 next to this HTML. -->
   <audio id="gameMusic" src="new-world-soundtrack.mp3" loop preload="auto"></audio>
+  <button class="fullscreen-btn" id="fullscreenBtn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
   <div class="game-header">⚔️ Boj o Aeternum ⚔️</div>
   <div class="game-stats">
     <span>Skóre: <strong id="gameScore">0</strong></span>
@@ -1047,6 +1140,62 @@
         <button class="game-btn" onclick="toggleSkinsPanel(false)">✕ Zavřít</button>
       </div>
     </div>
+
+    <!-- Cheat Codes panel -->
+    <div class="shop-panel" id="cheatCodesPanel" style="text-align:center;">
+      <h2>⌨ Cheat Codes</h2>
+      <div class="shop-subtitle">Tady jednou budou skryté zkratky pro otrlé hráče.</div>
+      <div style="margin:1.5rem 0; font-family:'Cinzel Decorative',serif; color:var(--gold-light); font-size:1.05rem; letter-spacing:0.14em;">
+        Cheat Codes — Work in progress
+      </div>
+      <div class="game-buttons" style="margin-top:0.6rem;">
+        <button class="game-btn" onclick="toggleCheatCodesPanel(false)">✕ Zavřít</button>
+      </div>
+    </div>
+
+    <!-- Settings panel -->
+    <div class="shop-panel" id="settingsPanel">
+      <h2>⚙ Settings</h2>
+      <div class="shop-subtitle">Tvoje nastavení se ukládá lokálně v prohlížeči.</div>
+
+      <div class="settings-row">
+        <div class="label-wrap">
+          <span class="label">Zvuky</span>
+          <span class="hint">Herní SFX — Hmmm, sběr, štít</span>
+        </div>
+        <div class="toggle" id="settingsSfxToggle" onclick="toggleSetting('sfx')"></div>
+      </div>
+
+      <div class="settings-row">
+        <div class="label-wrap">
+          <span class="label">Hudba</span>
+          <span class="hint">Background soundtrack</span>
+        </div>
+        <div class="toggle" id="settingsMusicToggle" onclick="toggleSetting('music')"></div>
+      </div>
+
+      <div class="settings-row">
+        <div class="label-wrap">
+          <span class="label">Hlášky</span>
+          <span class="hint">Náhodné voice lines během hry</span>
+        </div>
+        <div class="toggle" id="settingsVoiceToggle" onclick="toggleSetting('voiceLines')"></div>
+      </div>
+
+      <div class="settings-row">
+        <div class="label-wrap">
+          <span class="label">Efekty</span>
+          <span class="hint">Glow, particles, flash</span>
+        </div>
+        <div class="toggle" id="settingsEffectsToggle" onclick="toggleSetting('effects')"></div>
+      </div>
+
+      <div class="settings-footer-quote">Víc si toho nenastavíš ty mamrde</div>
+
+      <div class="game-buttons" style="margin-top:0.6rem;">
+        <button class="game-btn" onclick="toggleSettingsPanel(false)">✕ Zavřít</button>
+      </div>
+    </div>
   </div>
 
   <div class="game-controls">Mezerník · Klik · Tap pro skok</div>
@@ -1059,6 +1208,14 @@
     <div class="locked-feature">
       <button class="game-btn" onclick="toggleSkinsPanel()" title="Vybrat skin postavy">🎭 Skiny</button>
       <div class="shop-wip">Výběr postavy</div>
+    </div>
+    <div class="locked-feature">
+      <button class="game-btn" onclick="toggleCheatCodesPanel()" title="Cheat Codes">⌨ Cheat Codes</button>
+      <div class="shop-wip">Work in progress</div>
+    </div>
+    <div class="locked-feature">
+      <button class="game-btn" onclick="toggleSettingsPanel()" title="Nastavení">⚙ Settings</button>
+      <div class="shop-wip">Zvuky · Hudba · Efekty</div>
     </div>
     <button class="game-btn" onclick="closeGame()">✕ Zavřít hru</button>
   </div>
@@ -1232,6 +1389,7 @@ function getGameMusic() {
   return document.getElementById('gameMusic');
 }
 function startGameMusic() {
+  if (!settings.music) return;
   const music = getGameMusic();
   if (!music) return;
   music.volume = MUSIC_VOLUME;
@@ -1247,6 +1405,7 @@ function stopGameMusic() {
 }
 
 function playHmm() {
+  if (!settings.sfx) return;
   const ctx = getAudioCtx();
   if (!ctx) return;
   const now = ctx.currentTime;
@@ -1397,6 +1556,19 @@ let pipesSincePowerup = 0;
 let selectedSkinId = 'godias-zubaty';
 let currentSkinIndex = 0;
 
+const settings = {
+  sfx: true,
+  music: true,
+  voiceLines: true,
+  effects: true
+};
+const SETTINGS_KEYS = {
+  sfx: 'nw_flappy_settings_sfx',
+  music: 'nw_flappy_settings_music',
+  voiceLines: 'nw_flappy_settings_voice_lines',
+  effects: 'nw_flappy_settings_effects'
+};
+
 // Load best score from localStorage
 try {
   const saved = localStorage.getItem('nw_flappy_best');
@@ -1422,6 +1594,18 @@ try {
     }
   }
 } catch (e) {}
+
+try {
+  for (const key of Object.keys(SETTINGS_KEYS)) {
+    const stored = localStorage.getItem(SETTINGS_KEYS[key]);
+    if (stored === '0') settings[key] = false;
+    else if (stored === '1') settings[key] = true;
+  }
+} catch (e) {}
+
+function saveSetting(key) {
+  try { localStorage.setItem(SETTINGS_KEYS[key], settings[key] ? '1' : '0'); } catch (e) {}
+}
 
 function saveEconomy() {
   try {
@@ -1506,8 +1690,12 @@ function toggleSkinsPanel(forceOpen) {
     activeVoiceLineUntil = performance.now() + 2800;
     return;
   }
-  const shop = document.getElementById('shopPanel');
-  if (shop) shop.classList.remove('active');
+  if (typeof closeOtherPanels === 'function') {
+    closeOtherPanels('skinsPanel');
+  } else {
+    const shop = document.getElementById('shopPanel');
+    if (shop) shop.classList.remove('active');
+  }
   panel.classList.toggle('active', open);
   if (open) {
     currentSkinIndex = SKINS.findIndex(s => s.id === selectedSkinId);
@@ -1572,6 +1760,16 @@ function renderSkinsPanel() {
   }
 }
 
+const ALL_PANEL_IDS = ['shopPanel', 'skinsPanel', 'cheatCodesPanel', 'settingsPanel'];
+function closeOtherPanels(keepId) {
+  for (const id of ALL_PANEL_IDS) {
+    if (id === keepId) continue;
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('active');
+  }
+}
+function closeAllPanels() { closeOtherPanels(null); }
+
 function toggleShop(forceOpen) {
   const panel = document.getElementById('shopPanel');
   if (!panel) return;
@@ -1581,12 +1779,81 @@ function toggleShop(forceOpen) {
     activeVoiceLineUntil = performance.now() + 2800;
     return;
   }
-  const skinsP = document.getElementById('skinsPanel');
-  if (skinsP) skinsP.classList.remove('active');
+  closeOtherPanels('shopPanel');
   panel.classList.toggle('active', open);
   if (open) {
     showShopMessage('');
     updateEconomyUi();
+  }
+}
+
+function toggleCheatCodesPanel(forceOpen) {
+  const panel = document.getElementById('cheatCodesPanel');
+  if (!panel) return;
+  const open = typeof forceOpen === 'boolean' ? forceOpen : !panel.classList.contains('active');
+  if (open && gameState === 'playing') {
+    activeVoiceLine = 'Cheat Codes mimo aktivní let. Amazon nemá rád zkratky.';
+    activeVoiceLineUntil = performance.now() + 2800;
+    return;
+  }
+  closeOtherPanels('cheatCodesPanel');
+  panel.classList.toggle('active', open);
+}
+
+function toggleSettingsPanel(forceOpen) {
+  const panel = document.getElementById('settingsPanel');
+  if (!panel) return;
+  const open = typeof forceOpen === 'boolean' ? forceOpen : !panel.classList.contains('active');
+  if (open && gameState === 'playing') {
+    activeVoiceLine = 'Settings mimo aktivní let. Teď není čas na ladění.';
+    activeVoiceLineUntil = performance.now() + 2800;
+    return;
+  }
+  closeOtherPanels('settingsPanel');
+  panel.classList.toggle('active', open);
+  if (open) renderSettingsPanel();
+}
+
+function renderSettingsPanel() {
+  const map = {
+    sfx: 'settingsSfxToggle',
+    music: 'settingsMusicToggle',
+    voiceLines: 'settingsVoiceToggle',
+    effects: 'settingsEffectsToggle'
+  };
+  for (const key of Object.keys(map)) {
+    const el = document.getElementById(map[key]);
+    if (el) el.classList.toggle('on', !!settings[key]);
+  }
+}
+
+function toggleSetting(key) {
+  if (!(key in settings)) return;
+  settings[key] = !settings[key];
+  saveSetting(key);
+  renderSettingsPanel();
+  applySettingSideEffects(key);
+}
+
+function applySettingSideEffects(key) {
+  if (key === 'music') {
+    if (settings.music) {
+      if (gameState === 'playing') startGameMusic();
+    } else {
+      stopGameMusic();
+    }
+  } else if (key === 'sfx') {
+    // No persistent SFX to stop; new ones simply won't play.
+  } else if (key === 'voiceLines') {
+    if (!settings.voiceLines) {
+      activeVoiceLine = null;
+      activeVoiceLineUntil = 0;
+      if ('speechSynthesis' in window) {
+        try { window.speechSynthesis.cancel(); } catch (e) {}
+      }
+    }
+  } else if (key === 'effects') {
+    if (!settings.effects) particles.length = 0;
   }
 }
 
@@ -1819,6 +2086,7 @@ const VOICE_LINES = [
 ];
 
 function showVoiceLine() {
+  if (!settings.voiceLines) return;
   const line = VOICE_LINES[Math.floor(Math.random() * VOICE_LINES.length)];
   activeVoiceLine = line;
   activeVoiceLineUntil = performance.now() + 4200;
@@ -2017,7 +2285,7 @@ function startGame() {
   document.getElementById('winPanel').classList.remove('active');
   document.getElementById('gameScore').textContent = '0';
   updateEconomyUi();
-  toggleShop(false);
+  closeAllPanels();
   startGameMusic();
   if (animationId) cancelAnimationFrame(animationId);
   loop();
@@ -2435,13 +2703,15 @@ function drawCoin(coin) {
   const spinAngle = frameCount * style.spinSpeed;
   ctx.rotate(spinAngle);
 
-  const glow = ctx.createRadialGradient(0, 0, r * 0.5, 0, 0, r * 2.4);
-  glow.addColorStop(0, style.glow);
-  glow.addColorStop(1, 'rgba(0,0,0,0)');
-  ctx.fillStyle = glow;
-  ctx.beginPath();
-  ctx.arc(0, 0, r * 2.4, 0, Math.PI * 2);
-  ctx.fill();
+  if (settings.effects) {
+    const glow = ctx.createRadialGradient(0, 0, r * 0.5, 0, 0, r * 2.4);
+    glow.addColorStop(0, style.glow);
+    glow.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = glow;
+    ctx.beginPath();
+    ctx.arc(0, 0, r * 2.4, 0, Math.PI * 2);
+    ctx.fill();
+  }
 
   const coinGrad = ctx.createRadialGradient(-r * 0.35, -r * 0.45, 2, 0, 0, r);
   coinGrad.addColorStop(0, style.inner);
@@ -2482,13 +2752,15 @@ function drawYang(coin) {
   ctx.translate(coin.x, coin.y);
   ctx.rotate(Math.sin(frameCount * 0.06) * 0.18);
 
-  const glow = ctx.createRadialGradient(0, 0, r * 0.45, 0, 0, r * 2.2);
-  glow.addColorStop(0, 'rgba(240,208,128,0.38)');
-  glow.addColorStop(1, 'rgba(240,208,128,0)');
-  ctx.fillStyle = glow;
-  ctx.beginPath();
-  ctx.arc(0, 0, r * 2.2, 0, Math.PI * 2);
-  ctx.fill();
+  if (settings.effects) {
+    const glow = ctx.createRadialGradient(0, 0, r * 0.45, 0, 0, r * 2.2);
+    glow.addColorStop(0, 'rgba(240,208,128,0.38)');
+    glow.addColorStop(1, 'rgba(240,208,128,0)');
+    ctx.fillStyle = glow;
+    ctx.beginPath();
+    ctx.arc(0, 0, r * 2.2, 0, Math.PI * 2);
+    ctx.fill();
+  }
 
   const grad = ctx.createRadialGradient(-r * 0.3, -r * 0.4, 2, 0, 0, r);
   grad.addColorStop(0, '#fff2a8');
@@ -2609,14 +2881,16 @@ function drawPlayer() {
   // Glow halo
   const invincible = isInvincible();
   const protectedNow = hasActiveProtection();
-  const glowSize = protectedNow || hasShield ? player.r + 24 + Math.sin(frameCount * 0.25) * 5 : player.r + 12;
-  const glowGrad = ctx.createRadialGradient(0, 0, player.r - 4, 0, 0, glowSize);
-  glowGrad.addColorStop(0, protectedNow ? 'rgba(240,208,128,0.9)' : hasShield ? 'rgba(128,216,255,0.85)' : 'rgba(201,168,76,0.5)');
-  glowGrad.addColorStop(1, 'rgba(201,168,76,0)');
-  ctx.fillStyle = glowGrad;
-  ctx.beginPath();
-  ctx.arc(0, 0, glowSize, 0, Math.PI * 2);
-  ctx.fill();
+  if (settings.effects || protectedNow || hasShield) {
+    const glowSize = protectedNow || hasShield ? player.r + 24 + Math.sin(frameCount * 0.25) * 5 : player.r + 12;
+    const glowGrad = ctx.createRadialGradient(0, 0, player.r - 4, 0, 0, glowSize);
+    glowGrad.addColorStop(0, protectedNow ? 'rgba(240,208,128,0.9)' : hasShield ? 'rgba(128,216,255,0.85)' : 'rgba(201,168,76,0.5)');
+    glowGrad.addColorStop(1, 'rgba(201,168,76,0)');
+    ctx.fillStyle = glowGrad;
+    ctx.beginPath();
+    ctx.arc(0, 0, glowSize, 0, Math.PI * 2);
+    ctx.fill();
+  }
 
   // Draw the head image (circular clip using selected skin)
   {
@@ -2673,6 +2947,10 @@ function drawPlayer() {
 }
 
 function drawParticles() {
+  if (!settings.effects) {
+    if (particles.length) particles.length = 0;
+    return;
+  }
   for (const p of particles) {
     const alpha = Math.min(1, p.life / 30);
     ctx.fillStyle = p.color;
@@ -2772,7 +3050,7 @@ function openGame() {
   document.getElementById('gameBest').textContent = bestScore;
   document.getElementById('gameScore').textContent = '0';
   updateEconomyUi();
-  toggleShop(false);
+  closeAllPanels();
   document.getElementById('startPanel').classList.remove('hidden');
   document.getElementById('gameOverPanel').classList.remove('active');
   document.getElementById('winPanel').classList.remove('active');
@@ -2804,7 +3082,7 @@ function closeGame() {
   if ('speechSynthesis' in window) {
     try { window.speechSynthesis.cancel(); } catch (e) {}
   }
-  toggleShop(false);
+  closeAllPanels();
   document.getElementById('gameOverlay').classList.remove('active');
   if (animationId) {
     cancelAnimationFrame(animationId);
@@ -2838,10 +3116,13 @@ document.addEventListener('keydown', (e) => {
 function resizeCanvas() {
   const overlay = document.getElementById('gameOverlay');
   if (!overlay.classList.contains('active')) return;
+  const fs = !!(document.fullscreenElement || document.webkitFullscreenElement);
   const aspect = 1000 / 780;
-  const maxH = window.innerHeight - 240;
-  const maxW = Math.min(1200, window.innerWidth - 24);
-  // Fit canvas to whichever dimension is more constraining
+  const reservedV = fs ? 170 : 240;
+  const reservedH = fs ? 8 : 24;
+  const maxCap = fs ? 100000 : 1200;
+  const maxH = Math.max(200, window.innerHeight - reservedV);
+  const maxW = Math.max(280, Math.min(maxCap, window.innerWidth - reservedH));
   if (maxW / aspect <= maxH) {
     canvas.style.width = maxW + 'px';
     canvas.style.height = (maxW / aspect) + 'px';
@@ -2851,6 +3132,36 @@ function resizeCanvas() {
   }
 }
 window.addEventListener('resize', resizeCanvas);
+
+// ===== Fullscreen =====
+function isFullscreen() {
+  return !!(document.fullscreenElement || document.webkitFullscreenElement);
+}
+
+function toggleFullscreen() {
+  const overlay = document.getElementById('gameOverlay');
+  if (!overlay) return;
+  if (isFullscreen()) {
+    const exit = document.exitFullscreen || document.webkitExitFullscreen;
+    if (exit) exit.call(document);
+  } else {
+    const req = overlay.requestFullscreen || overlay.webkitRequestFullscreen;
+    if (req) {
+      const p = req.call(overlay);
+      if (p && typeof p.catch === 'function') p.catch(() => {});
+    }
+  }
+}
+
+function syncFullscreenButton() {
+  const btn = document.getElementById('fullscreenBtn');
+  if (!btn) return;
+  btn.textContent = isFullscreen() ? '⛶ Exit Fullscreen' : '⛶ Fullscreen';
+  resizeCanvas();
+}
+
+document.addEventListener('fullscreenchange', syncFullscreenButton);
+document.addEventListener('webkitfullscreenchange', syncFullscreenButton);
 
 </script>
 </body>
