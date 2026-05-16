@@ -1,4 +1,4 @@
-const ALL_PANEL_IDS = ['shopPanel', 'skinsPanel', 'achievementsPanel', 'cheatCodesPanel', 'settingsPanel', 'shellGamePanel'];
+const ALL_PANEL_IDS = ['shopPanel', 'skinsPanel', 'achievementsPanel', 'cheatCodesPanel', 'settingsPanel', 'shellGamePanel', 'heirloomPanel'];
 function closeOtherPanels(keepId) {
   for (const id of ALL_PANEL_IDS) {
     if (id === keepId) continue;
@@ -64,6 +64,20 @@ function toggleSettingsPanel(forceOpen) {
   closeOtherPanels('settingsPanel');
   panel.classList.toggle('active', open);
   if (open) renderSettingsPanel();
+}
+
+function toggleHeirloomPanel(forceOpen) {
+  const panel = document.getElementById('heirloomPanel');
+  if (!panel) return;
+  const open = typeof forceOpen === 'boolean' ? forceOpen : !panel.classList.contains('active');
+  if (open && gameState === 'playing') {
+    activeVoiceLine = t('panel.heirloomBlocked');
+    activeVoiceLineUntil = performance.now() + 2800;
+    return;
+  }
+  closeOtherPanels('heirloomPanel');
+  panel.classList.toggle('active', open);
+  if (open && typeof renderHeirloomPanel === 'function') renderHeirloomPanel();
 }
 
 function toggleShellGamePanel(forceOpen) {

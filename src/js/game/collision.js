@@ -22,8 +22,10 @@ function update() {
     if (p.yang && !p.yang.collected) p.yang.x -= speed;
     if (!p.passed && p.x + PIPE_WIDTH < player.x) {
       p.passed = true;
-      addScore(1);
-      if (gameState !== 'playing') return;
+      if (!p.destroyed) {
+        addScore(1);
+        if (gameState !== 'playing') return;
+      }
     }
   }
   pipes = pipes.filter(p => p.x + PIPE_WIDTH > 0);
@@ -92,9 +94,12 @@ function update() {
     player.vy = 0;
   }
 
+  if (typeof updateRockets === 'function') updateRockets();
+
   // Collision with pipes (use per-pipe gap)
   if (!protectedNow) {
     for (const p of pipes) {
+      if (p.destroyed) continue;
       if (player.x + player.r > p.x && player.x - player.r < p.x + PIPE_WIDTH) {
         if (player.y - player.r < p.gapTop || player.y + player.r > p.gapTop + p.gap) {
           if (hasShield) {

@@ -19,6 +19,10 @@ function handleKeyboardInput(e) {
 function handlePointerJump(e) {
   const overlay = document.getElementById('gameOverlay');
   if (!overlay.classList.contains('active')) return;
+  if (e.button !== undefined && e.button === 2) {
+    // Right click — rocket fire (handled separately on mousedown)
+    return;
+  }
   if (e.button !== undefined && e.button !== 0) return;
   if (isInteractiveInputTarget(e.target)) return;
   e.preventDefault();
@@ -27,8 +31,23 @@ function handlePointerJump(e) {
   jump();
 }
 
+function handleRocketFire(e) {
+  const overlay = document.getElementById('gameOverlay');
+  if (!overlay.classList.contains('active')) return;
+  if (e.button !== 2) return;
+  e.preventDefault();
+  e.stopPropagation();
+  if (gameState !== 'playing') return;
+  if (typeof isBlockingModalOpen === 'function' && isBlockingModalOpen()) return;
+  if (typeof fireRocket === 'function') fireRocket();
+}
+
 document.addEventListener('keydown', handleKeyboardInput);
 canvas.addEventListener('pointerdown', handlePointerJump, { passive: false });
+canvas.addEventListener('mousedown', handleRocketFire);
+canvas.addEventListener('contextmenu', (e) => {
+  if (gameState === 'playing') e.preventDefault();
+});
 
 // Escape key closes game
 document.addEventListener('keydown', (e) => {

@@ -10,6 +10,8 @@ function addScore(amount) {
   difficultyLevel = getDifficultyStep();
   if (score >= WIN_SCORE) unlockAchievement('survived_amazon');
 
+  if (typeof maybeRefreshRocketAmmoAtScore === 'function') maybeRefreshRocketAmmoAtScore();
+
   // HMM sound when crossing any new multiple of 10.
   if (Math.floor(score / 10) > Math.floor(before / 10) && score >= 10) {
     playHmm();

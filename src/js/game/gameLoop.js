@@ -44,6 +44,7 @@ function startGame() {
   shieldPhaseUntil = 0;
   activeVoiceLine = null;
   activeVoiceLineUntil = 0;
+  if (typeof resetRocketRunState === 'function') resetRocketRunState();
   unlockAchievement('first_run');
   checkAchievements();
   setNextVoiceLineScore();
@@ -335,12 +336,18 @@ function drawScore() {
 
 function draw() {
   drawBackground();
-  for (const p of pipes) drawPipe(p);
+  for (const p of pipes) {
+    if (p.destroyed) continue;
+    drawPipe(p);
+  }
   for (const p of pipes) drawCoin(p.coin);
   for (const p of pipes) drawYang(p.yang);
   drawParticles();
   drawPlayer();
+  if (typeof drawRocketLauncher === 'function') drawRocketLauncher();
+  if (typeof drawRockets === 'function') drawRockets();
   drawScore();
+  if (typeof drawRocketHud === 'function') drawRocketHud();
 }
 
 function loop() {

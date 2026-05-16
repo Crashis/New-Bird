@@ -36,7 +36,22 @@ function applyCheatCode(rawCode) {
     unlockAdminSkinFromCheat();
     return;
   }
+  if (code === 'hesoyam') {
+    applyHesoyamCheat();
+    return;
+  }
   showCheatStatus(t('cheats.unknown'), true);
+}
+
+function applyHesoyamCheat() {
+  addYangs(500);
+  wallets += 50;
+  saveEconomy();
+  updateEconomyUi();
+  showCheatStatus(t('cheat.hesoyam.status'));
+  if (typeof showUnlockToast === 'function') {
+    showUnlockToast(t('toast.hesoyam.title'), t('toast.hesoyam.subtitle'), 'upgrade');
+  }
 }
 
 function applyCheatCodeFromInput() {
