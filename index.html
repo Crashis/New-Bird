@@ -912,6 +912,196 @@
     opacity: 0.85;
   }
 
+  /* ===== ACHIEVEMENTS PANEL ===== */
+  .panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .panel-header h2 {
+    flex: 1;
+    margin-bottom: 0;
+  }
+
+  .panel-close-btn {
+    width: 2rem;
+    height: 2rem;
+    min-width: 2rem;
+    padding: 0;
+    line-height: 1;
+    font-size: 1.2rem;
+  }
+
+  .achievements-panel {
+    max-height: min(76vh, 620px);
+    overflow-y: auto;
+  }
+
+  .achievements-list {
+    display: grid;
+    gap: 0.7rem;
+    margin-top: 0.95rem;
+  }
+
+  .achievement-card {
+    border: 1px solid var(--dark-border);
+    background: rgba(255,255,255,0.025);
+    padding: 0.85rem 0.9rem;
+    border-radius: 4px;
+    transition: border-color 0.25s, box-shadow 0.25s, opacity 0.25s;
+  }
+
+  .achievement-card.unlocked {
+    border-color: var(--gold-dark);
+    background:
+      radial-gradient(ellipse at 100% 0%, rgba(201,168,76,0.14), transparent 58%),
+      rgba(255,255,255,0.035);
+    box-shadow: 0 0 22px rgba(201,168,76,0.2);
+  }
+
+  .achievement-card.locked {
+    opacity: 0.55;
+    filter: grayscale(0.35);
+  }
+
+  .achievement-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .achievement-title {
+    font-family: 'Cinzel Decorative', serif;
+    color: var(--gold-light);
+    font-size: 0.88rem;
+    letter-spacing: 0.08em;
+    line-height: 1.25;
+  }
+
+  .achievement-card.locked .achievement-title {
+    color: var(--text-light);
+  }
+
+  .achievement-description {
+    font-family: 'Lato', sans-serif;
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    line-height: 1.45;
+    margin-bottom: 0.45rem;
+  }
+
+  .achievement-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .achievement-reward {
+    font-family: 'Cinzel', serif;
+    color: var(--gold);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+  }
+
+  .achievement-badge {
+    border: 1px solid var(--dark-border);
+    color: var(--text-muted);
+    font-family: 'Lato', sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 0.22rem 0.5rem;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .achievement-card.unlocked .achievement-badge {
+    border-color: var(--gold-dark);
+    color: var(--gold-light);
+    background: rgba(201,168,76,0.1);
+    box-shadow: 0 0 14px rgba(201,168,76,0.22);
+  }
+
+  /* ===== UNLOCK / REWARD TOAST ===== */
+  .unlock-toast {
+    position: fixed;
+    left: 50%;
+    top: clamp(1rem, 8vh, 4.5rem);
+    width: min(460px, calc(100vw - 2rem));
+    transform: translateX(-50%) translateY(-12px) scale(0.96);
+    pointer-events: none;
+    z-index: 260;
+    opacity: 0;
+    visibility: hidden;
+    padding: 0.9rem 1.2rem;
+    border: 1px solid var(--gold-dark);
+    border-radius: 4px;
+    text-align: center;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.18), transparent 65%),
+      rgba(10,8,6,0.96);
+    box-shadow:
+      0 0 35px rgba(201,168,76,0.34),
+      inset 0 0 22px rgba(0,0,0,0.55);
+  }
+
+  .unlock-toast.show {
+    visibility: visible;
+    animation: unlockToastInOut 2.6s ease both;
+  }
+
+  .unlock-toast.upgrade { border-color: var(--gold); box-shadow: 0 0 36px rgba(201,168,76,0.4), inset 0 0 22px rgba(0,0,0,0.55); }
+  .unlock-toast.skin { border-color: #d6a8ff; box-shadow: 0 0 36px rgba(164,92,220,0.34), inset 0 0 22px rgba(0,0,0,0.55); }
+  .unlock-toast.wallet { border-color: #f0d080; box-shadow: 0 0 42px rgba(240,208,128,0.42), inset 0 0 22px rgba(0,0,0,0.55); }
+  .unlock-toast.achievement { border-color: #d13a2f; box-shadow: 0 0 42px rgba(209,58,47,0.4), inset 0 0 22px rgba(0,0,0,0.55); }
+
+  .unlock-toast.no-effects {
+    box-shadow: 0 0 12px rgba(0,0,0,0.45);
+  }
+
+  .unlock-toast.no-effects.show {
+    animation: unlockToastSimple 2.4s ease both;
+  }
+
+  .unlock-toast-title {
+    font-family: 'Cinzel Decorative', serif;
+    color: var(--gold-light);
+    font-size: clamp(0.95rem, 3.6vw, 1.25rem);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-shadow: 0 0 18px rgba(240,208,128,0.52);
+    line-height: 1.25;
+  }
+
+  .unlock-toast-subtitle {
+    margin-top: 0.28rem;
+    font-family: 'Lato', sans-serif;
+    color: var(--text-light);
+    font-size: 0.78rem;
+    line-height: 1.35;
+    letter-spacing: 0.06em;
+  }
+
+  @keyframes unlockToastInOut {
+    0% { opacity: 0; transform: translateX(-50%) translateY(-14px) scale(0.94); filter: brightness(0.85); }
+    12% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1.02); filter: brightness(1.25); }
+    20%, 78% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); filter: brightness(1); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-10px) scale(0.98); filter: brightness(0.9); }
+  }
+
+  @keyframes unlockToastSimple {
+    0% { opacity: 0; transform: translateX(-50%) translateY(-8px) scale(0.98); }
+    14%, 82% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-8px) scale(0.98); }
+  }
+
   /* ===== FULLSCREEN BUTTON ===== */
   .fullscreen-btn {
     position: absolute;
@@ -1092,6 +1282,7 @@
   .menu-actions .menu-btn:nth-child(3) { animation-delay: 0.65s; }
   .menu-actions .menu-btn:nth-child(4) { animation-delay: 0.75s; }
   .menu-actions .menu-btn:nth-child(5) { animation-delay: 0.85s; }
+  .menu-actions .menu-btn:nth-child(6) { animation-delay: 0.95s; }
 
   .menu-actions .menu-btn:hover {
     transform: translateY(-2px);
@@ -1290,6 +1481,10 @@
 <div class="game-overlay" id="gameOverlay">
   <!-- Optional background music: put a legally owned file named new-world-soundtrack.mp3 next to this HTML. -->
   <audio id="gameMusic" src="new-world-soundtrack.mp3" loop preload="auto"></audio>
+  <div id="unlockToast" class="unlock-toast hidden">
+    <div class="unlock-toast-title"></div>
+    <div class="unlock-toast-subtitle"></div>
+  </div>
   <button class="fullscreen-btn" id="fullscreenBtn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
   <div class="game-header">⚔️ Boj o Aeternum ⚔️</div>
   <div class="game-stats">
@@ -1317,6 +1512,7 @@
         <button class="game-btn primary menu-btn" id="startBtn" onclick="startGame()">⚔ Start</button>
         <button class="game-btn menu-btn" id="menuShopBtn" onclick="toggleShop()">🛒 Shop</button>
         <button class="game-btn menu-btn" id="menuSkinsBtn" onclick="toggleSkinsPanel()">🎭 Skiny</button>
+        <button class="game-btn menu-btn" id="menuAchievementsBtn" onclick="toggleAchievementsPanel()">🏆 Achievementy</button>
         <button class="game-btn menu-btn" id="menuSettingsBtn" onclick="toggleSettingsPanel()">⚙ Settings</button>
         <button class="game-btn menu-btn" id="menuCheatBtn" onclick="toggleCheatCodesPanel()">⌨ Cheat Codes</button>
       </div>
@@ -1424,6 +1620,16 @@
       </div>
     </div>
 
+    <!-- Achievements panel -->
+    <div class="shop-panel achievements-panel" id="achievementsPanel">
+      <div class="panel-header">
+        <h2>🏆 Achievementy</h2>
+        <button class="game-btn panel-close-btn" id="closeAchievementsBtn" onclick="toggleAchievementsPanel(false)">×</button>
+      </div>
+      <div class="shop-subtitle">Sběratelské zářezy z Aeterna. Odměny se připíšou automaticky při odemčení.</div>
+      <div id="achievementsList" class="achievements-list"></div>
+    </div>
+
     <!-- Cheat Codes panel -->
     <div class="shop-panel" id="cheatCodesPanel" style="text-align:center;">
       <h2>⌨ Cheat Codes</h2>
@@ -1491,6 +1697,10 @@
     <div class="locked-feature">
       <button class="game-btn" onclick="toggleSkinsPanel()" title="Vybrat skin postavy">🎭 Skiny</button>
       <div class="shop-wip">Výběr postavy</div>
+    </div>
+    <div class="locked-feature">
+      <button class="game-btn" onclick="toggleAchievementsPanel()" title="Achievementy">🏆 Achievementy</button>
+      <div class="shop-wip">Odměny za postup</div>
     </div>
     <div class="locked-feature">
       <button class="game-btn" onclick="toggleCheatCodesPanel()" title="Cheat Codes">⌨ Cheat Codes</button>
@@ -1815,6 +2025,49 @@ const SKINS = [
   }
 ];
 
+const ACHIEVEMENT_REWARD_YANG = 10;
+const ACHIEVEMENT_STORAGE_KEY = 'nw_flappy_achievements';
+const IMMORTALITY_USES_KEY = 'nw_flappy_immortality_uses';
+const CRASHIS_CONFUSED_SKIN_ID = (SKINS.find(s => s.name === 'Crashis Confused') || {}).id || 'crashis-confused';
+const ACHIEVEMENTS = [
+  {
+    id: 'first_run',
+    title: 'První let',
+    description: 'Zahraj první run.',
+    rewardYang: ACHIEVEMENT_REWARD_YANG
+  },
+  {
+    id: 'survived_amazon',
+    title: 'Přežil jsem Amazon',
+    description: 'Dosáhni skóre 20.',
+    rewardYang: ACHIEVEMENT_REWARD_YANG
+  },
+  {
+    id: 'bezos_rich',
+    title: 'Bohatý jak Bezos',
+    description: 'Nasbírej 500 Yangů.',
+    rewardYang: ACHIEVEMENT_REWARD_YANG
+  },
+  {
+    id: 'immortal_mamrd',
+    title: 'Nesmrtelný mamrd',
+    description: 'Použij nesmrtelnost 10×.',
+    rewardYang: ACHIEVEMENT_REWARD_YANG
+  },
+  {
+    id: 'not_bug_feature',
+    title: 'Tohle nebyl bug, to byl feature',
+    description: 'Přežij náraz díky štítu.',
+    rewardYang: ACHIEVEMENT_REWARD_YANG
+  },
+  {
+    id: 'typicooo',
+    title: 'Typičooo',
+    description: 'Odemkni Crashis Confused.',
+    rewardYang: ACHIEVEMENT_REWARD_YANG
+  }
+];
+
 const skinImages = new Map();
 for (const skin of SKINS) {
   if (skin.src) {
@@ -1860,6 +2113,9 @@ let pipesSincePowerup = 0;
 let selectedSkinId = 'godias-zubaty';
 let currentSkinIndex = 0;
 let eventPhaseActive = false;
+let unlockedAchievements = {};
+let immortalityUses = 0;
+let unlockToastTimer = null;
 const EVENT_PHASE_TRIGGER_SCORE = 20;
 
 const settings = {
@@ -1888,6 +2144,11 @@ try {
   invincibilityLevel = Math.min(3, Math.max(0, parseInt(localStorage.getItem('nw_flappy_upgrade_invincibility') || '0', 10) || 0));
   doubleYangLevel = Math.min(2, Math.max(0, parseInt(localStorage.getItem('nw_flappy_upgrade_double_yang') || '0', 10) || 0));
   crownBonusLevel = Math.min(2, Math.max(0, parseInt(localStorage.getItem('nw_flappy_upgrade_crown_bonus') || '0', 10) || 0));
+} catch (e) {}
+
+unlockedAchievements = loadAchievements();
+try {
+  immortalityUses = Math.max(0, parseInt(localStorage.getItem(IMMORTALITY_USES_KEY) || '0', 10) || 0);
 } catch (e) {}
 
 try {
@@ -1922,6 +2183,136 @@ function saveEconomy() {
     localStorage.setItem('nw_flappy_upgrade_double_yang', String(doubleYangLevel));
     localStorage.setItem('nw_flappy_upgrade_crown_bonus', String(crownBonusLevel));
   } catch (e) {}
+}
+
+function loadAchievements() {
+  try {
+    const raw = localStorage.getItem(ACHIEVEMENT_STORAGE_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== 'object') return {};
+    const state = {};
+    for (const achievement of ACHIEVEMENTS) {
+      const entry = parsed[achievement.id];
+      if (entry === true) {
+        state[achievement.id] = {
+          unlocked: true,
+          rewardClaimed: true,
+          unlockedAt: Date.now()
+        };
+      } else if (entry && typeof entry === 'object' && entry.unlocked) {
+        state[achievement.id] = {
+          unlocked: true,
+          rewardClaimed: entry.rewardClaimed !== false,
+          unlockedAt: Number(entry.unlockedAt) || Date.now()
+        };
+      }
+    }
+    return state;
+  } catch (e) {
+    return {};
+  }
+}
+
+function saveAchievements() {
+  try { localStorage.setItem(ACHIEVEMENT_STORAGE_KEY, JSON.stringify(unlockedAchievements)); } catch (e) {}
+}
+
+function saveAchievementCounters() {
+  try { localStorage.setItem(IMMORTALITY_USES_KEY, String(immortalityUses)); } catch (e) {}
+}
+
+function getAchievement(id) {
+  return ACHIEVEMENTS.find(a => a.id === id) || null;
+}
+
+function isAchievementUnlocked(id) {
+  return !!(unlockedAchievements[id] && unlockedAchievements[id].unlocked);
+}
+
+function addYangs(amount, checkAfter = true) {
+  if (!Number.isFinite(amount) || amount <= 0) return;
+  yang += Math.floor(amount);
+  saveEconomy();
+  updateEconomyUi();
+  if (checkAfter) checkAchievements();
+}
+
+function unlockAchievement(id) {
+  const achievement = getAchievement(id);
+  if (!achievement || isAchievementUnlocked(id)) return false;
+
+  unlockedAchievements[id] = {
+    unlocked: true,
+    rewardClaimed: false,
+    unlockedAt: Date.now()
+  };
+
+  const reward = Number(achievement.rewardYang) || 0;
+  if (reward > 0 && !unlockedAchievements[id].rewardClaimed) {
+    yang += reward;
+    unlockedAchievements[id].rewardClaimed = true;
+    saveEconomy();
+  }
+  saveAchievements();
+
+  updateEconomyUi();
+  renderAchievementsPanel();
+  showUnlockToast('ACHIEVEMENT ODEMČEN', achievement.title, 'achievement');
+  checkAchievements();
+  return true;
+}
+
+function checkAchievements() {
+  if (score >= WIN_SCORE) unlockAchievement('survived_amazon');
+  if (yang >= 500) unlockAchievement('bezos_rich');
+  if (immortalityUses >= 10) unlockAchievement('immortal_mamrd');
+}
+
+function renderAchievementsPanel() {
+  const list = document.getElementById('achievementsList');
+  if (!list) return;
+  list.innerHTML = ACHIEVEMENTS.map(achievement => {
+    const unlocked = isAchievementUnlocked(achievement.id);
+    const reward = Number(achievement.rewardYang) || 0;
+    return `
+      <div class="achievement-card ${unlocked ? 'unlocked' : 'locked'}">
+        <div class="achievement-top">
+          <div class="achievement-title">${achievement.title}</div>
+          <div class="achievement-badge">${unlocked ? 'Splněno' : 'Zamčeno'}</div>
+        </div>
+        <div class="achievement-description">${achievement.description}</div>
+        <div class="achievement-bottom">
+          <div class="achievement-reward">+${reward} Yangů</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function showUnlockToast(title, subtitle, type = 'default') {
+  const toast = document.getElementById('unlockToast');
+  if (!toast) return;
+  const titleEl = toast.querySelector('.unlock-toast-title');
+  const subtitleEl = toast.querySelector('.unlock-toast-subtitle');
+  if (titleEl) titleEl.textContent = title || '';
+  if (subtitleEl) subtitleEl.textContent = subtitle || '';
+
+  const types = ['default', 'upgrade', 'skin', 'wallet', 'achievement'];
+  toast.classList.remove('hidden', 'show', 'default', 'upgrade', 'skin', 'wallet', 'achievement', 'no-effects');
+  toast.classList.add(types.includes(type) ? type : 'default');
+  if (!settings.effects) toast.classList.add('no-effects');
+  if (unlockToastTimer) {
+    clearTimeout(unlockToastTimer);
+    unlockToastTimer = null;
+  }
+  void toast.offsetWidth;
+  toast.classList.add('show');
+  unlockToastTimer = setTimeout(() => {
+    toast.classList.remove('show');
+    toast.classList.add('hidden');
+    unlockToastTimer = null;
+  }, settings.effects ? 2600 : 2400);
 }
 
 function updateEconomyUi() {
@@ -2028,7 +2419,16 @@ function selectCurrentSkin() {
   const skin = SKINS[currentSkinIndex];
   if (!skin || !skin.unlocked) return;
   setSelectedSkin(skin.id);
+  if (skin.id === CRASHIS_CONFUSED_SKIN_ID) unlockAchievement('typicooo');
+  // TODO: If skins become purchasable later, call handleSkinUnlocked(skin)
+  // only in the successful purchase/unlock branch, not when opening this panel.
   renderSkinsPanel();
+}
+
+function handleSkinUnlocked(skin) {
+  if (!skin) return;
+  showUnlockToast('SKIN ODEMČEN', 'Teď už aspoň vypadáš draze.', 'skin');
+  if (skin.id === CRASHIS_CONFUSED_SKIN_ID) unlockAchievement('typicooo');
 }
 
 function renderSkinsPanel() {
@@ -2070,7 +2470,7 @@ function renderSkinsPanel() {
   }
 }
 
-const ALL_PANEL_IDS = ['shopPanel', 'skinsPanel', 'cheatCodesPanel', 'settingsPanel'];
+const ALL_PANEL_IDS = ['shopPanel', 'skinsPanel', 'achievementsPanel', 'cheatCodesPanel', 'settingsPanel'];
 function closeOtherPanels(keepId) {
   for (const id of ALL_PANEL_IDS) {
     if (id === keepId) continue;
@@ -2108,6 +2508,20 @@ function toggleCheatCodesPanel(forceOpen) {
   }
   closeOtherPanels('cheatCodesPanel');
   panel.classList.toggle('active', open);
+}
+
+function toggleAchievementsPanel(forceOpen) {
+  const panel = document.getElementById('achievementsPanel');
+  if (!panel) return;
+  const open = typeof forceOpen === 'boolean' ? forceOpen : !panel.classList.contains('active');
+  if (open && gameState === 'playing') {
+    activeVoiceLine = 'Achievementy si prohlédneš až po přistání. Teď se padá profesionálně.';
+    activeVoiceLineUntil = performance.now() + 2800;
+    return;
+  }
+  closeOtherPanels('achievementsPanel');
+  panel.classList.toggle('active', open);
+  if (open) renderAchievementsPanel();
 }
 
 function toggleSettingsPanel(forceOpen) {
@@ -2169,9 +2583,11 @@ function applySettingSideEffects(key) {
 
 function spendYang(amount) {
   if (yang < amount) return false;
+  checkAchievements();
   yang -= amount;
   saveEconomy();
   updateEconomyUi();
+  checkAchievements();
   return true;
 }
 
@@ -2185,6 +2601,7 @@ function buyShieldStart() {
   saveEconomy();
   updateEconomyUi();
   showShopMessage('Shield Start koupen. Další run začne se štítem.');
+  showUnlockToast('UPGRADE ODEMČEN', 'Amazon účetní oddělení nesouhlasí.', 'upgrade');
 }
 
 function buyInvincibilityUpgrade() {
@@ -2197,6 +2614,7 @@ function buyInvincibilityUpgrade() {
   saveEconomy();
   updateEconomyUi();
   showShopMessage(`Nesmrtelnost prodloužena na ${(2 + invincibilityLevel * 0.5).toFixed(1)}s.`);
+  showUnlockToast('UPGRADE ODEMČEN', 'Amazon účetní oddělení nesouhlasí.', 'upgrade');
 }
 
 function buyDoubleYangUpgrade() {
@@ -2209,6 +2627,7 @@ function buyDoubleYangUpgrade() {
   saveEconomy();
   updateEconomyUi();
   showShopMessage(`Double Yang prodloužen na ${(getDoubleYangDuration() / 1000).toFixed(1)}s.`);
+  showUnlockToast('UPGRADE ODEMČEN', 'Amazon účetní oddělení nesouhlasí.', 'upgrade');
 }
 
 function buyCrownBonusUpgrade() {
@@ -2221,6 +2640,7 @@ function buyCrownBonusUpgrade() {
   saveEconomy();
   updateEconomyUi();
   showShopMessage(`Crown Bonus zvýšen na +${getCrownBonusValue()} skóre.`);
+  showUnlockToast('UPGRADE ODEMČEN', 'Amazon účetní oddělení nesouhlasí.', 'upgrade');
 }
 
 function getInvincibleDurationMs() {
@@ -2335,6 +2755,7 @@ function getNextPipeDelay() {
 function activateEventPhase() {
   if (eventPhaseActive) return;
   eventPhaseActive = true;
+  if (score >= EVENT_PHASE_TRIGGER_SCORE) unlockAchievement('survived_amazon');
 
   const overlay = document.getElementById('gameOverlay');
   if (overlay) overlay.classList.add('event-phase');
@@ -2451,6 +2872,7 @@ function addScore(amount) {
   const gameScoreEl = document.getElementById('gameScore');
   if (gameScoreEl) gameScoreEl.textContent = score;
   difficultyLevel = getDifficultyStep();
+  if (score >= WIN_SCORE) unlockAchievement('survived_amazon');
 
   // HMM sound when crossing any new multiple of 10.
   if (Math.floor(score / 10) > Math.floor(before / 10) && score >= 10) {
@@ -2564,6 +2986,7 @@ function awardShield() {
 
 function consumeShield(pipe, speed) {
   hasShield = false;
+  unlockAchievement('not_bug_feature');
   const remainingPipeDistance = Math.max(0, pipe.x + PIPE_WIDTH - (player.x - player.r));
   const framesToClearPipe = remainingPipeDistance / Math.max(0.1, speed);
   shieldPhaseUntil = performance.now() + Math.max(900, framesToClearPipe * 16.7 + 350);
@@ -2717,6 +3140,7 @@ function startGame() {
   shieldPhaseUntil = 0;
   activeVoiceLine = null;
   activeVoiceLineUntil = 0;
+  unlockAchievement('first_run');
   setNextVoiceLineScore();
   resetEventPhase();
   const overlayEl = document.getElementById('gameOverlay');
@@ -2764,6 +3188,7 @@ function winGame() {
     walletAwardedThisRun = true;
     wallets += 1;
     saveEconomy();
+    showUnlockToast('+1 Peněženka', 'První výplata z Aeterna.', 'wallet');
     activeVoiceLine = '+1 Peněženka za záchranu Aeterna';
     activeVoiceLineUntil = performance.now() + 3600;
   }
@@ -2872,6 +3297,9 @@ function applyPowerup(coin) {
   switch (type) {
     case 'invincibility': {
       invincibleUntil = performance.now() + getInvincibleDurationMs();
+      immortalityUses++;
+      saveAchievementCounters();
+      if (immortalityUses >= 10) unlockAchievement('immortal_mamrd');
       activeVoiceLine = `NESMRTELNOST ${(getInvincibleDurationMs() / 1000).toFixed(1)}s`;
       activeVoiceLineUntil = performance.now() + 2000;
       spawnPickupParticles(coin, '#f0d080', '#8a6a1f', 24);
@@ -2991,9 +3419,7 @@ function update() {
       coin.collected = true;
       const mult = isDoubleYangActive() ? 2 : 1;
       const earned = coin.value * mult;
-      yang += earned;
-      saveEconomy();
-      updateEconomyUi();
+      addYangs(earned);
       activeVoiceLine = mult > 1 ? `+${earned} Yangy (Double!)` : `+${earned} Yangy`;
       activeVoiceLineUntil = performance.now() + 1800;
       for (let i = 0; i < 18; i++) {
@@ -3530,6 +3956,7 @@ function openGame() {
   document.getElementById('gameBest').textContent = bestScore;
   document.getElementById('gameScore').textContent = '0';
   updateEconomyUi();
+  renderAchievementsPanel();
   closeAllPanels();
   document.getElementById('startPanel').classList.remove('hidden');
   document.getElementById('gameOverPanel').classList.remove('active');
