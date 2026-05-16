@@ -164,6 +164,8 @@ window.NWI18n = window.NWI18n || {};
       'settings.voiceLinesHint': 'Náhodné voice lines během hry',
       'settings.effects': 'Efekty',
       'settings.effectsHint': 'Glow, particles, flash',
+      'settings.mobileBoost': 'Mobil Boost',
+      'settings.mobileBoostHint': 'Oseká efekty pro plynulejší hraní na mobilu.',
       'settings.footer': 'Víc si toho nenastavíš ty mamrde',
       'settings.close': '✕ Zavřít',
 
@@ -396,6 +398,8 @@ window.NWI18n = window.NWI18n || {};
       'settings.voiceLinesHint': 'Random voice lines during gameplay',
       'settings.effects': 'Effects',
       'settings.effectsHint': 'Glow, particles, flash',
+      'settings.mobileBoost': 'Mobile Boost',
+      'settings.mobileBoostHint': 'Reduces effects for smoother mobile gameplay.',
       'settings.footer': "You can't configure anything else, you bastard",
       'settings.close': '✕ Close',
 

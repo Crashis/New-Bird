@@ -324,7 +324,9 @@
   }
 }
 
-@media (max-width: 768px) and (orientation: landscape), (max-height: 480px) and (orientation: landscape) {
+@media (max-width: 950px) and (orientation: landscape),
+       (max-height: 520px) and (orientation: landscape),
+       (orientation: landscape) and (pointer: coarse) {
   .rotate-hint {
     display: none;
   }
@@ -333,7 +335,7 @@
      Shrink the chrome aggressively so the canvas-wrap can stretch and resizeCanvas()
      has more vertical room to scale up. */
   .game-overlay {
-    padding: calc(0.25rem + env(safe-area-inset-top)) 0.25rem 0.25rem;
+    padding: calc(0.2rem + env(safe-area-inset-top)) 0.15rem 0.2rem;
     justify-content: flex-start;
     overflow: hidden;
   }
@@ -367,13 +369,17 @@
   }
 
   .game-canvas-wrap {
-    width: calc(100vw - 8px);
-    max-width: calc(100vw - 8px);
+    width: calc(100vw - 4px);
+    max-width: calc(100vw - 4px);
   }
 
   #gameCanvas {
-    max-width: calc(100vw - 8px);
-    max-height: calc(100svh - 70px);
+    width: 100%;
+    max-width: calc(100vw - 4px);
+    max-height: calc(100svh - 60px);
+    /* Allow visual stretching beyond original 1200x780 aspect in mobile landscape.
+       Internal physics is unchanged; this just fills more horizontal real estate. */
+    object-fit: fill;
   }
 
   .game-start-panel.main-menu {
@@ -442,4 +448,43 @@
   .settings-row {
     align-items: flex-start;
   }
+}
+
+/* ===== MOBILE BOOST: aggressive trimming of decorative effects =====
+   Triggered when user enables the Mobil Boost toggle (or on devices where it
+   auto-defaults). Keeps gameplay visuals — only strips heavy CSS chrome that
+   runs continuously and burns frames. */
+body.mobile-boost #gameCanvas {
+  box-shadow: none;
+}
+body.mobile-boost .game-canvas-wrap,
+body.mobile-boost .menu-card,
+body.mobile-boost .menu-panel,
+body.mobile-boost .shop-panel,
+body.mobile-boost .game-start-panel,
+body.mobile-boost .game-over-panel,
+body.mobile-boost .win-panel {
+  box-shadow: none;
+}
+body.mobile-boost .game-header {
+  text-shadow: none;
+}
+body.mobile-boost .fight-btn {
+  animation: none;
+  box-shadow: 0 0 8px rgba(139,26,26,0.3);
+}
+body.mobile-boost .fight-btn::before {
+  display: none;
+}
+body.mobile-boost * {
+  /* Kill any continuous backdrop-filter blur in boost mode — it's expensive. */
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+body.mobile-boost .unlock-toast,
+body.mobile-boost .new-record {
+  animation-duration: 0.6s !important;
+}
+body.mobile-boost .game-overlay {
+  animation: none;
 }

@@ -3,7 +3,8 @@ function renderSettingsPanel() {
     sfx: 'settingsSfxToggle',
     music: 'settingsMusicToggle',
     voiceLines: 'settingsVoiceToggle',
-    effects: 'settingsEffectsToggle'
+    effects: 'settingsEffectsToggle',
+    mobileBoost: 'settingsMobileBoostToggle'
   };
   for (const key of Object.keys(map)) {
     const el = document.getElementById(map[key]);
@@ -38,5 +39,12 @@ function applySettingSideEffects(key) {
     }
   } else if (key === 'effects') {
     if (!settings.effects) particles.length = 0;
+  } else if (key === 'mobileBoost') {
+    window.MOBILE_BOOST = settings.mobileBoost === true;
+    if (typeof window.NWUtils?.refreshPerfMobile === 'function') {
+      window.NWUtils.refreshPerfMobile();
+    }
+    document.body.classList.toggle('mobile-boost', window.MOBILE_BOOST);
+    if (window.MOBILE_BOOST) particles.length = 0;
   }
 }

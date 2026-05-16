@@ -43,18 +43,38 @@ function resizeCanvas() {
   if (!overlay.classList.contains('active')) return;
   const fs = !!(document.fullscreenElement || document.webkitFullscreenElement);
   const aspect = 1200 / 780;
-  const mobile = window.matchMedia('(max-width: 768px), (max-height: 480px) and (orientation: landscape)').matches;
+  const mobile = window.matchMedia('(max-width: 950px), (max-height: 520px) and (orientation: landscape)').matches;
   const landscape = window.matchMedia('(orientation: landscape)').matches;
-  // Mobile-landscape reserved vertical was 145 — too aggressive for short phone viewports,
-  // which forced the canvas into height-limited scaling and left the sides empty. Compact
-  // HUD (header+stats only, controls/bottom-buttons hidden in landscape CSS) needs ~70 px.
+  const coarse = (function () { try { return window.matchMedia('(pointer: coarse)').matches; } catch (e) { return false; } })();
+  const mobileLandscape = landscape && (mobile || coarse || window.innerHeight <= 520);
   const reservedV = fs ? (mobile ? 90 : 170) : (mobile ? (landscape ? 70 : 250) : 240);
   const reservedH = fs ? 8 : (mobile ? (landscape ? 8 : 12) : 24);
-  // In mobile landscape allow the canvas to scale beyond the 1200px desktop cap so it
-  // can actually fill the viewport on wide phones (e.g. 932 CSS px); desktop is unchanged.
   const maxCap = fs ? 100000 : (mobile && landscape ? 100000 : 1200);
   const maxH = Math.max(200, window.innerHeight - reservedV);
   const maxW = Math.max(280, Math.min(maxCap, window.innerWidth - reservedH));
+
+  // Mobile landscape: prioritize using the full viewport width even if it means
+  // breaking the 1200x780 aspect ratio. Internal physics still runs at 1200x780;
+  // CSS stretch is purely visual. Cap the horizontal stretch at 1.25x to avoid
+  // making the bird look comically squished on ultra-wide phones.
+  if (mobileLandscape) {
+    const targetW = maxW;
+    const fitH = targetW / aspect;
+    if (fitH <= maxH) {
+      // Width-limited fit — use full width, aspect preserved.
+      canvas.style.width = targetW + 'px';
+      canvas.style.height = fitH + 'px';
+    } else {
+      // Not enough vertical room: keep full width and let the canvas stretch
+      // vertically less than aspect would dictate (visual deformation accepted).
+      const stretchedH = maxH;
+      const stretchedW = Math.min(targetW, stretchedH * aspect * 1.25);
+      canvas.style.width = stretchedW + 'px';
+      canvas.style.height = stretchedH + 'px';
+    }
+    return;
+  }
+
   if (maxW / aspect <= maxH) {
     canvas.style.width = maxW + 'px';
     canvas.style.height = (maxW / aspect) + 'px';

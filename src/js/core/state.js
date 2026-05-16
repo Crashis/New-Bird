@@ -59,13 +59,17 @@ const settings = {
   sfx: true,
   music: true,
   voiceLines: true,
-  effects: true
+  effects: true,
+  // Default: ON for mobile / coarse-pointer devices, OFF on desktop.
+  // Overridden below if the user has previously set the toggle explicitly.
+  mobileBoost: !!(window.PERF_MOBILE_AUTO)
 };
 const SETTINGS_KEYS = {
   sfx: 'nw_flappy_settings_sfx',
   music: 'nw_flappy_settings_music',
   voiceLines: 'nw_flappy_settings_voice_lines',
-  effects: 'nw_flappy_settings_effects'
+  effects: 'nw_flappy_settings_effects',
+  mobileBoost: 'nw_flappy_settings_mobile_boost'
 };
 
 // Load best score from localStorage
@@ -107,6 +111,19 @@ try {
     else if (stored === '1') settings[key] = true;
   }
 } catch (e) {}
+
+// Sync Mobile Boost into the perf flag + body class for CSS-driven effect trimming.
+window.MOBILE_BOOST = settings.mobileBoost === true;
+if (typeof window.NWUtils?.refreshPerfMobile === 'function') {
+  window.NWUtils.refreshPerfMobile();
+}
+if (typeof document !== 'undefined' && document.body) {
+  document.body.classList.toggle('mobile-boost', window.MOBILE_BOOST);
+} else if (typeof document !== 'undefined') {
+  document.addEventListener('DOMContentLoaded', () => {
+    document.body.classList.toggle('mobile-boost', window.MOBILE_BOOST);
+  });
+}
 
 function saveSetting(key) {
   try { localStorage.setItem(SETTINGS_KEYS[key], settings[key] ? '1' : '0'); } catch (e) {}
