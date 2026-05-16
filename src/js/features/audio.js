@@ -42,6 +42,39 @@ const musicPlayers = {};
 let currentMusicKey = null;
 let audioUnlocked = false;
 
+function getMusicMaster() {
+  const v = (typeof settings !== 'undefined' && Number.isFinite(settings.musicVolume))
+    ? settings.musicVolume : 0.35;
+  return Math.max(0, Math.min(1, v));
+}
+
+function getTrackVolume(key) {
+  const base = MUSIC_VOLUMES[key] || 0.3;
+  // Master slider scales the per-track base so phase3 stays a bit louder than phase1.
+  // Slider default 0.35 = unchanged base volumes.
+  const scaled = base * (getMusicMaster() / 0.35);
+  return Math.max(0, Math.min(1, scaled));
+}
+
+function applyMusicVolume() {
+  for (const k of Object.keys(musicPlayers)) {
+    try { musicPlayers[k].volume = getTrackVolume(k); } catch (e) {}
+  }
+}
+
+function setMusicVolume(value) {
+  let v = Number(value);
+  if (!Number.isFinite(v)) v = 0.35;
+  v = Math.max(0, Math.min(1, v));
+  settings.musicVolume = v;
+  if (typeof saveMusicVolume === 'function') saveMusicVolume();
+  applyMusicVolume();
+}
+
+function getMusicVolume() {
+  return getMusicMaster();
+}
+
 function getMusicPlayer(key) {
   if (musicPlayers[key]) return musicPlayers[key];
   const src = MUSIC_TRACKS[key];
@@ -50,7 +83,7 @@ function getMusicPlayer(key) {
     const a = new Audio(src);
     a.loop = true;
     a.preload = 'auto';
-    a.volume = MUSIC_VOLUMES[key] || 0.3;
+    a.volume = getTrackVolume(key);
     // Prevent uncaught error spam if a file is missing or codec unsupported.
     a.addEventListener('error', () => {}, { once: false });
     musicPlayers[key] = a;
@@ -94,7 +127,7 @@ function playMusic(key) {
   currentMusicKey = key;
   const audio = getMusicPlayer(key);
   if (!audio) return;
-  try { audio.volume = MUSIC_VOLUMES[key] || 0.3; } catch (e) {}
+  try { audio.volume = getTrackVolume(key); } catch (e) {}
   try { audio.playbackRate = 1.0; } catch (e) {}
   // play() returns a promise that rejects on autoplay block — swallow silently.
   const p = audio.play();

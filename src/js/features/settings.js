@@ -10,6 +10,31 @@ function renderSettingsPanel() {
     const el = document.getElementById(map[key]);
     if (el) el.classList.toggle('on', !!settings[key]);
   }
+  renderMusicVolumeRow();
+}
+
+function renderMusicVolumeRow() {
+  const slider = document.getElementById('musicVolumeSlider');
+  const valueEl = document.getElementById('musicVolumeValue');
+  const pct = Math.round((settings.musicVolume || 0) * 100);
+  if (slider) {
+    if (!slider.dataset.bound) {
+      slider.dataset.bound = '1';
+      slider.addEventListener('input', onMusicVolumeSliderInput);
+      slider.addEventListener('change', onMusicVolumeSliderInput);
+    }
+    if (String(slider.value) !== String(pct)) slider.value = String(pct);
+  }
+  if (valueEl) valueEl.textContent = t('settings.musicVolume.value', { value: pct });
+}
+
+function onMusicVolumeSliderInput(e) {
+  const raw = parseInt(e.target.value, 10);
+  const pct = Number.isFinite(raw) ? Math.max(0, Math.min(100, raw)) : 35;
+  if (typeof setMusicVolume === 'function') setMusicVolume(pct / 100);
+  else settings.musicVolume = pct / 100;
+  const valueEl = document.getElementById('musicVolumeValue');
+  if (valueEl) valueEl.textContent = t('settings.musicVolume.value', { value: pct });
 }
 
 function toggleSetting(key) {

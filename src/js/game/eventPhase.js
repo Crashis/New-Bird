@@ -54,6 +54,7 @@ function resetEventPhase() {
   eventPhaseActive = false;
   currentGamePhase = GAME_PHASES.NORMAL;
   score60PhaseActivated = false;
+  dragonCoinAwardedThisRun = false;
   score100MilestoneShown = false;
   score500FinalShown = false;
   const overlay = document.getElementById('gameOverlay');
@@ -80,6 +81,14 @@ function activateFrostPhase() {
     overlay.classList.add('phase-frost');
   }
   showPhaseToast(t('milestone.frost.toast'));
+  // +1 Dračí mince za dosažení fáze 3 (score 60+), jen jednou za run.
+  if (!dragonCoinAwardedThisRun) {
+    dragonCoinAwardedThisRun = true;
+    if (typeof addDragonCoins === 'function') addDragonCoins(1);
+    if (typeof showUnlockToast === 'function') {
+      showUnlockToast(t('toast.dragonCoinPhase3.title'), t('toast.dragonCoinPhase3.subtitle'), 'upgrade');
+    }
+  }
   // Score 60 = visual change only — music key derives to phase2 so this is a no-op
   // if phase2 is already running, but ensures continuity in edge cases.
   applyEventPhaseMusic();

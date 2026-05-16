@@ -47,6 +47,7 @@ function applyHesoyamCheat() {
   addYangs(500);
   wallets += 50;
   saveEconomy();
+  if (typeof addDragonCoins === 'function') addDragonCoins(5);
   updateEconomyUi();
   showCheatStatus(t('cheat.hesoyam.status'));
   if (typeof showUnlockToast === 'function') {

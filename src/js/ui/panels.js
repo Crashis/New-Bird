@@ -91,4 +91,5 @@ function toggleShellGamePanel(forceOpen) {
   }
   closeOtherPanels('shellGamePanel');
   panel.classList.toggle('active', open);
+  if (open && typeof renderShellGamePanel === 'function') renderShellGamePanel();
 }

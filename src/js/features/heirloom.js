@@ -2,13 +2,26 @@
 // shared by every skin. Right-click fires; 1 ammo per run; refills once at score 100.
 
 const HEIRLOOM_ROCKET_KEY = 'heirloomRocketEquipped';
+const HEIRLOOM_ROCKET_PRICE = 10;
 
-let heirloomRocketEquipped = true;
+let heirloomRocketPurchased = false;
+try {
+  heirloomRocketPurchased = localStorage.getItem(HEIRLOOM_ROCKET_PURCHASED_KEY) === '1';
+} catch (e) {}
+
+let heirloomRocketEquipped = false;
 try {
   const stored = localStorage.getItem(HEIRLOOM_ROCKET_KEY);
   if (stored === '0') heirloomRocketEquipped = false;
   else if (stored === '1') heirloomRocketEquipped = true;
 } catch (e) {}
+// Unlock-gated: never report equipped until purchased, even if old localStorage said so.
+if (!heirloomRocketPurchased) heirloomRocketEquipped = false;
+
+function isHeirloomRocketPurchased() { return heirloomRocketPurchased === true; }
+function saveHeirloomRocketPurchased() {
+  try { localStorage.setItem(HEIRLOOM_ROCKET_PURCHASED_KEY, heirloomRocketPurchased ? '1' : '0'); } catch (e) {}
+}
 
 let rocketAmmo = 1;
 let rocketAmmoRestoredAt100 = false;
@@ -16,7 +29,7 @@ let rockets = [];
 let rocketExplosions = [];
 
 function isRocketLauncherEquipped() {
-  return heirloomRocketEquipped === true;
+  return heirloomRocketPurchased === true && heirloomRocketEquipped === true;
 }
 
 function saveHeirloomRocketEquipped() {
@@ -210,6 +223,7 @@ function drawRocketHud() {
 }
 
 function toggleHeirloomRocketEquipped() {
+  if (!heirloomRocketPurchased) return;
   heirloomRocketEquipped = !heirloomRocketEquipped;
   saveHeirloomRocketEquipped();
   if (!heirloomRocketEquipped) {
@@ -222,9 +236,48 @@ function toggleHeirloomRocketEquipped() {
   renderHeirloomPanel();
 }
 
+function purchaseHeirloomRocket() {
+  if (heirloomRocketPurchased) return;
+  if (typeof getDragonCoins !== 'function' || getDragonCoins() < HEIRLOOM_ROCKET_PRICE) {
+    const statusEl = document.getElementById('heirloomRocketMessage');
+    if (statusEl) statusEl.textContent = t('heirloom.rocket.notEnoughDragonCoins');
+    return;
+  }
+  if (!spendDragonCoins(HEIRLOOM_ROCKET_PRICE)) return;
+  heirloomRocketPurchased = true;
+  saveHeirloomRocketPurchased();
+  heirloomRocketEquipped = true;
+  saveHeirloomRocketEquipped();
+  if (typeof showUnlockToast === 'function') {
+    showUnlockToast(t('heirloom.rocket.unlocked'), t('heirloom.rocket.description'), 'upgrade');
+  }
+  const statusEl = document.getElementById('heirloomRocketMessage');
+  if (statusEl) statusEl.textContent = t('heirloom.rocket.unlocked');
+  renderHeirloomPanel();
+  updateEconomyUi();
+}
+
 function renderHeirloomPanel() {
   const statusEl = document.getElementById('heirloomRocketStatus');
   const btnEl = document.getElementById('toggleHeirloomRocketBtn');
+  const dcEl = document.getElementById('heirloomDragonCoins');
+  if (dcEl && typeof dragonCoins === 'number') dcEl.textContent = String(dragonCoins);
+  if (!heirloomRocketPurchased) {
+    if (statusEl) statusEl.textContent = t('heirloom.rocket.lockedStatus');
+    if (btnEl) {
+      btnEl.textContent = t('heirloom.rocket.unlock');
+      btnEl.onclick = purchaseHeirloomRocket;
+      const canAfford = typeof getDragonCoins === 'function' && getDragonCoins() >= HEIRLOOM_ROCKET_PRICE;
+      btnEl.disabled = !canAfford;
+      btnEl.classList.toggle('disabled', !canAfford);
+    }
+    return;
+  }
   if (statusEl) statusEl.textContent = heirloomRocketEquipped ? t('heirloom.rocket.equipped') : t('heirloom.rocket.unequipped');
-  if (btnEl) btnEl.textContent = heirloomRocketEquipped ? t('heirloom.rocket.unequipAction') : t('heirloom.rocket.equipAction');
+  if (btnEl) {
+    btnEl.textContent = heirloomRocketEquipped ? t('heirloom.rocket.unequipAction') : t('heirloom.rocket.equipAction');
+    btnEl.onclick = toggleHeirloomRocketEquipped;
+    btnEl.disabled = false;
+    btnEl.classList.remove('disabled');
+  }
 }

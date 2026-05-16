@@ -108,6 +108,7 @@
     <span><span data-i18n="hud.best">Rekord:</span> <strong id="gameBest">0</strong></span>
     <span><span data-i18n="hud.yang">Yangy:</span> <strong id="gameYang">0</strong></span>
     <span><span data-i18n="hud.wallets">Peněženky:</span> <strong id="gameWallets">0</strong></span>
+    <span><span data-i18n="hud.dragonCoins">Dračí mince:</span> <strong id="gameDragonCoins">0</strong></span>
   </div>
   <div id="rotateHint" class="rotate-hint" data-i18n="rotate.hint">Pro lepší hraní otoč mobil na šířku.</div>
 
@@ -285,6 +286,7 @@
         <button class="game-btn primary" id="applyCheatCodeBtn" onclick="applyCheatCodeFromInput()" data-i18n="cheats.apply">Použít</button>
         <p id="cheatCodeStatus" class="cheat-code-status"></p>
       </div>
+      <div class="settings-footer-quote" data-i18n="cheats.footer">Zadej cheat code a potvrď. Některé věci by se radši neměly testovat v produkci.</div>
       <div class="game-buttons" style="margin-top:0.6rem;">
         <button class="game-btn" onclick="toggleCheatCodesPanel(false)" data-i18n="cheats.close">✕ Zavřít</button>
       </div>
@@ -309,6 +311,17 @@
           <span class="hint" data-i18n="settings.musicHint">Background soundtrack</span>
         </div>
         <div class="toggle" id="settingsMusicToggle" onclick="toggleSetting('music')"></div>
+      </div>
+
+      <div class="settings-row settings-slider-row">
+        <div class="label-wrap">
+          <span class="label" data-i18n="settings.musicVolume.label">Hlasitost hudby</span>
+          <span class="hint" data-i18n="settings.musicVolume.hint">Celková hlasitost hudby (0–100 %).</span>
+        </div>
+        <div class="slider-wrap">
+          <input id="musicVolumeSlider" class="settings-slider" type="range" min="0" max="100" step="1" value="35">
+          <span id="musicVolumeValue" class="settings-slider-value">35 %</span>
+        </div>
       </div>
 
       <div class="settings-row">
@@ -354,10 +367,15 @@
         <div class="shop-item-title" data-i18n="heirloom.rocket.name">🚀 Raketomet</div>
         <div class="shop-item-desc" data-i18n="heirloom.rocket.description">Pravým tlačítkem vystřelíš raketu, která zničí první překážku před tebou.</div>
         <div class="shop-item-desc" data-i18n="heirloom.rocket.ammoInfo">1 náboj na run. Náboj se obnoví po dosažení 100 bodů.</div>
-        <div class="shop-item-bottom">
-          <span class="shop-level" id="heirloomRocketStatus">Vybaveno</span>
-          <button class="game-btn shop-buy-btn" id="toggleHeirloomRocketBtn" onclick="toggleHeirloomRocketEquipped()">Sundat</button>
+        <div class="shop-item-desc" data-i18n="heirloom.rocket.price">Cena: 10 Dračí mince</div>
+        <div class="shop-item-desc">
+          <span data-i18n="currency.dragonCoins">Dračí mince</span>: <strong id="heirloomDragonCoins">0</strong>
         </div>
+        <div class="shop-item-bottom">
+          <span class="shop-level" id="heirloomRocketStatus">Zamčeno</span>
+          <button class="game-btn shop-buy-btn" id="toggleHeirloomRocketBtn">Odemknout</button>
+        </div>
+        <div class="shop-message" id="heirloomRocketMessage"></div>
       </div>
 
       <div class="game-buttons" style="margin-top:0.6rem;">
@@ -366,10 +384,36 @@
     </div>
 
     <!-- Shell Game panel -->
-    <div class="shop-panel" id="shellGamePanel" style="text-align:center;">
+    <div class="shop-panel shell-game-panel" id="shellGamePanel" style="text-align:center;">
       <h2 data-i18n="shellGame.title">Skořápkář</h2>
-      <div class="shop-subtitle" data-i18n="shellGame.desc">Tahle podvodná atrakce je zatím ve vývoji.</div>
-      <div class="game-buttons" style="margin-top:1rem;">
+      <div class="shop-subtitle" data-i18n="shellGame.subtitle">Tři možnosti, jedna kapsa, nulová záruka férovosti.</div>
+
+      <div class="shell-game-bet-row">
+        <label for="shellGameBetInput" class="shell-game-label" data-i18n="shellGame.betLabel">Sázka v Yangách</label>
+        <input id="shellGameBetInput" type="number" min="1" step="1" class="shell-game-input" data-i18n-placeholder="shellGame.betPlaceholder" placeholder="Zadej sázku">
+        <button class="game-btn primary" id="shellGamePlaceBetBtn" onclick="startShellGameBet()" data-i18n="shellGame.placeBet">Vsadit</button>
+      </div>
+
+      <div class="shell-game-active">
+        <span data-i18n="shellGame.activeBet">Aktivní sázka</span>:
+        <strong id="shellGameActiveBet">0</strong>
+      </div>
+
+      <div class="shell-game-choices">
+        <button class="game-btn" id="shellGameRockBtn" onclick="playShellGameChoice('rock')" disabled data-i18n="shellGame.rock">Kámen</button>
+        <button class="game-btn" id="shellGameScissorsBtn" onclick="playShellGameChoice('scissors')" disabled data-i18n="shellGame.scissors">Nůžky</button>
+        <button class="game-btn" id="shellGamePaperBtn" onclick="playShellGameChoice('paper')" disabled data-i18n="shellGame.paper">Papír</button>
+      </div>
+
+      <div class="shell-game-result">
+        <div><span data-i18n="shellGame.yourChoice">Tvoje volba</span>: <strong id="shellGameYourChoice">—</strong></div>
+        <div><span data-i18n="shellGame.enemyChoice">Volba hry</span>: <strong id="shellGameEnemyChoice">—</strong></div>
+      </div>
+
+      <p id="shellGameStatus" class="shell-game-status"></p>
+
+      <div class="game-buttons" style="margin-top:0.6rem; justify-content:center;">
+        <button class="game-btn" id="shellGameNewBetBtn" onclick="resetShellGameRound()" data-i18n="shellGame.newBet">Nová sázka</button>
         <button class="game-btn" id="closeShellGameBtn" onclick="toggleShellGamePanel(false)" data-i18n="shellGame.close">✕ Zavřít</button>
       </div>
     </div>

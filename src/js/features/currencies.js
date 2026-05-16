@@ -1,12 +1,16 @@
 function updateEconomyUi() {
   const gameYang = document.getElementById('gameYang');
   const gameWallets = document.getElementById('gameWallets');
+  const gameDragonCoins = document.getElementById('gameDragonCoins');
   const shopYang = document.getElementById('shopYang');
   const shopWallets = document.getElementById('shopWallets');
   if (gameYang) gameYang.textContent = yang;
   if (gameWallets) gameWallets.textContent = wallets;
+  if (gameDragonCoins) gameDragonCoins.textContent = (typeof dragonCoins === 'number') ? dragonCoins : 0;
   if (shopYang) shopYang.textContent = yang;
   if (shopWallets) shopWallets.textContent = wallets;
+  if (typeof renderShellGamePanel === 'function') renderShellGamePanel();
+  if (typeof renderHeirloomPanel === 'function') renderHeirloomPanel();
 
   const shieldLevel = document.getElementById('shieldStartLevel');
   const shieldBtn = document.getElementById('buyShieldStartBtn');

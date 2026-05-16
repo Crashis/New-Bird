@@ -40,6 +40,77 @@
   .toggle.on { background: rgba(201,168,76,0.22); border-color: var(--gold-dark); }
   .toggle.on::after { left: 26px; background: var(--gold-light); }
 
+  .settings-slider-row .slider-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+  }
+  .settings-slider {
+    width: 140px;
+    accent-color: var(--gold-dark, #c9a84c);
+    cursor: pointer;
+  }
+  .settings-slider-value {
+    color: var(--gold-light);
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    min-width: 3.2rem;
+    text-align: right;
+  }
+
+  .shell-game-bet-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+    margin: 0.8rem 0;
+    flex-wrap: wrap;
+  }
+  .shell-game-input {
+    width: 110px;
+    padding: 0.4rem 0.6rem;
+    background: var(--dark-card, #1a1208);
+    border: 1px solid var(--dark-border, #3a2e1a);
+    color: var(--gold-light, #f0d080);
+    border-radius: 4px;
+    font-family: 'Cinzel', serif;
+  }
+  .shell-game-active {
+    margin: 0.4rem 0;
+    color: var(--gold-light);
+    font-family: 'Cinzel', serif;
+    letter-spacing: 0.1em;
+  }
+  .shell-game-choices {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 0.6rem 0;
+  }
+  .shell-game-result {
+    margin: 0.5rem 0;
+    color: var(--text-light);
+    font-family: 'Lato', sans-serif;
+    font-size: 0.85rem;
+  }
+  .shell-game-status {
+    min-height: 1.3em;
+    margin: 0.4rem 0;
+    color: var(--gold-light);
+    font-family: 'Cinzel', serif;
+    letter-spacing: 0.08em;
+  }
+  .shell-game-status.win { color: #80f0c0; }
+  .shell-game-status.lose { color: #ff8a8a; }
+  .shell-game-status.draw { color: #80c8ff; }
+
+  @media (max-width: 600px) {
+    .settings-slider { width: 110px; }
+    .shell-game-input { width: 80px; }
+  }
+
   .settings-footer-quote {
     margin-top: 0.9rem;
     padding-top: 0.7rem;

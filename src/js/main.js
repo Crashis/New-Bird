@@ -17,6 +17,7 @@ const scriptChunks = [
   "./src/js/features/cheatCodes.js",
   "./src/js/features/shop.js",
   "./src/js/features/heirloom.js",
+  "./src/js/features/shellGame.js",
   "./src/js/game/eventPhase.js",
   "./src/js/game/score.js",
   "./src/js/game/obstacles.js",
@@ -44,3 +45,5 @@ for (const chunk of scriptChunks) {
 
 window.NWI18n?.initI18n?.();
 window.NWCheatCodes?.initCheatCodes?.();
+if (typeof initShellGameDefaults === 'function') initShellGameDefaults();
+if (typeof updateEconomyUi === 'function') updateEconomyUi();
