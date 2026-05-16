@@ -130,9 +130,18 @@ window.NWI18n = window.NWI18n || {};
 
       // Cheat codes panel
       'cheats.title': '⌨ Cheat Codes',
-      'cheats.subtitle': 'Tady jednou budou skryté zkratky pro otrlé hráče.',
+      'cheats.subtitle': 'Zadej tajný kód a uvidíme, co Aeternum dovolí.',
       'cheats.wip': 'Cheat Codes — Work in progress',
       'cheats.close': '✕ Zavřít',
+      'cheats.placeholder': 'Zadej cheat code...',
+      'cheats.apply': 'Použít',
+      'cheats.unknown': 'Neznámý cheat code.',
+      'cheats.adminUnlocked': 'Admin skin odemčen.',
+      'cheats.adminAlready': 'Admin skin už je odemčený.',
+      'cheats.adminToastTitle': 'ADMIN SKIN ODEMČEN',
+      'cheats.adminToastSub': 'Debug bohové ti dali nesmrtelnost.',
+      'skins.lockedCheat': '🔒 Odemkneš cheatem',
+      'skins.lockedCheatBtn': 'Zamčeno',
 
       // Settings panel
       'settings.title': '⚙ Settings',
@@ -320,9 +329,18 @@ window.NWI18n = window.NWI18n || {};
 
       // Cheat codes panel
       'cheats.title': '⌨ Cheat Codes',
-      'cheats.subtitle': 'Hidden shortcuts for hardened players will be here someday.',
+      'cheats.subtitle': 'Type a secret code and see what Aeternum allows.',
       'cheats.wip': 'Cheat Codes — Work in progress',
       'cheats.close': '✕ Close',
+      'cheats.placeholder': 'Enter cheat code...',
+      'cheats.apply': 'Apply',
+      'cheats.unknown': 'Unknown cheat code.',
+      'cheats.adminUnlocked': 'Admin skin unlocked.',
+      'cheats.adminAlready': 'Admin skin is already unlocked.',
+      'cheats.adminToastTitle': 'ADMIN SKIN UNLOCKED',
+      'cheats.adminToastSub': 'The debug gods granted you immortality.',
+      'skins.lockedCheat': '🔒 Unlock via cheat code',
+      'skins.lockedCheatBtn': 'Locked',
 
       // Settings panel
       'settings.title': '⚙ Settings',
@@ -405,6 +423,7 @@ window.NWI18n = window.NWI18n || {};
       'skleny-hydratovany': { name: 'Skleny Hydratovaný',    desc: 'Dvě deci vody, jedna deci kódu.' },
       'sklenar-holoprd':    { name: 'Sklenář Holoprd',       desc: 'Legenda říká, že tenhle skin dropnul z produkce.' },
       'vseho-s-mirou':      { name: 'Všeho s Mírou',         desc: 'Amazon mu dovolil jeden respawn. Použil ho na nákup LEGO.', buff: 'Má LEGO Barad-dûr.', debuff: 'Nemá webkameru.' },
+      'admin':              { name: 'Admin',                 desc: 'Testovací skin pro bohy debugování.',            effect: 'Nesmrtelnost po celou dobu runu.' },
     },
     en: {
       'godias-zubaty':      { name: 'Godias Toothed',        desc: "The original New World hero. His toothy grin haunts Amazon employees in their dreams." },
@@ -421,6 +440,7 @@ window.NWI18n = window.NWI18n || {};
       'skleny-hydratovany': { name: 'Skleny Hydrated',       desc: 'Two decis of water, one deci of code.' },
       'sklenar-holoprd':    { name: 'Sklenář Holoprd',       desc: 'Legend says this skin dropped from production.' },
       'vseho-s-mirou':      { name: 'Všeho s Mírou',         desc: 'Amazon gave him one respawn. He used it to buy LEGO.', buff: 'Has LEGO Barad-dûr.', debuff: "Doesn't have a webcam." },
+      'admin':              { name: 'Admin',                 desc: 'Testing skin for debug gods.',                   effect: 'Immortality for the entire run.' },
     }
   };
 
@@ -627,6 +647,11 @@ window.NWI18n = window.NWI18n || {};
     const i18nEls = document.querySelectorAll('[data-i18n]');
     for (let i = 0; i < i18nEls.length; i++) {
       i18nEls[i].textContent = t(i18nEls[i].getAttribute('data-i18n'));
+    }
+    // data-i18n-placeholder → placeholder attribute
+    const phEls = document.querySelectorAll('[data-i18n-placeholder]');
+    for (let i = 0; i < phEls.length; i++) {
+      phEls[i].setAttribute('placeholder', t(phEls[i].getAttribute('data-i18n-placeholder')));
     }
     // data-i18n-html → innerHTML (only static trusted content)
     const htmlEls = document.querySelectorAll('[data-i18n-html]');

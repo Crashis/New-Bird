@@ -147,3 +147,36 @@
   /* Hide redundant bottom row only while the main menu is showing */
   .game-overlay.menu-open > .game-buttons { display: none; }
   .game-overlay.menu-open .game-controls { opacity: 0.45; }
+
+  /* ===== CHEAT CODES PANEL ===== */
+  .cheat-content {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.55rem;
+    margin: 1rem auto 0.4rem;
+    max-width: 320px;
+  }
+  .cheat-input {
+    width: 100%;
+    padding: 0.55rem 0.8rem;
+    background: #1a1510;
+    border: 1px solid var(--gold-dark, #6a5326);
+    border-radius: 4px;
+    color: var(--gold-light, #f0d080);
+    font-family: 'Lato', sans-serif;
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+    text-align: center;
+    outline: none;
+  }
+  .cheat-input:focus { border-color: var(--gold-light, #f0d080); box-shadow: 0 0 8px rgba(240,208,128,0.3); }
+  .cheat-code-status {
+    min-height: 1.2rem;
+    margin: 0.2rem 0 0;
+    font-family: 'Lato', sans-serif;
+    font-size: 0.78rem;
+    color: var(--gold-light, #f0d080);
+    letter-spacing: 0.05em;
+  }
+  .cheat-code-status.error { color: var(--red-accent, #d13a2f); }

@@ -57,6 +57,7 @@ function selectCurrentSkin() {
 function tryBuyCurrentSkin() {
   const skin = SKINS[currentSkinIndex];
   if (!skin || skin.unlocked) return;
+  if (skin.unlockMethod === 'cheat') return;
   const price = skin.priceWallets || 0;
   if (wallets < price) {
     activeVoiceLine = t('skins.notEnoughMsg', { price });
@@ -182,6 +183,15 @@ function renderSkinsPanel() {
 
   const price = skin.priceWallets || 0;
   if (!skin.unlocked) {
+    if (skin.unlockMethod === 'cheat') {
+      if (statusEl) statusEl.textContent = t('skins.lockedCheat');
+      if (selectBtn) {
+        selectBtn.textContent = t('skins.lockedCheatBtn');
+        selectBtn.disabled = true;
+        selectBtn.classList.add('disabled');
+      }
+      return;
+    }
     const canAfford = wallets >= price;
     if (statusEl) statusEl.textContent = t('skins.locked', { price });
     if (selectBtn) {

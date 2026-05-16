@@ -240,9 +240,11 @@
     <!-- Cheat Codes panel -->
     <div class="shop-panel" id="cheatCodesPanel" style="text-align:center;">
       <h2 data-i18n="cheats.title">⌨ Cheat Codes</h2>
-      <div class="shop-subtitle" data-i18n="cheats.subtitle">Tady jednou budou skryté zkratky pro otrlé hráče.</div>
-      <div style="margin:1.5rem 0; font-family:'Cinzel Decorative',serif; color:var(--gold-light); font-size:1.05rem; letter-spacing:0.14em;" data-i18n="cheats.wip">
-        Cheat Codes — Work in progress
+      <div class="shop-subtitle" data-i18n="cheats.subtitle">Zadej tajný kód a uvidíme, co Aeternum dovolí.</div>
+      <div class="cheat-content">
+        <input id="cheatCodeInput" class="cheat-input" type="text" autocomplete="off" spellcheck="false" data-i18n-placeholder="cheats.placeholder" placeholder="Zadej cheat code...">
+        <button class="game-btn primary" id="applyCheatCodeBtn" onclick="applyCheatCodeFromInput()" data-i18n="cheats.apply">Použít</button>
+        <p id="cheatCodeStatus" class="cheat-code-status"></p>
       </div>
       <div class="game-buttons" style="margin-top:0.6rem;">
         <button class="game-btn" onclick="toggleCheatCodesPanel(false)" data-i18n="cheats.close">✕ Zavřít</button>

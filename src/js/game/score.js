@@ -44,11 +44,14 @@ function addScore(amount) {
   // event fáze nakopne sama. Hlavní trigger je v continueGame().
   maybeActivateEventPhase();
 }
+function hasAdminSkinInvincibility() {
+  return typeof ADMIN_SKIN_ID !== 'undefined' && selectedSkinId === ADMIN_SKIN_ID;
+}
 function isInvincible() {
   return performance.now() < invincibleUntil;
 }
 function hasActiveProtection() {
-  return isInvincible() || performance.now() < shieldPhaseUntil;
+  return isInvincible() || performance.now() < shieldPhaseUntil || hasAdminSkinInvincibility();
 }
 function setNextVoiceLineScore() {
   nextVoiceLineScore = score + 15 + Math.floor(Math.random() * 16);

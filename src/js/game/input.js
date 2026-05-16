@@ -3,6 +3,10 @@ function handleInput(e) {
   const overlay = document.getElementById('gameOverlay');
   if (!overlay.classList.contains('active')) return;
   if (e.type === 'keydown' && e.code !== 'Space') return;
+  if (e.type === 'keydown') {
+    const tag = (e.target && e.target.tagName) || '';
+    if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+  }
   e.preventDefault();
   if (gameState === 'over') return; // ignore inputs on game over (use buttons)
   jump();

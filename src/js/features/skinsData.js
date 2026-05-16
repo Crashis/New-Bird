@@ -11,6 +11,8 @@ const SKIN_PRICE_WALLETS = 2;
 const CRASHIS_SMAZENY_SKIN_ID = 'crashis-smazeny';
 const MARTIN_SLUNECNY_SKIN_ID = 'martin-slunecny';
 const MARTIN_SLUNECNY_BUFF_MS = 10000;
+const ADMIN_SKIN_ID = 'admin';
+const ADMIN_SKIN_PLACEHOLDER_SVG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><radialGradient id='g' cx='50%25' cy='50%25' r='60%25'><stop offset='0%25' stop-color='%232a1f12'/><stop offset='100%25' stop-color='%23120a05'/></radialGradient></defs><rect width='100' height='100' fill='url(%23g)'/><circle cx='50' cy='50' r='44' fill='none' stroke='%23c9a84c' stroke-width='2'/><text x='50' y='68' text-anchor='middle' font-family='Cinzel Decorative,Georgia,serif' font-size='60' fill='%23f0d080' font-weight='bold'>A</text></svg>";
 
 const SKINS = [
   {
@@ -118,6 +120,16 @@ const SKINS = [
     src: 'assets/skins/Sklenář-Holoprd.png',
     priceWallets: SKIN_PRICE_WALLETS,
     unlockedByDefault: false
+  },
+  {
+    id: ADMIN_SKIN_ID,
+    name: 'Admin',
+    desc: 'Testovací skin pro bohy debugování.',
+    src: ADMIN_SKIN_PLACEHOLDER_SVG,
+    priceWallets: 0,
+    unlockedByDefault: false,
+    unlockMethod: 'cheat',
+    effectDescription: 'Testovací efekt: nesmrtelnost po celou dobu runu.'
   },
   {
     id: 'vseho-s-mirou',
