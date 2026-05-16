@@ -39,6 +39,7 @@ function handleRocketFire(e) {
   e.stopPropagation();
   if (gameState !== 'playing') return;
   if (typeof isBlockingModalOpen === 'function' && isBlockingModalOpen()) return;
+  if (typeof isRocketLauncherEquipped === 'function' && !isRocketLauncherEquipped()) return;
   if (typeof fireRocket === 'function') fireRocket();
 }
 

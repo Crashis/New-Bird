@@ -214,11 +214,11 @@ window.NWI18n = window.NWI18n || {};
       'shellGame.placeBet': 'Vsadit',
       'shellGame.ready': 'Vsaď Yangy a vyber kámen, nůžky nebo papír.',
       'shellGame.chooseHand': 'Sázka přijata. Vyber kámen, nůžky nebo papír.',
-      'heirloom.rocket.price': 'Cena: 10 Dračí mince',
-      'heirloom.rocket.unlock': 'Odemknout za 10 Dračí mince',
-      'heirloom.rocket.notEnoughDragonCoins': 'Nemáš dost dračích mincí.',
+      'heirloom.rocket.price': 'Cena: 1000 Yangů + 10 Dračích mincí',
+      'heirloom.rocket.unlock': 'Odemknout za 1000 Yangů + 10 Dračích mincí',
+      'heirloom.rocket.notEnough': 'Nemáš dost Yangů nebo Dračích mincí.',
       'heirloom.rocket.unlocked': 'Raketomet odemčen.',
-      'heirloom.rocket.lockedStatus': 'Zamčeno (10 Dračí mince)',
+      'heirloom.rocket.locked': 'Zamčeno',
       'settings.close': '✕ Zavřít',
 
       // Shell Game panel
@@ -500,11 +500,11 @@ window.NWI18n = window.NWI18n || {};
       'shellGame.placeBet': 'Place bet',
       'shellGame.ready': 'Bet Yangs and pick rock, scissors or paper.',
       'shellGame.chooseHand': 'Bet placed. Pick rock, scissors or paper.',
-      'heirloom.rocket.price': 'Price: 10 Dragon Coins',
-      'heirloom.rocket.unlock': 'Unlock for 10 Dragon Coins',
-      'heirloom.rocket.notEnoughDragonCoins': 'Not enough Dragon Coins.',
+      'heirloom.rocket.price': 'Price: 1000 Yangs + 10 Dragon Coins',
+      'heirloom.rocket.unlock': 'Unlock for 1000 Yangs + 10 Dragon Coins',
+      'heirloom.rocket.notEnough': 'Not enough Yangs or Dragon Coins.',
       'heirloom.rocket.unlocked': 'Rocket Launcher unlocked.',
-      'heirloom.rocket.lockedStatus': 'Locked (10 Dragon Coins)',
+      'heirloom.rocket.locked': 'Locked',
       'settings.close': '✕ Close',
 
       // Bottom buttons

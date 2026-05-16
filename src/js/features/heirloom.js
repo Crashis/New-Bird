@@ -1,26 +1,43 @@
 // Heirloom — universal rocket launcher. Equippable from the Heirloom panel,
 // shared by every skin. Right-click fires; 1 ammo per run; refills once at score 100.
 
-const HEIRLOOM_ROCKET_KEY = 'heirloomRocketEquipped';
-const HEIRLOOM_ROCKET_PRICE = 10;
+const HEIRLOOM_ROCKET_EQUIPPED_KEY = 'heirloomRocketEquipped';
+const HEIRLOOM_ROCKET_KEY = HEIRLOOM_ROCKET_EQUIPPED_KEY;
+const HEIRLOOM_ROCKET_COST_YANGS = 1000;
+const HEIRLOOM_ROCKET_COST_DRAGON_COINS = 10;
 
 let heirloomRocketPurchased = false;
-try {
-  heirloomRocketPurchased = localStorage.getItem(HEIRLOOM_ROCKET_PURCHASED_KEY) === '1';
-} catch (e) {}
-
 let heirloomRocketEquipped = false;
-try {
-  const stored = localStorage.getItem(HEIRLOOM_ROCKET_KEY);
-  if (stored === '0') heirloomRocketEquipped = false;
-  else if (stored === '1') heirloomRocketEquipped = true;
-} catch (e) {}
-// Unlock-gated: never report equipped until purchased, even if old localStorage said so.
-if (!heirloomRocketPurchased) heirloomRocketEquipped = false;
+
+function loadBool(key, fallback) {
+  try {
+    const stored = localStorage.getItem(key);
+    if (stored === null) return fallback;
+    if (stored === '1' || stored === 'true') return true;
+    if (stored === '0' || stored === 'false') return false;
+  } catch (e) {}
+  return fallback;
+}
+
+function loadHeirloomState() {
+  heirloomRocketPurchased = loadBool(HEIRLOOM_ROCKET_PURCHASED_KEY, false);
+  heirloomRocketEquipped = loadBool(HEIRLOOM_ROCKET_KEY, false);
+  // Unlock-gated migration: old test storage could have equipped=1 without purchase.
+  if (!heirloomRocketPurchased && heirloomRocketEquipped) {
+    heirloomRocketEquipped = false;
+    saveHeirloomRocketEquipped();
+  }
+}
 
 function isHeirloomRocketPurchased() { return heirloomRocketPurchased === true; }
+function isRocketLauncherPurchased() { return isHeirloomRocketPurchased(); }
 function saveHeirloomRocketPurchased() {
   try { localStorage.setItem(HEIRLOOM_ROCKET_PURCHASED_KEY, heirloomRocketPurchased ? '1' : '0'); } catch (e) {}
+}
+
+function saveHeirloomState() {
+  saveHeirloomRocketPurchased();
+  saveHeirloomRocketEquipped();
 }
 
 let rocketAmmo = 1;
@@ -35,6 +52,8 @@ function isRocketLauncherEquipped() {
 function saveHeirloomRocketEquipped() {
   try { localStorage.setItem(HEIRLOOM_ROCKET_KEY, heirloomRocketEquipped ? '1' : '0'); } catch (e) {}
 }
+
+loadHeirloomState();
 
 function resetRocketRunState() {
   rocketAmmo = isRocketLauncherEquipped() ? 1 : 0;
@@ -223,7 +242,7 @@ function drawRocketHud() {
 }
 
 function toggleHeirloomRocketEquipped() {
-  if (!heirloomRocketPurchased) return;
+  if (!isRocketLauncherPurchased()) return;
   heirloomRocketEquipped = !heirloomRocketEquipped;
   saveHeirloomRocketEquipped();
   if (!heirloomRocketEquipped) {
@@ -236,23 +255,51 @@ function toggleHeirloomRocketEquipped() {
   renderHeirloomPanel();
 }
 
+function showHeirloomRocketMessage(message) {
+  const statusEl = document.getElementById('heirloomRocketMessage');
+  if (statusEl) statusEl.textContent = message || '';
+}
+
+function getCurrentYangs() {
+  return (typeof yang === 'number') ? yang : 0;
+}
+
+function getCurrentDragonCoins() {
+  if (typeof getDragonCoins === 'function') return getDragonCoins();
+  return (typeof dragonCoins === 'number') ? dragonCoins : 0;
+}
+
+function canAffordHeirloomRocket() {
+  return getCurrentYangs() >= HEIRLOOM_ROCKET_COST_YANGS
+    && getCurrentDragonCoins() >= HEIRLOOM_ROCKET_COST_DRAGON_COINS;
+}
+
+function spendHeirloomRocketCost() {
+  if (!canAffordHeirloomRocket()) return false;
+  yang -= HEIRLOOM_ROCKET_COST_YANGS;
+  dragonCoins -= HEIRLOOM_ROCKET_COST_DRAGON_COINS;
+  if (typeof saveEconomy === 'function') saveEconomy();
+  if (typeof saveDragonCoins === 'function') saveDragonCoins();
+  return true;
+}
+
 function purchaseHeirloomRocket() {
   if (heirloomRocketPurchased) return;
-  if (typeof getDragonCoins !== 'function' || getDragonCoins() < HEIRLOOM_ROCKET_PRICE) {
-    const statusEl = document.getElementById('heirloomRocketMessage');
-    if (statusEl) statusEl.textContent = t('heirloom.rocket.notEnoughDragonCoins');
+  if (!canAffordHeirloomRocket()) {
+    showHeirloomRocketMessage(t('heirloom.rocket.notEnough'));
     return;
   }
-  if (!spendDragonCoins(HEIRLOOM_ROCKET_PRICE)) return;
+  if (!spendHeirloomRocketCost()) {
+    showHeirloomRocketMessage(t('heirloom.rocket.notEnough'));
+    return;
+  }
   heirloomRocketPurchased = true;
-  saveHeirloomRocketPurchased();
   heirloomRocketEquipped = true;
-  saveHeirloomRocketEquipped();
+  saveHeirloomState();
   if (typeof showUnlockToast === 'function') {
     showUnlockToast(t('heirloom.rocket.unlocked'), t('heirloom.rocket.description'), 'upgrade');
   }
-  const statusEl = document.getElementById('heirloomRocketMessage');
-  if (statusEl) statusEl.textContent = t('heirloom.rocket.unlocked');
+  showHeirloomRocketMessage(t('heirloom.rocket.unlocked'));
   renderHeirloomPanel();
   updateEconomyUi();
 }
@@ -260,22 +307,23 @@ function purchaseHeirloomRocket() {
 function renderHeirloomPanel() {
   const statusEl = document.getElementById('heirloomRocketStatus');
   const btnEl = document.getElementById('toggleHeirloomRocketBtn');
+  const yangEl = document.getElementById('heirloomYangs');
   const dcEl = document.getElementById('heirloomDragonCoins');
+  if (yangEl && typeof yang === 'number') yangEl.textContent = String(yang);
   if (dcEl && typeof dragonCoins === 'number') dcEl.textContent = String(dragonCoins);
-  if (!heirloomRocketPurchased) {
-    if (statusEl) statusEl.textContent = t('heirloom.rocket.lockedStatus');
+  if (!isRocketLauncherPurchased()) {
+    if (statusEl) statusEl.textContent = t('heirloom.rocket.locked');
     if (btnEl) {
       btnEl.textContent = t('heirloom.rocket.unlock');
       btnEl.onclick = purchaseHeirloomRocket;
-      const canAfford = typeof getDragonCoins === 'function' && getDragonCoins() >= HEIRLOOM_ROCKET_PRICE;
-      btnEl.disabled = !canAfford;
-      btnEl.classList.toggle('disabled', !canAfford);
+      btnEl.disabled = false;
+      btnEl.classList.toggle('disabled', !canAffordHeirloomRocket());
     }
     return;
   }
-  if (statusEl) statusEl.textContent = heirloomRocketEquipped ? t('heirloom.rocket.equipped') : t('heirloom.rocket.unequipped');
+  if (statusEl) statusEl.textContent = isRocketLauncherEquipped() ? t('heirloom.rocket.equipped') : t('heirloom.rocket.unequipped');
   if (btnEl) {
-    btnEl.textContent = heirloomRocketEquipped ? t('heirloom.rocket.unequipAction') : t('heirloom.rocket.equipAction');
+    btnEl.textContent = isRocketLauncherEquipped() ? t('heirloom.rocket.unequipAction') : t('heirloom.rocket.equipAction');
     btnEl.onclick = toggleHeirloomRocketEquipped;
     btnEl.disabled = false;
     btnEl.classList.remove('disabled');
