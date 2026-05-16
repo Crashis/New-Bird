@@ -953,6 +953,276 @@
     font-size: 1.1rem;
     padding: 0.5rem 1.1rem;
   }
+
+  /* ===== MAIN MENU (vylepšený start panel) ===== */
+  .game-start-panel.main-menu {
+    width: min(560px, calc(100% - 2rem));
+    max-width: 92vw;
+    padding: 1.8rem 2rem 1.6rem;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(139,26,26,0.18) 0%, transparent 65%),
+      radial-gradient(ellipse at 50% 100%, rgba(201,168,76,0.12) 0%, transparent 55%),
+      rgba(10,8,6,0.95);
+    border: 1px solid var(--gold-dark);
+    box-shadow:
+      0 0 60px rgba(201,168,76,0.35),
+      inset 0 0 40px rgba(0,0,0,0.55);
+    overflow: hidden;
+    z-index: 3;
+    animation: menuPanelIn 0.7s ease both;
+  }
+
+  .game-start-panel.main-menu::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(120deg, transparent 0%, rgba(201,168,76,0.04) 50%, transparent 100%);
+    background-size: 200% 200%;
+    animation: menuShimmer 9s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes menuPanelIn {
+    0% { opacity: 0; transform: translateY(20px) scale(0.96); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  @keyframes menuShimmer {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  .menu-kicker {
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    color: var(--text-muted);
+    font-size: 0.62rem;
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    animation: menuItemIn 0.7s ease 0.1s both;
+  }
+
+  .game-start-panel.main-menu .game-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-weight: 900;
+    color: var(--gold);
+    font-size: clamp(1.6rem, 4.4vw, 2.4rem);
+    letter-spacing: 0.16em;
+    line-height: 1.05;
+    margin: 0 0 0.4rem;
+    text-shadow:
+      0 0 22px rgba(240,208,128,0.55),
+      0 0 60px rgba(139,26,26,0.25);
+    animation: menuItemIn 0.7s ease 0.2s both, titleGlow 4s ease-in-out infinite 0.9s;
+  }
+
+  @keyframes titleGlow {
+    0%, 100% { text-shadow: 0 0 22px rgba(240,208,128,0.55), 0 0 60px rgba(139,26,26,0.25); }
+    50% { text-shadow: 0 0 34px rgba(240,208,128,0.85), 0 0 90px rgba(139,26,26,0.4); }
+  }
+
+  .game-start-panel.main-menu .menu-subtitle {
+    font-family: 'Cinzel', serif;
+    font-style: italic;
+    color: var(--gold-light);
+    font-size: 0.85rem;
+    letter-spacing: 0.14em;
+    margin: 0 0 1.1rem;
+    opacity: 0.9;
+    animation: menuItemIn 0.7s ease 0.3s both;
+  }
+
+  .currency-row {
+    display: flex;
+    justify-content: center;
+    gap: 0.7rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.15rem;
+    animation: menuItemIn 0.7s ease 0.4s both;
+  }
+
+  .currency-pill {
+    font-family: 'Cinzel', serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    color: var(--text-light);
+    background: rgba(201,168,76,0.06);
+    border: 1px solid var(--dark-border);
+    padding: 0.4rem 0.85rem;
+    border-radius: 999px;
+    box-shadow: inset 0 0 14px rgba(201,168,76,0.05);
+    animation: currencyPulse 3.4s ease-in-out infinite;
+  }
+
+  .currency-pill strong, .currency-pill span {
+    color: var(--gold-light);
+    font-weight: 600;
+    margin-left: 0.3rem;
+  }
+
+  @keyframes currencyPulse {
+    0%, 100% { box-shadow: inset 0 0 14px rgba(201,168,76,0.05), 0 0 0 rgba(201,168,76,0); }
+    50% { box-shadow: inset 0 0 18px rgba(201,168,76,0.12), 0 0 14px rgba(201,168,76,0.18); }
+  }
+
+  .menu-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.55rem;
+    margin-bottom: 1rem;
+  }
+
+  .menu-actions .menu-btn {
+    min-width: 9rem;
+    padding: 0.75rem 1.1rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.22em;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: menuItemIn 0.55s ease forwards;
+  }
+
+  .menu-actions .menu-btn:nth-child(1) { animation-delay: 0.45s; }
+  .menu-actions .menu-btn:nth-child(2) { animation-delay: 0.55s; }
+  .menu-actions .menu-btn:nth-child(3) { animation-delay: 0.65s; }
+  .menu-actions .menu-btn:nth-child(4) { animation-delay: 0.75s; }
+  .menu-actions .menu-btn:nth-child(5) { animation-delay: 0.85s; }
+
+  .menu-actions .menu-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(201,168,76,0.2);
+  }
+
+  .menu-actions .menu-btn::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(240,208,128,0.18), transparent);
+    transition: left 0.6s ease;
+    pointer-events: none;
+  }
+
+  .menu-actions .menu-btn:hover::after { left: 100%; }
+
+  .menu-quote {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 0.18em;
+    margin-top: 0.5rem;
+    animation: menuItemIn 0.7s ease 1s both;
+  }
+
+  @keyframes menuItemIn {
+    0% { opacity: 0; transform: translateY(12px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Hide redundant bottom row only while the main menu is showing */
+  .game-overlay.menu-open > .game-buttons { display: none; }
+  .game-overlay.menu-open .game-controls { opacity: 0.45; }
+
+  @media (max-width: 600px) {
+    .game-start-panel.main-menu { padding: 1.2rem 1rem 1rem; }
+    .menu-actions .menu-btn { min-width: 7rem; font-size: 0.7rem; padding: 0.6rem 0.8rem; }
+    .game-start-panel.main-menu .game-title { font-size: 1.5rem; letter-spacing: 0.1em; }
+  }
+
+  /* ===== EVENT PHASE (Fáze 2 — corrupted) ===== */
+  .game-overlay.event-phase {
+    background: rgba(20,4,4,0.97);
+  }
+  .game-overlay.event-phase .game-header {
+    color: #ff9a8a;
+    text-shadow: 0 0 22px rgba(180,30,30,0.7);
+    animation: eventHeaderPulse 2.2s ease-in-out infinite;
+  }
+  .game-overlay.event-phase #gameCanvas {
+    border-color: #6a1a1a;
+    box-shadow:
+      0 0 48px rgba(180,30,30,0.55),
+      inset 0 0 30px rgba(60,4,4,0.65);
+    animation: eventCanvasPulse 2.6s ease-in-out infinite;
+  }
+  .game-overlay.event-phase .game-stats span strong {
+    color: #ffb380;
+  }
+
+  @keyframes eventHeaderPulse {
+    0%, 100% { text-shadow: 0 0 18px rgba(180,30,30,0.6); }
+    50% { text-shadow: 0 0 32px rgba(220,40,40,0.95); }
+  }
+  @keyframes eventCanvasPulse {
+    0%, 100% { box-shadow: 0 0 48px rgba(180,30,30,0.45), inset 0 0 30px rgba(60,4,4,0.55); }
+    50% { box-shadow: 0 0 72px rgba(220,40,40,0.7), inset 0 0 36px rgba(80,4,4,0.7); }
+  }
+
+  /* Event phase activation toast */
+  .event-phase-toast {
+    position: absolute;
+    top: 38%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.85);
+    background: rgba(20,4,4,0.92);
+    border: 2px solid #8b1a1a;
+    color: #ffd0c0;
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(1.2rem, 3.6vw, 2.1rem);
+    letter-spacing: 0.28em;
+    padding: 0.9rem 1.6rem;
+    border-radius: 4px;
+    text-shadow: 0 0 22px rgba(255,80,60,0.8);
+    box-shadow: 0 0 50px rgba(180,30,30,0.7), inset 0 0 30px rgba(80,4,4,0.6);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 10;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .event-phase-toast.show {
+    animation: eventToast 1.9s ease forwards;
+  }
+  @keyframes eventToast {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.7); filter: blur(8px); }
+    25% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); filter: blur(0); }
+    75% { opacity: 1; transform: translate(-50%, -50%) scale(1); filter: blur(0); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(1.08); filter: blur(2px); }
+  }
+
+  /* Quick screen-flash on event activation (respects Effects toggle via JS) */
+  .event-phase-flash {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(255,40,40,0.35), rgba(80,4,4,0) 70%);
+    pointer-events: none;
+    z-index: 9;
+    opacity: 0;
+  }
+  .event-phase-flash.show { animation: eventFlash 0.9s ease forwards; }
+  @keyframes eventFlash {
+    0% { opacity: 0; }
+    20% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  /* Subtle shake when event phase activates */
+  .game-canvas-wrap.event-shake {
+    animation: eventShake 0.55s ease;
+  }
+  @keyframes eventShake {
+    0%, 100% { transform: translate(0, 0); }
+    15% { transform: translate(-6px, 3px); }
+    30% { transform: translate(5px, -4px); }
+    45% { transform: translate(-4px, 4px); }
+    60% { transform: translate(4px, -2px); }
+    75% { transform: translate(-2px, 2px); }
+  }
 </style>
 </head>
 <body>
@@ -1032,13 +1302,26 @@
   <div class="game-canvas-wrap">
     <canvas id="gameCanvas" width="1000" height="780">>>></canvas>
 
-    <!-- Start panel -->
-    <div class="game-start-panel" id="startPanel">
-      <h2>⚔️ Připraven, hrdino? ⚔️</h2>
-      <p>Proleť mezi Amazoními meči</p>
-      <p>a dokaž, že Aeternum žije.</p>
-      <p class="hint">Mezerník / Klik / Tap</p>
-      <p class="hint" style="margin-top:0.4rem;">▼ Začni hrát ▼</p>
+    <!-- Start panel / Main menu -->
+    <div class="game-start-panel main-menu" id="startPanel">
+      <div class="menu-kicker">Endless grind simulator</div>
+      <h2 class="game-title">BOJ O AETERNUM</h2>
+      <p class="menu-subtitle">Aeternum čeká. Amazon taky.</p>
+
+      <div class="currency-row">
+        <div class="currency-pill">Yangy: <span id="menuYang">0</span></div>
+        <div class="currency-pill">Peněženky: <span id="menuWallets">0</span></div>
+      </div>
+
+      <div class="menu-actions">
+        <button class="game-btn primary menu-btn" id="startBtn" onclick="startGame()">⚔ Start</button>
+        <button class="game-btn menu-btn" id="menuShopBtn" onclick="toggleShop()">🛒 Shop</button>
+        <button class="game-btn menu-btn" id="menuSkinsBtn" onclick="toggleSkinsPanel()">🎭 Skiny</button>
+        <button class="game-btn menu-btn" id="menuSettingsBtn" onclick="toggleSettingsPanel()">⚙ Settings</button>
+        <button class="game-btn menu-btn" id="menuCheatBtn" onclick="toggleCheatCodesPanel()">⌨ Cheat Codes</button>
+      </div>
+
+      <p class="hint menu-quote">Mezerník · Klik · Tap pro skok</p>
     </div>
 
     <!-- Game over panel -->
@@ -1393,15 +1676,36 @@ function startGameMusic() {
   const music = getGameMusic();
   if (!music) return;
   music.volume = MUSIC_VOLUME;
+  try { music.playbackRate = 1.0; } catch (e) {}
   music.play().catch(() => {
     // Browser may block audio until the next user gesture, or the mp3 file may be missing.
   });
+  // Event phase music tweaks take precedence (volume + playback rate).
+  applyEventPhaseMusic();
 }
 function stopGameMusic() {
   const music = getGameMusic();
   if (!music) return;
   music.pause();
   music.currentTime = 0;
+  try {
+    music.volume = MUSIC_VOLUME;
+    music.playbackRate = 1.0;
+  } catch (e) {}
+}
+function applyEventPhaseMusic() {
+  const music = getGameMusic();
+  if (!music) return;
+  if (!settings.music) return;
+  try {
+    if (eventPhaseActive) {
+      music.playbackRate = 1.08;
+      music.volume = Math.min(1, MUSIC_VOLUME * 1.35);
+    } else {
+      music.playbackRate = 1.0;
+      music.volume = MUSIC_VOLUME;
+    }
+  } catch (e) {}
 }
 
 function playHmm() {
@@ -1555,6 +1859,8 @@ let amazonNerfSpeedMult = 1.0;
 let pipesSincePowerup = 0;
 let selectedSkinId = 'godias-zubaty';
 let currentSkinIndex = 0;
+let eventPhaseActive = false;
+const EVENT_PHASE_TRIGGER_SCORE = 20;
 
 const settings = {
   sfx: true,
@@ -1623,10 +1929,14 @@ function updateEconomyUi() {
   const gameWallets = document.getElementById('gameWallets');
   const shopYang = document.getElementById('shopYang');
   const shopWallets = document.getElementById('shopWallets');
+  const menuYang = document.getElementById('menuYang');
+  const menuWallets = document.getElementById('menuWallets');
   if (gameYang) gameYang.textContent = yang;
   if (gameWallets) gameWallets.textContent = wallets;
   if (shopYang) shopYang.textContent = yang;
   if (shopWallets) shopWallets.textContent = wallets;
+  if (menuYang) menuYang.textContent = yang;
+  if (menuWallets) menuWallets.textContent = wallets;
 
   const shieldLevel = document.getElementById('shieldStartLevel');
   const shieldBtn = document.getElementById('buyShieldStartBtn');
@@ -2021,6 +2331,116 @@ function getNextPipeDelay() {
   return Math.max(80, Math.round(getPipeInterval() / mult));
 }
 
+// ===== EVENT PHASE (Fáze 2 — po score 20 v endless) =====
+function activateEventPhase() {
+  if (eventPhaseActive) return;
+  eventPhaseActive = true;
+
+  const overlay = document.getElementById('gameOverlay');
+  if (overlay) overlay.classList.add('event-phase');
+
+  applyEventPhaseMusic();
+
+  // Aktivační hláška (respektuje Voice toggle).
+  if (settings.voiceLines) {
+    activeVoiceLine = 'Fáze 2: už žádné slitování.';
+    activeVoiceLineUntil = performance.now() + 4200;
+    if ('speechSynthesis' in window) {
+      try {
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(activeVoiceLine);
+        utter.lang = 'cs-CZ';
+        utter.rate = 0.92;
+        utter.pitch = 0.55;
+        utter.volume = 0.55;
+        window.speechSynthesis.speak(utter);
+      } catch (e) {}
+    }
+  }
+
+  showEventPhaseToast();
+
+  if (settings.effects) {
+    triggerEventPhaseShake();
+    triggerEventPhaseFlash();
+    // Burst rudých částic pro pocit corrupted průlomu.
+    for (let i = 0; i < 36; i++) {
+      particles.push({
+        x: canvas.width * (0.2 + Math.random() * 0.6),
+        y: canvas.height * (0.15 + Math.random() * 0.55),
+        vx: (Math.random() - 0.5) * 7,
+        vy: (Math.random() - 0.5) * 7,
+        life: 55 + Math.random() * 35,
+        size: 2 + Math.random() * 3,
+        color: Math.random() > 0.5 ? '#b8302a' : '#5a0a0a'
+      });
+    }
+  }
+}
+
+function resetEventPhase() {
+  if (!eventPhaseActive) {
+    // Pojistka: odstraň class i tak, kdyby zůstala z dřívějška.
+    const overlay = document.getElementById('gameOverlay');
+    if (overlay) overlay.classList.remove('event-phase');
+    applyEventPhaseMusic();
+    return;
+  }
+  eventPhaseActive = false;
+  const overlay = document.getElementById('gameOverlay');
+  if (overlay) overlay.classList.remove('event-phase');
+  applyEventPhaseMusic();
+}
+
+function maybeActivateEventPhase() {
+  if (!eventPhaseActive && endlessMode && score >= EVENT_PHASE_TRIGGER_SCORE) {
+    activateEventPhase();
+  }
+}
+
+function showEventPhaseToast() {
+  const wrap = document.querySelector('.game-canvas-wrap');
+  if (!wrap) return;
+  let toast = document.getElementById('eventPhaseToast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'eventPhaseToast';
+    toast.className = 'event-phase-toast';
+    wrap.appendChild(toast);
+  }
+  toast.textContent = 'FÁZE 2 AKTIVOVÁNA';
+  toast.classList.remove('show');
+  // Force reflow so the animation re-triggers if activated repeatedly (debug).
+  void toast.offsetWidth;
+  toast.classList.add('show');
+  setTimeout(() => { toast.classList.remove('show'); }, 1900);
+}
+
+function triggerEventPhaseFlash() {
+  const wrap = document.querySelector('.game-canvas-wrap');
+  if (!wrap) return;
+  let flash = document.getElementById('eventPhaseFlash');
+  if (!flash) {
+    flash = document.createElement('div');
+    flash.id = 'eventPhaseFlash';
+    flash.className = 'event-phase-flash';
+    wrap.appendChild(flash);
+  }
+  flash.classList.remove('show');
+  void flash.offsetWidth;
+  flash.classList.add('show');
+  setTimeout(() => flash.classList.remove('show'), 900);
+}
+
+function triggerEventPhaseShake() {
+  const wrap = document.querySelector('.game-canvas-wrap');
+  if (!wrap) return;
+  wrap.classList.remove('event-shake');
+  void wrap.offsetWidth;
+  wrap.classList.add('event-shake');
+  setTimeout(() => wrap.classList.remove('event-shake'), 600);
+}
+
 // Centralised score increment so pipe-pass, Crown Bonus and Amazon double-score
 // all share the same win-trigger / particle / sound / voice-line logic.
 function addScore(amount) {
@@ -2061,6 +2481,10 @@ function addScore(amount) {
     awardShield();
     winGame();
   }
+
+  // Pojistka: pokud bychom někdy získali skóre >= 20 v endless módu bez aktivace,
+  // event fáze nakopne sama. Hlavní trigger je v continueGame().
+  maybeActivateEventPhase();
 }
 function isInvincible() {
   return performance.now() < invincibleUntil;
@@ -2085,9 +2509,23 @@ const VOICE_LINES = [
   "Tvůj kamarád by řekl, že tohle je skill issue."
 ];
 
+const EVENT_VOICE_LINES = [
+  "Teď už nejde o výhru. Teď přežíváš.",
+  "Aeternum se probouzí.",
+  "Amazon tě vidí.",
+  "Fáze 2: už žádné slitování.",
+  "Sloupy jsou corrupted. Ty brzo taky.",
+  "Server tě teď zná. A nemá tě rád.",
+  "Tohle není endless. Tohle je trest.",
+  "Bezos se směje. Slyšíš to?",
+  "Krev v gridu. Crash v kódu. Tvoje smrt na queue.",
+  "Aeternum krvácí. Ty taky budeš."
+];
+
 function showVoiceLine() {
   if (!settings.voiceLines) return;
-  const line = VOICE_LINES[Math.floor(Math.random() * VOICE_LINES.length)];
+  const pool = eventPhaseActive ? EVENT_VOICE_LINES : VOICE_LINES;
+  const line = pool[Math.floor(Math.random() * pool.length)];
   activeVoiceLine = line;
   activeVoiceLineUntil = performance.now() + 4200;
 
@@ -2280,6 +2718,9 @@ function startGame() {
   activeVoiceLine = null;
   activeVoiceLineUntil = 0;
   setNextVoiceLineScore();
+  resetEventPhase();
+  const overlayEl = document.getElementById('gameOverlay');
+  if (overlayEl) overlayEl.classList.remove('menu-open');
   document.getElementById('startPanel').classList.add('hidden');
   document.getElementById('gameOverPanel').classList.remove('active');
   document.getElementById('winPanel').classList.remove('active');
@@ -2368,6 +2809,8 @@ function continueGame() {
   // Re-center player & zero velocity for a clean restart
   player.vy = 0;
   document.getElementById('winPanel').classList.remove('active');
+  // Event fáze: hráč právě překročil 20 a pokračuje → aktivovat.
+  activateEventPhase();
   startGameMusic();
   loop();
 }
@@ -2606,13 +3049,26 @@ function update() {
 }
 
 function drawBackground() {
-  // Dark sky gradient (Aeternum night)
+  // Dark sky gradient (Aeternum night) — switches to corrupted red tones in event phase.
   const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
-  grad.addColorStop(0, '#1a1208');
-  grad.addColorStop(0.5, '#0f0a05');
-  grad.addColorStop(1, '#0a0806');
+  if (eventPhaseActive) {
+    grad.addColorStop(0, '#2c0a08');
+    grad.addColorStop(0.5, '#170504');
+    grad.addColorStop(1, '#0a0302');
+  } else {
+    grad.addColorStop(0, '#1a1208');
+    grad.addColorStop(0.5, '#0f0a05');
+    grad.addColorStop(1, '#0a0806');
+  }
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Lehký pulzující rudý overlay v event fázi (respektuje Effects toggle).
+  if (eventPhaseActive && settings.effects) {
+    const pulse = 0.07 + Math.sin(frameCount * 0.04) * 0.04;
+    ctx.fillStyle = `rgba(140, 20, 20, ${pulse})`;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
 
   // Distant mountains silhouette (parallax)
   const offset = (frameCount * 0.3) % canvas.width;
@@ -2796,18 +3252,39 @@ function drawPipe(pipe) {
 }
 
 function drawAmazonBlade(x, y, w, h, pointingDown) {
-  // Main blade body — dark metallic with gold trim
+  // V event fázi je celý blade tmavší, s tlumenějšími kovy a rudým glow.
+  const ev = eventPhaseActive;
+
+  // Red glow halo around the blade body (jemné, mimo Effects vypnuto).
+  if (ev && settings.effects) {
+    ctx.save();
+    ctx.shadowColor = 'rgba(200, 30, 30, 0.55)';
+    ctx.shadowBlur = 18;
+    ctx.fillStyle = 'rgba(40,0,0,0.85)';
+    ctx.fillRect(x - 1, y - 1, w + 2, h + 2);
+    ctx.restore();
+  }
+
+  // Main blade body — dark metallic with gold trim (or corrupted in event phase)
   const grad = ctx.createLinearGradient(x, 0, x + w, 0);
-  grad.addColorStop(0, '#2a1f10');
-  grad.addColorStop(0.3, '#5a4520');
-  grad.addColorStop(0.5, '#8a6a1f');
-  grad.addColorStop(0.7, '#5a4520');
-  grad.addColorStop(1, '#2a1f10');
+  if (ev) {
+    grad.addColorStop(0, '#180404');
+    grad.addColorStop(0.3, '#3a1010');
+    grad.addColorStop(0.5, '#5a1414');
+    grad.addColorStop(0.7, '#3a1010');
+    grad.addColorStop(1, '#180404');
+  } else {
+    grad.addColorStop(0, '#2a1f10');
+    grad.addColorStop(0.3, '#5a4520');
+    grad.addColorStop(0.5, '#8a6a1f');
+    grad.addColorStop(0.7, '#5a4520');
+    grad.addColorStop(1, '#2a1f10');
+  }
   ctx.fillStyle = grad;
   ctx.fillRect(x, y, w, h);
 
-  // Gold edges
-  ctx.fillStyle = '#c9a84c';
+  // Edges — gold normally, rust-red in event phase.
+  ctx.fillStyle = ev ? '#a82828' : '#c9a84c';
   ctx.fillRect(x, y, 2, h);
   ctx.fillRect(x + w - 2, y, 2, h);
 
@@ -2817,7 +3294,7 @@ function drawAmazonBlade(x, y, w, h, pointingDown) {
   ctx.strokeRect(x, y, w, h);
 
   // Decorative diamond pattern (New World style)
-  ctx.fillStyle = '#c9a84c';
+  ctx.fillStyle = ev ? '#c84040' : '#c9a84c';
   const diamondSpacing = 50;
   const startOffset = pointingDown ? h % diamondSpacing : 0;
   for (let dy = startOffset + 20; dy < h - 20; dy += diamondSpacing) {
@@ -3046,7 +3523,10 @@ function loop() {
 }
 
 function openGame() {
-  document.getElementById('gameOverlay').classList.add('active');
+  const overlayEl = document.getElementById('gameOverlay');
+  overlayEl.classList.add('active');
+  overlayEl.classList.add('menu-open');
+  resetEventPhase();
   document.getElementById('gameBest').textContent = bestScore;
   document.getElementById('gameScore').textContent = '0';
   updateEconomyUi();
@@ -3083,7 +3563,10 @@ function closeGame() {
     try { window.speechSynthesis.cancel(); } catch (e) {}
   }
   closeAllPanels();
-  document.getElementById('gameOverlay').classList.remove('active');
+  resetEventPhase();
+  const overlayEl = document.getElementById('gameOverlay');
+  overlayEl.classList.remove('active');
+  overlayEl.classList.remove('menu-open');
   if (animationId) {
     cancelAnimationFrame(animationId);
     animationId = null;
