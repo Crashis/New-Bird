@@ -24,9 +24,11 @@ function unlockAchievement(id) {
     unlockedAt: Date.now()
   };
 
-  const reward = Number(achievement.rewardYang) || 0;
-  if (reward > 0 && !unlockedAchievements[id].rewardClaimed) {
-    yang += reward;
+  const rewardYang = Number(achievement.rewardYang) || 0;
+  const rewardWallets = Number(achievement.rewardWallets) || 0;
+  if ((rewardYang > 0 || rewardWallets > 0) && !unlockedAchievements[id].rewardClaimed) {
+    if (rewardYang > 0) yang += rewardYang;
+    if (rewardWallets > 0) wallets += rewardWallets;
     unlockedAchievements[id].rewardClaimed = true;
     saveEconomy();
   }
@@ -39,10 +41,32 @@ function unlockAchievement(id) {
   return true;
 }
 
+function areAllRegularSkinsUnlocked() {
+  if (typeof SKINS === 'undefined') return false;
+  return SKINS
+    .filter(s => !s.excludeFromSkinAchievements)
+    .every(s => !!s.unlocked);
+}
+
+function checkSkinAchievements(unlockedSkinId) {
+  if (typeof MOUCHA_SKIN_ID !== 'undefined' && unlockedSkinId === MOUCHA_SKIN_ID) {
+    unlockAchievement('typicooo');
+  }
+  if (areAllRegularSkinsUnlocked()) {
+    unlockAchievement('unlock_all_regular_skins');
+  }
+}
+
 function checkAchievements() {
   if (score >= WIN_SCORE) unlockAchievement('survived_amazon');
   if (yang >= 500) unlockAchievement('bezos_rich');
   if (immortalityUses >= 10) unlockAchievement('immortal_mamrd');
+  if (typeof BEZOS_MILESTONE_SCORE !== 'undefined' && score >= BEZOS_MILESTONE_SCORE) {
+    unlockAchievement('hero_of_new_world');
+  }
+  if (areAllRegularSkinsUnlocked()) {
+    unlockAchievement('unlock_all_regular_skins');
+  }
 }
 
 function renderAchievementsPanel() {
@@ -50,9 +74,14 @@ function renderAchievementsPanel() {
   if (!list) return;
   list.innerHTML = ACHIEVEMENTS.map(achievement => {
     const unlocked = isAchievementUnlocked(achievement.id);
-    const reward = Number(achievement.rewardYang) || 0;
+    const rewardYang = Number(achievement.rewardYang) || 0;
+    const rewardWallets = Number(achievement.rewardWallets) || 0;
     const titleKey = 'ach.' + achievement.id + '.title';
     const descKey  = 'ach.' + achievement.id + '.desc';
+    const parts = [];
+    if (rewardYang > 0) parts.push(t('achievements.reward', { amount: rewardYang }));
+    if (rewardWallets > 0) parts.push(t('achievements.rewardWallets', { amount: rewardWallets }));
+    const rewardText = parts.join(' · ');
     return `
       <div class="achievement-card ${unlocked ? 'unlocked' : 'locked'}">
         <div class="achievement-top">
@@ -61,7 +90,7 @@ function renderAchievementsPanel() {
         </div>
         <div class="achievement-description">${t(descKey)}</div>
         <div class="achievement-bottom">
-          <div class="achievement-reward">${t('achievements.reward', { amount: reward })}</div>
+          <div class="achievement-reward">${rewardText}</div>
         </div>
       </div>
     `;

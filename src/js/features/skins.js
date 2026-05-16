@@ -50,7 +50,6 @@ function selectCurrentSkin() {
     return;
   }
   setSelectedSkin(skin.id);
-  if (skin.id === CRASHIS_CONFUSED_SKIN_ID) unlockAchievement('typicooo');
   renderSkinsPanel();
 }
 
@@ -79,7 +78,7 @@ function handleSkinUnlocked(skin) {
   const skinTrans = window.NWI18n ? window.NWI18n.getSkinTranslation(skin.id) : null;
   const displayName = skinTrans && skinTrans.name ? skinTrans.name : skin.name;
   showUnlockToast(t('toast.skinUnlocked'), t('skins.unlockedToast', { name: displayName }), 'skin');
-  if (skin.id === CRASHIS_CONFUSED_SKIN_ID) unlockAchievement('typicooo');
+  checkSkinAchievements(skin.id);
 }
 
 function isSelectedSkin(id) {

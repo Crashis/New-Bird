@@ -43,6 +43,7 @@ function startGame() {
   activeVoiceLine = null;
   activeVoiceLineUntil = 0;
   unlockAchievement('first_run');
+  checkAchievements();
   setNextVoiceLineScore();
   resetEventPhase();
   const overlayEl = document.getElementById('gameOverlay');

@@ -53,6 +53,9 @@ function addScore(amount) {
   if (before < BEZOS_MILESTONE_SCORE && score >= BEZOS_MILESTONE_SCORE && !score100MilestoneShown) {
     triggerBezosMilestone();
   }
+  if (score >= BEZOS_MILESTONE_SCORE) {
+    unlockAchievement('hero_of_new_world');
+  }
 
   // Score 500: final milestone — pauza + modal.
   if (before < FINAL_MILESTONE_SCORE && score >= FINAL_MILESTONE_SCORE && !score500FinalShown) {

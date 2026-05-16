@@ -114,6 +114,7 @@ window.NWI18n = window.NWI18n || {};
       'achievements.unlocked': 'Splněno',
       'achievements.locked': 'Zamčeno',
       'achievements.reward': '+{amount} Yangů',
+      'achievements.rewardWallets': '+{amount} Peněženek',
       'achievements.toast': 'ACHIEVEMENT ODEMČEN',
 
       'ach.first_run.title': 'První let',
@@ -127,7 +128,11 @@ window.NWI18n = window.NWI18n || {};
       'ach.not_bug_feature.title': 'Tohle nebyl bug, to byl feature',
       'ach.not_bug_feature.desc': 'Přežij náraz díky štítu.',
       'ach.typicooo.title': 'Typičooo',
-      'ach.typicooo.desc': 'Odemkni Crashis Confused.',
+      'ach.typicooo.desc': 'Odemkni skin Moucha.',
+      'ach.hero_of_new_world.title': 'Hrdina New Worldu',
+      'ach.hero_of_new_world.desc': 'Dosáhni 100 bodů a poraz bosse Bezose.',
+      'ach.unlock_all_regular_skins.title': 'Šatník Aeterna',
+      'ach.unlock_all_regular_skins.desc': 'Odemkni všechny běžné skiny.',
 
       // Cheat codes panel
       'cheats.title': '⌨ Cheat Codes',
@@ -327,6 +332,7 @@ window.NWI18n = window.NWI18n || {};
       'achievements.unlocked': 'Completed',
       'achievements.locked': 'Locked',
       'achievements.reward': '+{amount} Yangs',
+      'achievements.rewardWallets': '+{amount} Wallets',
       'achievements.toast': 'ACHIEVEMENT UNLOCKED',
 
       'ach.first_run.title': 'First Flight',
@@ -340,7 +346,11 @@ window.NWI18n = window.NWI18n || {};
       'ach.not_bug_feature.title': "That Wasn't a Bug, It Was a Feature",
       'ach.not_bug_feature.desc': 'Survive a crash thanks to a shield.',
       'ach.typicooo.title': 'Typičooo',
-      'ach.typicooo.desc': 'Unlock Crashis Confused.',
+      'ach.typicooo.desc': 'Unlock the Moucha skin.',
+      'ach.hero_of_new_world.title': 'Hero of New World',
+      'ach.hero_of_new_world.desc': 'Reach a score of 100 and defeat boss Bezos.',
+      'ach.unlock_all_regular_skins.title': 'Aeternum Wardrobe',
+      'ach.unlock_all_regular_skins.desc': 'Unlock all regular skins.',
 
       // Cheat codes panel
       'cheats.title': '⌨ Cheat Codes',
