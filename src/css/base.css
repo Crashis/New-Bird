@@ -40,3 +40,95 @@
     pointer-events: none;
     z-index: 0;
   }
+
+  /* Dark/gold scrollbar styling — applies to all scrollable UI panels */
+  .menu-panel,
+  .panel-content,
+  .achievements-panel,
+  .achievements-list,
+  .shop-panel,
+  .shop-list,
+  .skins-panel,
+  .skins-list,
+  .settings-panel,
+  .settings-list,
+  .cheat-content {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(212, 175, 55, 0.75) rgba(10, 7, 3, 0.75);
+  }
+
+  .menu-panel::-webkit-scrollbar,
+  .panel-content::-webkit-scrollbar,
+  .achievements-panel::-webkit-scrollbar,
+  .achievements-list::-webkit-scrollbar,
+  .shop-panel::-webkit-scrollbar,
+  .shop-list::-webkit-scrollbar,
+  .skins-panel::-webkit-scrollbar,
+  .skins-list::-webkit-scrollbar,
+  .settings-panel::-webkit-scrollbar,
+  .settings-list::-webkit-scrollbar,
+  .cheat-content::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  .menu-panel::-webkit-scrollbar-track,
+  .panel-content::-webkit-scrollbar-track,
+  .achievements-panel::-webkit-scrollbar-track,
+  .achievements-list::-webkit-scrollbar-track,
+  .shop-panel::-webkit-scrollbar-track,
+  .shop-list::-webkit-scrollbar-track,
+  .skins-panel::-webkit-scrollbar-track,
+  .skins-list::-webkit-scrollbar-track,
+  .settings-panel::-webkit-scrollbar-track,
+  .settings-list::-webkit-scrollbar-track,
+  .cheat-content::-webkit-scrollbar-track {
+    background: rgba(8, 6, 3, 0.85);
+    border-left: 1px solid rgba(212, 175, 55, 0.15);
+    border-radius: 999px;
+  }
+
+  .menu-panel::-webkit-scrollbar-thumb,
+  .panel-content::-webkit-scrollbar-thumb,
+  .achievements-panel::-webkit-scrollbar-thumb,
+  .achievements-list::-webkit-scrollbar-thumb,
+  .shop-panel::-webkit-scrollbar-thumb,
+  .shop-list::-webkit-scrollbar-thumb,
+  .skins-panel::-webkit-scrollbar-thumb,
+  .skins-list::-webkit-scrollbar-thumb,
+  .settings-panel::-webkit-scrollbar-thumb,
+  .settings-list::-webkit-scrollbar-thumb,
+  .cheat-content::-webkit-scrollbar-thumb {
+    background: linear-gradient(
+      180deg,
+      rgba(246, 208, 92, 0.95),
+      rgba(135, 92, 18, 0.95)
+    );
+    border-radius: 999px;
+    border: 2px solid rgba(8, 6, 3, 0.95);
+    box-shadow: 0 0 8px rgba(212, 175, 55, 0.35);
+  }
+
+  .menu-panel::-webkit-scrollbar-thumb:hover,
+  .panel-content::-webkit-scrollbar-thumb:hover,
+  .achievements-panel::-webkit-scrollbar-thumb:hover,
+  .achievements-list::-webkit-scrollbar-thumb:hover,
+  .shop-panel::-webkit-scrollbar-thumb:hover,
+  .shop-list::-webkit-scrollbar-thumb:hover,
+  .skins-panel::-webkit-scrollbar-thumb:hover,
+  .skins-list::-webkit-scrollbar-thumb:hover,
+  .settings-panel::-webkit-scrollbar-thumb:hover,
+  .settings-list::-webkit-scrollbar-thumb:hover,
+  .cheat-content::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(
+      180deg,
+      rgba(255, 225, 120, 1),
+      rgba(170, 115, 25, 1)
+    );
+    box-shadow: 0 0 12px rgba(246, 208, 92, 0.55);
+  }
+
+  .menu-panel::-webkit-scrollbar-corner,
+  .panel-content::-webkit-scrollbar-corner {
+    background: rgba(8, 6, 3, 0.85);
+  }

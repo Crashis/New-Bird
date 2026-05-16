@@ -367,14 +367,7 @@ function returnToMainMenu() {
 }
 
 function quitGameFromMainMenu() {
-  if (window.opener) {
-    window.close();
-  }
-  setTimeout(() => {
-    if (!window.closed) {
-      showUnlockToast(t('quit.tabClose'), t('quit.tabCloseMsg'), 'default');
-    }
-  }, 120);
+  closeGame();
 }
 
 function closeGame() {
