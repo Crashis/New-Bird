@@ -800,6 +800,67 @@
     .game-stats { gap: 1rem; font-size: 0.75rem; }
     .game-header { font-size: 1rem; }
   }
+
+  /* ===== SKINS PANEL ===== */
+  .skins-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.2rem;
+    margin: 0.8rem 0 0.6rem;
+  }
+
+  .skin-avatar-wrap {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid var(--gold-dark);
+    box-shadow: 0 0 22px rgba(201,168,76,0.35);
+    flex-shrink: 0;
+    background: #1a1510;
+  }
+
+  .skin-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .skin-name {
+    font-family: 'Cinzel Decorative', serif;
+    color: var(--gold-light);
+    font-size: 1rem;
+    letter-spacing: 0.12em;
+    text-align: center;
+    margin-bottom: 0.3rem;
+  }
+
+  .skin-desc {
+    font-family: 'Lato', sans-serif;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    text-align: center;
+    line-height: 1.4;
+    margin-bottom: 0.4rem;
+    font-style: italic;
+  }
+
+  .skin-status {
+    font-family: 'Lato', sans-serif;
+    font-size: 0.72rem;
+    text-align: center;
+    color: var(--red-accent);
+    min-height: 1.1rem;
+    margin-bottom: 0.2rem;
+    letter-spacing: 0.08em;
+  }
+
+  .skin-arrow {
+    font-size: 1.1rem;
+    padding: 0.5rem 1.1rem;
+  }
 </style>
 </head>
 <body>
@@ -963,6 +1024,29 @@
         <button class="game-btn" onclick="toggleShop(false)">✕ Zavřít shop</button>
       </div>
     </div>
+
+    <!-- Skins panel -->
+    <div class="shop-panel" id="skinsPanel" style="text-align:center;">
+      <h2>🎭 Výběr postavy</h2>
+      <div class="shop-subtitle">Vyber si skin pro svého hrdinu. Odemykej nové postavy hraním.</div>
+
+      <div class="skins-nav">
+        <button class="game-btn skin-arrow" onclick="previousSkin()">&#8592;</button>
+        <div class="skin-avatar-wrap">
+          <img class="skin-avatar" id="skinPreviewImg" src="" alt="skin preview">
+        </div>
+        <button class="game-btn skin-arrow" onclick="nextSkin()">&#8594;</button>
+      </div>
+
+      <div class="skin-name" id="skinPreviewName">Godias Zubatý</div>
+      <div class="skin-desc" id="skinPreviewDesc">Původní New World hrdina. Zubatý úsměv straší Amazonce ve snech.</div>
+      <div class="skin-status" id="skinPreviewStatus"></div>
+
+      <div class="game-buttons" style="margin-top:0.6rem;">
+        <button class="game-btn primary" id="skinSelectBtn" onclick="selectCurrentSkin()">Vybrat</button>
+        <button class="game-btn" onclick="toggleSkinsPanel(false)">✕ Zavřít</button>
+      </div>
+    </div>
   </div>
 
   <div class="game-controls">Mezerník · Klik · Tap pro skok</div>
@@ -973,8 +1057,8 @@
       <div class="shop-wip">Upgrady za Yangy</div>
     </div>
     <div class="locked-feature">
-      <button class="game-btn disabled" disabled title="Skiny budou doplněny později">🎭 Skiny</button>
-      <div class="shop-wip">Work in progress</div>
+      <button class="game-btn" onclick="toggleSkinsPanel()" title="Vybrat skin postavy">🎭 Skiny</button>
+      <div class="shop-wip">Výběr postavy</div>
     </div>
     <button class="game-btn" onclick="closeGame()">✕ Zavřít hru</button>
   </div>
@@ -1244,6 +1328,42 @@ const ctx = canvas.getContext('2d');
 const headImg = new Image();
 headImg.src = HEAD_B64;
 
+const SKINS = [
+  {
+    id: 'godias-zubaty',
+    name: 'Godias Zubatý',
+    desc: 'Původní New World hrdina. Zubatý úsměv straší Amazonce ve snech.',
+    src: null,
+    unlocked: true
+  },
+  {
+    id: 'saradyn-z-hoodu',
+    name: 'Saradyn z Hoodu',
+    desc: 'Záhadný lukostřelec z temných lesů. Střílí šípy, NE dotazy na zásoby.',
+    src: 'assets/skins/saradyn-z-hoodu.png',
+    unlocked: true
+  },
+  {
+    id: 'crashis-confused',
+    name: 'Crashis Confused',
+    desc: 'Nikdo neví, jak se sem dostal. Ani on sám. Přesto nějak přežívá.',
+    src: 'assets/skins/crashis-confused.png',
+    unlocked: true
+  }
+];
+
+const skinImages = new Map();
+for (const skin of SKINS) {
+  if (skin.src) {
+    const img = new Image();
+    img.onerror = () => { skinImages.set(skin.id, null); };
+    img.src = skin.src;
+    skinImages.set(skin.id, img);
+  } else {
+    skinImages.set(skin.id, headImg);
+  }
+}
+
 // Game state
 let gameState = 'idle'; // 'idle', 'playing', 'over'
 let player = { x: 160, y: 390, vy: 0, r: 38, rotation: 0 };
@@ -1274,6 +1394,8 @@ let doubleYangUntil = 0;
 let amazonNerfUntil = 0;
 let amazonNerfSpeedMult = 1.0;
 let pipesSincePowerup = 0;
+let selectedSkinId = 'godias-zubaty';
+let currentSkinIndex = 0;
 
 // Load best score from localStorage
 try {
@@ -1288,6 +1410,17 @@ try {
   invincibilityLevel = Math.min(3, Math.max(0, parseInt(localStorage.getItem('nw_flappy_upgrade_invincibility') || '0', 10) || 0));
   doubleYangLevel = Math.min(2, Math.max(0, parseInt(localStorage.getItem('nw_flappy_upgrade_double_yang') || '0', 10) || 0));
   crownBonusLevel = Math.min(2, Math.max(0, parseInt(localStorage.getItem('nw_flappy_upgrade_crown_bonus') || '0', 10) || 0));
+} catch (e) {}
+
+try {
+  const savedSkin = localStorage.getItem('nw_flappy_selected_skin');
+  if (savedSkin) {
+    const idx = SKINS.findIndex(s => s.id === savedSkin);
+    if (idx !== -1 && SKINS[idx].unlocked) {
+      selectedSkinId = savedSkin;
+      currentSkinIndex = idx;
+    }
+  }
 } catch (e) {}
 
 function saveEconomy() {
@@ -1353,6 +1486,92 @@ function showShopMessage(message) {
   if (el) el.textContent = message || '';
 }
 
+// ===== SKINS =====
+
+function getSelectedSkin() {
+  return SKINS.find(s => s.id === selectedSkinId) || SKINS[0];
+}
+
+function setSelectedSkin(id) {
+  selectedSkinId = id;
+  try { localStorage.setItem('nw_flappy_selected_skin', id); } catch (e) {}
+}
+
+function toggleSkinsPanel(forceOpen) {
+  const panel = document.getElementById('skinsPanel');
+  if (!panel) return;
+  const open = typeof forceOpen === 'boolean' ? forceOpen : !panel.classList.contains('active');
+  if (open && gameState === 'playing') {
+    activeVoiceLine = 'Skiny si vybereš až mimo aktivní let. Amazon módní přehlídku v letu neplatí.';
+    activeVoiceLineUntil = performance.now() + 2800;
+    return;
+  }
+  const shop = document.getElementById('shopPanel');
+  if (shop) shop.classList.remove('active');
+  panel.classList.toggle('active', open);
+  if (open) {
+    currentSkinIndex = SKINS.findIndex(s => s.id === selectedSkinId);
+    if (currentSkinIndex === -1) currentSkinIndex = 0;
+    renderSkinsPanel();
+  }
+}
+
+function nextSkin() {
+  currentSkinIndex = (currentSkinIndex + 1) % SKINS.length;
+  renderSkinsPanel();
+}
+
+function previousSkin() {
+  currentSkinIndex = (currentSkinIndex - 1 + SKINS.length) % SKINS.length;
+  renderSkinsPanel();
+}
+
+function selectCurrentSkin() {
+  const skin = SKINS[currentSkinIndex];
+  if (!skin || !skin.unlocked) return;
+  setSelectedSkin(skin.id);
+  renderSkinsPanel();
+}
+
+function renderSkinsPanel() {
+  const skin = SKINS[currentSkinIndex];
+  if (!skin) return;
+
+  const nameEl = document.getElementById('skinPreviewName');
+  const descEl = document.getElementById('skinPreviewDesc');
+  const statusEl = document.getElementById('skinPreviewStatus');
+  const selectBtn = document.getElementById('skinSelectBtn');
+  const previewImg = document.getElementById('skinPreviewImg');
+
+  if (nameEl) nameEl.textContent = skin.name;
+  if (descEl) descEl.textContent = skin.desc;
+
+  if (previewImg) {
+    const img = skinImages.get(skin.id);
+    if (img && img.complete && img.naturalWidth > 0) {
+      previewImg.src = img.src;
+      previewImg.style.display = 'block';
+    } else if (img && img.src) {
+      previewImg.src = img.src;
+      previewImg.style.display = 'block';
+    } else {
+      previewImg.src = headImg.src;
+      previewImg.style.display = 'block';
+    }
+  }
+
+  if (!skin.unlocked) {
+    if (statusEl) statusEl.textContent = '🔒 Zamčeno';
+    if (selectBtn) { selectBtn.textContent = 'Zamčeno'; selectBtn.disabled = true; selectBtn.classList.add('disabled'); }
+  } else if (skin.id === selectedSkinId) {
+    if (statusEl) statusEl.textContent = '';
+    if (selectBtn) { selectBtn.textContent = 'Vybráno ✓'; selectBtn.disabled = true; selectBtn.classList.add('disabled'); }
+  } else {
+    if (statusEl) statusEl.textContent = '';
+    if (selectBtn) { selectBtn.textContent = 'Vybrat'; selectBtn.disabled = false; selectBtn.classList.remove('disabled'); }
+  }
+}
+
 function toggleShop(forceOpen) {
   const panel = document.getElementById('shopPanel');
   if (!panel) return;
@@ -1362,6 +1581,8 @@ function toggleShop(forceOpen) {
     activeVoiceLineUntil = performance.now() + 2800;
     return;
   }
+  const skinsP = document.getElementById('skinsPanel');
+  if (skinsP) skinsP.classList.remove('active');
   panel.classList.toggle('active', open);
   if (open) {
     showShopMessage('');
@@ -2397,15 +2618,22 @@ function drawPlayer() {
   ctx.arc(0, 0, glowSize, 0, Math.PI * 2);
   ctx.fill();
 
-  // Draw the head image
-  if (headImg.complete && headImg.naturalWidth > 0) {
-    ctx.drawImage(headImg, -player.r, -player.r, player.r * 2, player.r * 2);
-  } else {
-    // Fallback circle while image loads
-    ctx.fillStyle = '#d4a574';
+  // Draw the head image (circular clip using selected skin)
+  {
+    const skinImg = skinImages.get(selectedSkinId);
+    const imgToDraw = (skinImg && skinImg.complete && skinImg.naturalWidth > 0) ? skinImg
+                    : (headImg.complete && headImg.naturalWidth > 0) ? headImg : null;
+    ctx.save();
     ctx.beginPath();
     ctx.arc(0, 0, player.r, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.clip();
+    if (imgToDraw) {
+      ctx.drawImage(imgToDraw, -player.r, -player.r, player.r * 2, player.r * 2);
+    } else {
+      ctx.fillStyle = '#d4a574';
+      ctx.fill();
+    }
+    ctx.restore();
   }
 
   // Gold ring around head (New World armor vibe)
