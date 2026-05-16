@@ -58,6 +58,15 @@ function updateEconomyUi() {
     cbBtn.disabled = crownBonusLevel >= CROWN_BONUS_MAX_LEVEL || yang < cbCost;
     cbBtn.classList.toggle('disabled', cbBtn.disabled);
   }
+
+  const ms2Level = document.getElementById('maxShields2Level');
+  const ms2Btn = document.getElementById('buyMaxShields2Btn');
+  if (ms2Level) ms2Level.textContent = maxShields2Owned ? t('economy.owned') : t('economy.notOwned');
+  if (ms2Btn) {
+    ms2Btn.textContent = maxShields2Owned ? t('economy.bought') : t('economy.buyFor', { cost: 500 });
+    ms2Btn.disabled = maxShields2Owned || yang < 500;
+    ms2Btn.classList.toggle('disabled', ms2Btn.disabled);
+  }
 }
 
 function showShopMessage(message) {

@@ -128,7 +128,8 @@ function showVoiceLine() {
 }
 
 function awardShield() {
-  if (hasShield) return;
+  if (shieldCount >= getMaxShields()) return;
+  shieldCount++;
   hasShield = true;
   for (let i = 0; i < 36; i++) {
     particles.push({
@@ -146,7 +147,8 @@ function awardShield() {
 }
 
 function consumeShield(pipe, speed) {
-  hasShield = false;
+  shieldCount = Math.max(0, shieldCount - 1);
+  hasShield = shieldCount > 0;
   unlockAchievement('not_bug_feature');
   const remainingPipeDistance = Math.max(0, pipe.x + PIPE_WIDTH - (player.x - player.r));
   const framesToClearPipe = remainingPipeDistance / Math.max(0.1, speed);

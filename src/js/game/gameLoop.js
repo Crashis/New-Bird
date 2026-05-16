@@ -37,7 +37,9 @@ function startGame() {
   doubleYangUntil = 0;
   amazonNerfUntil = 0;
   amazonNerfSpeedMult = 1.0;
-  hasShield = shieldStartOwned;
+  runYangs = 0;
+  shieldCount = shieldStartOwned ? 1 : 0;
+  hasShield = shieldCount > 0;
   walletAwardedThisRun = false;
   shieldPhaseUntil = 0;
   activeVoiceLine = null;
@@ -318,7 +320,7 @@ function drawScore() {
     ctx.shadowBlur = perf ? 0 : 16;
     ctx.font = 'bold 20px "Cinzel", serif';
     ctx.fillStyle = '#80d8ff';
-    ctx.fillText(t('canvas.shield'), canvas.width / 2, statusY);
+    ctx.fillText(t('canvas.shield', { count: shieldCount, max: getMaxShields() }), canvas.width / 2, statusY);
   }
   if (activeVoiceLine && performance.now() < activeVoiceLineUntil) {
     ctx.shadowBlur = perf ? 0 : 18;
@@ -387,6 +389,7 @@ function openGame() {
   amazonNerfUntil = 0;
   amazonNerfSpeedMult = 1.0;
   hasShield = false;
+  shieldCount = 0;
   walletAwardedThisRun = false;
   shieldPhaseUntil = 0;
   activeVoiceLine = null;

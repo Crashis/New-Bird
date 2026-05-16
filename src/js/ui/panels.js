@@ -1,4 +1,4 @@
-const ALL_PANEL_IDS = ['shopPanel', 'skinsPanel', 'achievementsPanel', 'cheatCodesPanel', 'settingsPanel'];
+const ALL_PANEL_IDS = ['shopPanel', 'skinsPanel', 'achievementsPanel', 'cheatCodesPanel', 'settingsPanel', 'shellGamePanel'];
 function closeOtherPanels(keepId) {
   for (const id of ALL_PANEL_IDS) {
     if (id === keepId) continue;
@@ -64,4 +64,17 @@ function toggleSettingsPanel(forceOpen) {
   closeOtherPanels('settingsPanel');
   panel.classList.toggle('active', open);
   if (open) renderSettingsPanel();
+}
+
+function toggleShellGamePanel(forceOpen) {
+  const panel = document.getElementById('shellGamePanel');
+  if (!panel) return;
+  const open = typeof forceOpen === 'boolean' ? forceOpen : !panel.classList.contains('active');
+  if (open && gameState === 'playing') {
+    activeVoiceLine = t('panel.shellGameBlocked');
+    activeVoiceLineUntil = performance.now() + 2800;
+    return;
+  }
+  closeOtherPanels('shellGamePanel');
+  panel.classList.toggle('active', open);
 }

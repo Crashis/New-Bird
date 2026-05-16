@@ -88,6 +88,24 @@ function getAmazonNerfSpeedMultiplier() {
   return isAmazonNerfActive() ? amazonNerfSpeedMult : 1.0;
 }
 
+function getMaxShields() {
+  return maxShields2Owned ? 2 : 1;
+}
+
+function buyMaxShields2() {
+  if (maxShields2Owned) return;
+  const cost = 500;
+  if (!spendYang(cost)) {
+    showShopMessage(t('shop.noYangFor', { cost }));
+    return;
+  }
+  maxShields2Owned = true;
+  saveEconomy();
+  updateEconomyUi();
+  showShopMessage(t('shop.maxShields2Bought'));
+  showUnlockToast(t('toast.upgradeUnlocked'), t('toast.upgradeSubtitle'), 'upgrade');
+}
+
 function pickPowerupType() {
   const r = Math.random();
   let acc = 0;

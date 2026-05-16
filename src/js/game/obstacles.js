@@ -95,11 +95,14 @@ function applyPowerup(coin) {
         activeVoiceLine = 'Amazon vydal balance patch. Bohužel.';
         primary = '#ff5050';
       } else {
-        // Doubling score: pass current score back through addScore so the
-        // WIN_SCORE crossover (and Peněženky reward + shield) still fires.
-        activeVoiceLine = 'Amazon účetní chyba: skóre zdvojnásobeno.';
+        // Doubles yangs earned this run (runYangs already added to yang; add bonus).
+        activeVoiceLine = t('canvas.amazonYangDouble');
         primary = '#f0d080';
-        if (score > 0) addScore(score);
+        if (runYangs > 0) {
+          addYangs(runYangs);
+          runYangs *= 2;
+          showUnlockToast(t('toast.yangsDoubled'), t('toast.yangsDoubledSub'), 'upgrade');
+        }
       }
       activeVoiceLineUntil = performance.now() + 2800;
       spawnPickupParticles(coin, primary, '#3a2e1a', 28);

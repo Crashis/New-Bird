@@ -39,6 +39,7 @@ window.NWI18n = window.NWI18n || {};
       'menu.subtitle': 'Aeternum čeká. Amazon taky.',
       'menu.start': '⚔ Start',
       'menu.shop': '🛒 Shop',
+      'menu.shellGame': '🎰 Skořápkář',
       'menu.skins': '🎭 Skiny',
       'menu.achievements': '🏆 Achievementy',
       'menu.settings': '⚙ Settings',
@@ -66,7 +67,10 @@ window.NWI18n = window.NWI18n || {};
       'shop.wallets': 'Peněženky:',
       'shop.close': '✕ Zavřít shop',
       'shop.shield.title': '🛡 Shield Start',
-      'shop.shield.desc': 'Každý nový run začne s jedním štítem. Maximum zůstává 1/1.',
+      'shop.shield.desc': 'Každý nový run začne s jedním štítem. Jde kombinovat s upgadem Druhý štít.',
+      'shop.maxShields2.title': '🛡🛡 Druhý štít',
+      'shop.maxShields2.desc': 'Maximální počet štítů se zvýší na 2. Jednorázový upgrade za 500 Yangů.',
+      'shop.maxShields2Bought': 'Druhý štít koupen. Teď pojme dva zásahy.',
       'shop.inv.title': '⚜ Delší nesmrtelnost',
       'shop.inv.desc': 'Každý level prodlouží power-up nesmrtelnosti o 0,5 sekundy. Maximum jsou 3 levely.',
       'shop.dy.title': '⚡ Delší Double Yang',
@@ -163,7 +167,13 @@ window.NWI18n = window.NWI18n || {};
       'settings.footer': 'Víc si toho nenastavíš ty mamrde',
       'settings.close': '✕ Zavřít',
 
+      // Shell Game panel
+      'shellGame.title': 'Skořápkář',
+      'shellGame.desc': 'Tahle podvodná atrakce je zatím ve vývoji.',
+      'shellGame.close': '✕ Zavřít',
+
       // Bottom buttons
+      'bottom.shellGameHint': 'Ve vývoji',
       'bottom.shopHint': 'Upgrady za Yangy',
       'bottom.skinsHint': 'Výběr postavy',
       'bottom.achievementsHint': 'Odměny za postup',
@@ -181,6 +191,7 @@ window.NWI18n = window.NWI18n || {};
       'panel.achievementsBlocked': 'Achievementy si prohlédneš až po přistání. Teď se padá profesionálně.',
       'panel.settingsBlocked': 'Settings mimo aktivní let. Teď není čas na ladění.',
       'panel.skinsBlocked': 'Skiny si vybereš až mimo aktivní let. Amazon módní přehlídku v letu neplatí.',
+      'panel.shellGameBlocked': 'Skořápkáře otevřeš až mimo aktivní let. Podvod počká.',
 
       // Canvas status text
       'canvas.yang': 'Yangy {yang}  ·  Peněženky {wallets}',
@@ -188,7 +199,8 @@ window.NWI18n = window.NWI18n || {};
       'canvas.doubleYang': 'DOUBLE YANG {time}s',
       'canvas.amazonSlow': 'AMAZON SLOW {time}s',
       'canvas.amazonSpeed': 'AMAZON SPEED {time}s',
-      'canvas.shield': 'ŠTÍT AKTIVNÍ 1/1',
+      'canvas.shield': 'ŠTÍT AKTIVNÍ {count}/{max}',
+      'canvas.amazonYangDouble': 'Amazon účetní chyba: yangy zdvojnásobeny.',
 
       // Game events
       'event.shieldGained': 'ŠTÍT ZÍSKÁN — jeden náraz přežiješ.',
@@ -215,6 +227,8 @@ window.NWI18n = window.NWI18n || {};
       // Toast titles
       'toast.upgradeUnlocked': 'UPGRADE ODEMČEN',
       'toast.upgradeSubtitle': 'Amazon účetní oddělení nesouhlasí.',
+      'toast.yangsDoubled': 'YANGY ZDVOJNÁSOBENY',
+      'toast.yangsDoubledSub': 'Účetní oddělení nestíhá počítat.',
       'toast.skinUnlocked': 'SKIN ODEMČEN',
       'toast.solarStart': 'SOLÁRNÍ START',
       'toast.solarSub': 'Martin Slunečný zapnul dvojnásobné Yangy na 10 sekund.',
@@ -257,6 +271,7 @@ window.NWI18n = window.NWI18n || {};
       'menu.subtitle': 'Aeternum waits. Amazon does too.',
       'menu.start': '⚔ Start',
       'menu.shop': '🛒 Shop',
+      'menu.shellGame': '🎰 Shell Game',
       'menu.skins': '🎭 Skins',
       'menu.achievements': '🏆 Achievements',
       'menu.settings': '⚙ Settings',
@@ -284,7 +299,10 @@ window.NWI18n = window.NWI18n || {};
       'shop.wallets': 'Wallets:',
       'shop.close': '✕ Close shop',
       'shop.shield.title': '🛡 Shield Start',
-      'shop.shield.desc': 'Every new run starts with one shield. Maximum remains 1/1.',
+      'shop.shield.desc': 'Every new run starts with one shield. Combinable with the Second Shield upgrade.',
+      'shop.maxShields2.title': '🛡🛡 Second Shield',
+      'shop.maxShields2.desc': 'Increases maximum shields to 2. One-time upgrade for 500 Yangs.',
+      'shop.maxShields2Bought': 'Second Shield purchased. Now holds two hits.',
       'shop.inv.title': '⚜ Longer Immortality',
       'shop.inv.desc': 'Each level extends the immortality power-up by 0.5 seconds. Maximum 3 levels.',
       'shop.dy.title': '⚡ Longer Double Yang',
@@ -399,6 +417,7 @@ window.NWI18n = window.NWI18n || {};
       'panel.achievementsBlocked': 'Check Achievements after landing. Right now we fall professionally.',
       'panel.settingsBlocked': 'Settings outside active flight. No time for tuning now.',
       'panel.skinsBlocked': 'Choose Skins outside active flight. Amazon does not sponsor in-flight fashion shows.',
+      'panel.shellGameBlocked': 'Shell Game opens outside active flight. The scam can wait.',
 
       // Canvas status text
       'canvas.yang': 'Yangs {yang}  ·  Wallets {wallets}',
@@ -406,7 +425,8 @@ window.NWI18n = window.NWI18n || {};
       'canvas.doubleYang': 'DOUBLE YANG {time}s',
       'canvas.amazonSlow': 'AMAZON SLOW {time}s',
       'canvas.amazonSpeed': 'AMAZON SPEED {time}s',
-      'canvas.shield': 'SHIELD ACTIVE 1/1',
+      'canvas.shield': 'SHIELD ACTIVE {count}/{max}',
+      'canvas.amazonYangDouble': 'Amazon accounting error: yangs doubled.',
 
       // Game events
       'event.shieldGained': 'SHIELD GAINED — you will survive one hit.',
@@ -430,9 +450,24 @@ window.NWI18n = window.NWI18n || {};
       'milestone.keepPlaying': '▶ Keep playing',
       'milestone.end': '✕ Menu',
 
+      // Shell Game panel
+      'shellGame.title': 'Shell Game',
+      'shellGame.desc': 'This suspicious attraction is still in development.',
+      'shellGame.close': '✕ Close',
+
+      // Bottom buttons
+      'bottom.shellGameHint': 'In development',
+
+      // Shop
+      'shop.maxShields2.title': '🛡🛡 Second Shield',
+      'shop.maxShields2.desc': 'Increases maximum shields to 2. One-time upgrade for 500 Yangs.',
+      'shop.maxShields2Bought': 'Second Shield purchased. Now holds two hits.',
+
       // Toast titles
       'toast.upgradeUnlocked': 'UPGRADE UNLOCKED',
       'toast.upgradeSubtitle': 'Amazon accounting department disapproves.',
+      'toast.yangsDoubled': 'YANGS DOUBLED',
+      'toast.yangsDoubledSub': 'Accounting can no longer keep up.',
       'toast.skinUnlocked': 'SKIN UNLOCKED',
       'toast.solarStart': 'SOLAR START',
       'toast.solarSub': 'Martin Slunečný activated double Yangs for 10 seconds.',

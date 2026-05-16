@@ -54,6 +54,7 @@ function update() {
       const mult = isDoubleYangActive() ? 2 : 1;
       const earned = coin.value * mult;
       addYangs(earned);
+      runYangs += earned;
       activeVoiceLine = mult > 1 ? `+${earned} Yangy (Double!)` : `+${earned} Yangy`;
       activeVoiceLineUntil = performance.now() + 1800;
       for (let i = 0; i < 18; i++) {

@@ -118,6 +118,7 @@
       <div class="menu-actions">
         <button class="game-btn primary menu-btn" id="startBtn" onclick="startGame()" data-i18n="menu.start">⚔ Start</button>
         <button class="game-btn menu-btn" id="menuShopBtn" onclick="toggleShop()" data-i18n="menu.shop">🛒 Shop</button>
+        <button class="game-btn menu-btn" id="menuShellGameBtn" onclick="toggleShellGamePanel()" data-i18n="menu.shellGame">🎰 Skořápkář</button>
         <button class="game-btn menu-btn" id="menuSkinsBtn" onclick="toggleSkinsPanel()" data-i18n="menu.skins">🎭 Skiny</button>
         <button class="game-btn menu-btn" id="menuAchievementsBtn" onclick="toggleAchievementsPanel()" data-i18n="menu.achievements">🏆 Achievementy</button>
         <button class="game-btn menu-btn" id="menuSettingsBtn" onclick="toggleSettingsPanel()" data-i18n="menu.settings">⚙ Settings</button>
@@ -222,6 +223,15 @@
         </div>
       </div>
 
+      <div class="shop-item">
+        <div class="shop-item-title" data-i18n="shop.maxShields2.title">🛡🛡 Druhý štít</div>
+        <div class="shop-item-desc" data-i18n="shop.maxShields2.desc">Maximální počet štítů se zvýší na 2. Jednorázový upgrade za 500 Yangů.</div>
+        <div class="shop-item-bottom">
+          <span class="shop-level" id="maxShields2Level">Nevlastníš</span>
+          <button class="game-btn shop-buy-btn" id="buyMaxShields2Btn" onclick="buyMaxShields2()">Koupit — 500 Yangů</button>
+        </div>
+      </div>
+
       <div class="shop-message" id="shopMessage"></div>
       <div class="game-buttons" style="margin-top:0.4rem;">
         <button class="game-btn" onclick="toggleShop(false)" data-i18n="shop.close">✕ Zavřít shop</button>
@@ -318,6 +328,15 @@
         <button class="game-btn" onclick="toggleSettingsPanel(false)" data-i18n="settings.close">✕ Zavřít</button>
       </div>
     </div>
+
+    <!-- Shell Game panel -->
+    <div class="shop-panel" id="shellGamePanel" style="text-align:center;">
+      <h2 data-i18n="shellGame.title">Skořápkář</h2>
+      <div class="shop-subtitle" data-i18n="shellGame.desc">Tahle podvodná atrakce je zatím ve vývoji.</div>
+      <div class="game-buttons" style="margin-top:1rem;">
+        <button class="game-btn" id="closeShellGameBtn" onclick="toggleShellGamePanel(false)" data-i18n="shellGame.close">✕ Zavřít</button>
+      </div>
+    </div>
   </div>
 
   <div class="game-controls" data-i18n="hud.controls">Mezerník · Klik · Tap pro skok</div>
@@ -338,6 +357,10 @@
     <div class="locked-feature">
       <button class="game-btn" onclick="toggleCheatCodesPanel()" title="Cheat Codes" data-i18n="menu.cheats">⌨ Cheat Codes</button>
       <div class="shop-wip" data-i18n="bottom.cheatsHint">Work in progress</div>
+    </div>
+    <div class="locked-feature">
+      <button class="game-btn" onclick="toggleShellGamePanel()" title="Skořápkář" data-i18n="menu.shellGame">🎰 Skořápkář</button>
+      <div class="shop-wip" data-i18n="bottom.shellGameHint">Ve vývoji</div>
     </div>
     <div class="locked-feature">
       <button class="game-btn" onclick="toggleSettingsPanel()" title="Nastavení" data-i18n="menu.settings">⚙ Settings</button>

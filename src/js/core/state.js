@@ -12,18 +12,21 @@ let difficultyLevel = 0; // increases with score
 let endlessMode = false; // set when player continues after winning
 let invincibleUntil = 0;
 let hasShield = false;
+let shieldCount = 0; // 0, 1 or 2 — hasShield === (shieldCount > 0)
 let shieldPhaseUntil = 0;
 let nextVoiceLineScore = 0;
 let activeVoiceLine = null;
 let activeVoiceLineUntil = 0;
 let pipesSinceYang = 0;
 let yang = 0;
+let runYangs = 0; // yangs earned in the current run (reset on startGame)
 let wallets = 0;
 let shieldStartOwned = false;
 let invincibilityLevel = 0;
 let walletAwardedThisRun = false;
 let doubleYangLevel = 0;
 let crownBonusLevel = 0;
+let maxShields2Owned = false;
 let doubleYangUntil = 0;
 let amazonNerfUntil = 0;
 let amazonNerfSpeedMult = 1.0;
@@ -78,6 +81,7 @@ try {
   invincibilityLevel = Math.min(3, Math.max(0, parseInt(localStorage.getItem('nw_flappy_upgrade_invincibility') || '0', 10) || 0));
   doubleYangLevel = Math.min(2, Math.max(0, parseInt(localStorage.getItem('nw_flappy_upgrade_double_yang') || '0', 10) || 0));
   crownBonusLevel = Math.min(2, Math.max(0, parseInt(localStorage.getItem('nw_flappy_upgrade_crown_bonus') || '0', 10) || 0));
+  maxShields2Owned = localStorage.getItem('nw_flappy_upgrade_max_shields_2') === '1';
 } catch (e) {}
 
 unlockedAchievements = loadAchievements();
@@ -116,6 +120,7 @@ function saveEconomy() {
     localStorage.setItem('nw_flappy_upgrade_invincibility', String(invincibilityLevel));
     localStorage.setItem('nw_flappy_upgrade_double_yang', String(doubleYangLevel));
     localStorage.setItem('nw_flappy_upgrade_crown_bonus', String(crownBonusLevel));
+    localStorage.setItem('nw_flappy_upgrade_max_shields_2', maxShields2Owned ? '1' : '0');
   } catch (e) {}
 }
 
