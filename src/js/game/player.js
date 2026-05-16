@@ -3,10 +3,14 @@ function drawPlayer() {
   ctx.translate(player.x, player.y);
   ctx.rotate(player.rotation);
 
-  // Glow halo
+  // Glow halo — ambient verze přeskočená na mobilu kvůli radial gradientu každý frame;
+  // glow aktivních ochran (protection/shield) si necháváme i v perf módu, protože je to
+  // důležitý gameplay feedback.
   const invincible = isInvincible();
   const protectedNow = hasActiveProtection();
-  if (settings.effects || protectedNow || hasShield) {
+  const perfMobile = window.PERF_MOBILE;
+  const showGlow = protectedNow || hasShield || (settings.effects && !perfMobile);
+  if (showGlow) {
     const glowSize = protectedNow || hasShield ? player.r + 24 + Math.sin(frameCount * 0.25) * 5 : player.r + 12;
     const glowGrad = ctx.createRadialGradient(0, 0, player.r - 4, 0, 0, glowSize);
     glowGrad.addColorStop(0, protectedNow ? 'rgba(240,208,128,0.9)' : hasShield ? 'rgba(128,216,255,0.85)' : 'rgba(201,168,76,0.5)');

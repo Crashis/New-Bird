@@ -43,9 +43,14 @@ function resizeCanvas() {
   const aspect = 1200 / 780;
   const mobile = window.matchMedia('(max-width: 768px), (max-height: 480px) and (orientation: landscape)').matches;
   const landscape = window.matchMedia('(orientation: landscape)').matches;
-  const reservedV = fs ? (mobile ? 120 : 170) : (mobile ? (landscape ? 145 : 250) : 240);
-  const reservedH = fs ? 8 : (mobile ? 18 : 24);
-  const maxCap = fs ? 100000 : 1200;
+  // Mobile-landscape reserved vertical was 145 — too aggressive for short phone viewports,
+  // which forced the canvas into height-limited scaling and left the sides empty. Compact
+  // HUD (header+stats only, controls/bottom-buttons hidden in landscape CSS) needs ~70 px.
+  const reservedV = fs ? (mobile ? 90 : 170) : (mobile ? (landscape ? 70 : 250) : 240);
+  const reservedH = fs ? 8 : (mobile ? (landscape ? 8 : 12) : 24);
+  // In mobile landscape allow the canvas to scale beyond the 1200px desktop cap so it
+  // can actually fill the viewport on wide phones (e.g. 932 CSS px); desktop is unchanged.
+  const maxCap = fs ? 100000 : (mobile && landscape ? 100000 : 1200);
   const maxH = Math.max(200, window.innerHeight - reservedV);
   const maxW = Math.max(280, Math.min(maxCap, window.innerWidth - reservedH));
   if (maxW / aspect <= maxH) {

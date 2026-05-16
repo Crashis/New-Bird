@@ -162,7 +162,10 @@ function drawBackground() {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   // Lehký pulzující rudý overlay v event fázi (respektuje Effects toggle).
-  if (eventPhaseActive && settings.effects) {
+  // Na mobilu (PERF_MOBILE) overlay i atmosférické částice vypneme — celoplošný
+  // alpha fill + 15× fillRect každý frame zbytečně tahá za fillrate.
+  const perfMobile = window.PERF_MOBILE;
+  if (eventPhaseActive && settings.effects && !perfMobile) {
     const pulse = 0.07 + Math.sin(frameCount * 0.04) * 0.04;
     ctx.fillStyle = `rgba(140, 20, 20, ${pulse})`;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -196,13 +199,15 @@ function drawBackground() {
   ctx.closePath();
   ctx.fill();
 
-  // Floating gold particles (atmospheric)
-  ctx.fillStyle = 'rgba(201,168,76,0.4)';
-  for (let i = 0; i < 15; i++) {
-    const x = ((i * 73 + frameCount * 0.5) % canvas.width);
-    const y = ((i * 47 + frameCount * 0.8) % canvas.height);
-    const s = (i % 3) * 0.5 + 0.5;
-    ctx.fillRect(x, y, s, s);
+  // Floating gold particles (atmospheric) — vypnuto v mobile perf módu.
+  if (!perfMobile) {
+    ctx.fillStyle = 'rgba(201,168,76,0.4)';
+    for (let i = 0; i < 15; i++) {
+      const x = ((i * 73 + frameCount * 0.5) % canvas.width);
+      const y = ((i * 47 + frameCount * 0.8) % canvas.height);
+      const s = (i % 3) * 0.5 + 0.5;
+      ctx.fillRect(x, y, s, s);
+    }
   }
 
   // Ground (Aeternum corrupted earth)
@@ -235,6 +240,7 @@ function drawParticles() {
 
 function drawScore() {
   if (gameState !== 'playing') return;
+  const perf = window.PERF_MOBILE;
   ctx.save();
   ctx.font = 'bold 48px "Cinzel Decorative", serif';
   ctx.textAlign = 'center';
@@ -242,11 +248,13 @@ function drawScore() {
   ctx.fillText(score, canvas.width / 2 + 2, 70);
   ctx.fillStyle = '#c9a84c';
   ctx.fillText(score, canvas.width / 2, 68);
-  ctx.shadowColor = 'rgba(201,168,76,0.6)';
-  ctx.shadowBlur = 20;
-  ctx.fillText(score, canvas.width / 2, 68);
+  if (!perf) {
+    ctx.shadowColor = 'rgba(201,168,76,0.6)';
+    ctx.shadowBlur = 20;
+    ctx.fillText(score, canvas.width / 2, 68);
+  }
 
-  ctx.shadowBlur = 10;
+  ctx.shadowBlur = perf ? 0 : 10;
   ctx.font = 'bold 17px "Cinzel", serif';
   ctx.fillStyle = '#f0d080';
   ctx.fillText(t('canvas.yang', { yang, wallets }), canvas.width / 2, 98);
@@ -254,7 +262,7 @@ function drawScore() {
   const invincibleLeft = Math.ceil((invincibleUntil - performance.now()) / 100) / 10;
   let statusY = 130;
   if (invincibleLeft > 0) {
-    ctx.shadowBlur = 16;
+    ctx.shadowBlur = perf ? 0 : 16;
     ctx.font = 'bold 20px "Cinzel", serif';
     ctx.fillStyle = '#f0d080';
     ctx.fillText(t('canvas.invincible', { time: invincibleLeft.toFixed(1) }), canvas.width / 2, statusY);
@@ -262,7 +270,7 @@ function drawScore() {
   }
   const doubleYangLeft = Math.ceil((doubleYangUntil - performance.now()) / 100) / 10;
   if (doubleYangLeft > 0) {
-    ctx.shadowBlur = 16;
+    ctx.shadowBlur = perf ? 0 : 16;
     ctx.font = 'bold 20px "Cinzel", serif';
     ctx.fillStyle = '#80f0c0';
     ctx.fillText(t('canvas.doubleYang', { time: doubleYangLeft.toFixed(1) }), canvas.width / 2, statusY);
@@ -270,7 +278,7 @@ function drawScore() {
   }
   const nerfLeft = Math.ceil((amazonNerfUntil - performance.now()) / 100) / 10;
   if (nerfLeft > 0) {
-    ctx.shadowBlur = 16;
+    ctx.shadowBlur = perf ? 0 : 16;
     ctx.font = 'bold 20px "Cinzel", serif';
     if (amazonNerfSpeedMult < 1) {
       ctx.fillStyle = '#80c8ff';
@@ -282,13 +290,13 @@ function drawScore() {
     statusY += 30;
   }
   if (hasShield) {
-    ctx.shadowBlur = 16;
+    ctx.shadowBlur = perf ? 0 : 16;
     ctx.font = 'bold 20px "Cinzel", serif';
     ctx.fillStyle = '#80d8ff';
     ctx.fillText(t('canvas.shield'), canvas.width / 2, statusY);
   }
   if (activeVoiceLine && performance.now() < activeVoiceLineUntil) {
-    ctx.shadowBlur = 18;
+    ctx.shadowBlur = perf ? 0 : 18;
     ctx.font = 'bold 22px "Cinzel", serif';
     ctx.fillStyle = '#f0d080';
     ctx.textAlign = 'center';

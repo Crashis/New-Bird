@@ -329,22 +329,61 @@
     display: none;
   }
 
+  /* In landscape on phones the canvas should fill (almost) the whole viewport width.
+     Shrink the chrome aggressively so the canvas-wrap can stretch and resizeCanvas()
+     has more vertical room to scale up. */
   .game-overlay {
-    padding-top: calc(2.8rem + env(safe-area-inset-top));
+    padding: calc(0.25rem + env(safe-area-inset-top)) 0.25rem 0.25rem;
+    justify-content: flex-start;
+    overflow: hidden;
+  }
+
+  .game-header {
+    margin-bottom: 0.1rem;
+    font-size: clamp(0.7rem, 2.4vw, 0.9rem);
+    letter-spacing: 0.08em;
+    line-height: 1.1;
+  }
+
+  .game-stats {
+    display: flex;
+    grid-template-columns: none;
+    gap: 0.15rem 0.7rem;
+    width: auto;
+    margin-bottom: 0.15rem;
+    font-size: clamp(0.55rem, 2vw, 0.7rem);
+    letter-spacing: 0.04em;
+  }
+
+  .game-stats span strong {
+    font-size: clamp(0.7rem, 2.4vw, 0.9rem);
+    margin-left: 0.2rem;
+  }
+
+  /* Landscape on phones: hide redundant bottom chrome — same actions live in the menu. */
+  .game-overlay > .game-controls,
+  .game-overlay > .game-buttons {
+    display: none;
+  }
+
+  .game-canvas-wrap {
+    width: calc(100vw - 8px);
+    max-width: calc(100vw - 8px);
   }
 
   #gameCanvas {
-    max-height: calc(100svh - 165px);
+    max-width: calc(100vw - 8px);
+    max-height: calc(100svh - 70px);
   }
 
   .game-start-panel.main-menu {
-    max-height: min(62svh, 520px);
+    max-height: min(86svh, 520px);
   }
 
   .shop-panel,
   .game-over-panel,
   .win-panel {
-    max-height: min(60svh, 540px);
+    max-height: min(82svh, 540px);
   }
 }
 

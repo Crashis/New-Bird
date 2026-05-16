@@ -160,7 +160,7 @@ function drawCoin(coin) {
   const spinAngle = frameCount * style.spinSpeed;
   ctx.rotate(spinAngle);
 
-  if (settings.effects) {
+  if (settings.effects && !window.PERF_MOBILE) {
     const glow = ctx.createRadialGradient(0, 0, r * 0.5, 0, 0, r * 2.4);
     glow.addColorStop(0, style.glow);
     glow.addColorStop(1, 'rgba(0,0,0,0)');
@@ -209,7 +209,7 @@ function drawYang(coin) {
   ctx.translate(coin.x, coin.y);
   ctx.rotate(Math.sin(frameCount * 0.06) * 0.18);
 
-  if (settings.effects) {
+  if (settings.effects && !window.PERF_MOBILE) {
     const glow = ctx.createRadialGradient(0, 0, r * 0.45, 0, 0, r * 2.2);
     glow.addColorStop(0, 'rgba(240,208,128,0.38)');
     glow.addColorStop(1, 'rgba(240,208,128,0)');
@@ -257,7 +257,9 @@ function drawAmazonBlade(x, y, w, h, pointingDown) {
   const ev = eventPhaseActive;
 
   // Red glow halo around the blade body (jemné, mimo Effects vypnuto).
-  if (ev && settings.effects) {
+  // Mobile perf mode: shadowBlur na celém sloupu × 2 sloupy × N viditelných pipes
+  // je řádově nejdražší věc ve frame — na mobilu úplně skipnout.
+  if (ev && settings.effects && !window.PERF_MOBILE) {
     ctx.save();
     ctx.shadowColor = 'rgba(200, 30, 30, 0.55)';
     ctx.shadowBlur = 18;
