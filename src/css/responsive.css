@@ -1,10 +1,406 @@
-@media (max-width: 600px) {
-    .game-stats { gap: 1rem; font-size: 0.75rem; }
-    .game-header { font-size: 1rem; }
+@media (max-width: 768px), (max-height: 480px) and (orientation: landscape) {
+  body {
+    padding: 1rem;
   }
 
-  @media (max-width: 600px) {
-    .game-start-panel.main-menu { padding: 1.2rem 1rem 1rem; }
-    .menu-actions .menu-btn { min-width: 7rem; font-size: 0.7rem; padding: 0.6rem 0.8rem; }
-    .game-start-panel.main-menu .game-title { font-size: 1.5rem; letter-spacing: 0.1em; }
+  input,
+  select,
+  textarea {
+    font-size: 16px;
   }
+
+  .top-right-actions {
+    top: max(0.45rem, env(safe-area-inset-top));
+    right: max(0.45rem, env(safe-area-inset-right));
+    gap: 0.35rem;
+  }
+
+  .top-action-btn,
+  .fullscreen-btn {
+    min-height: 44px;
+    padding: 0.5rem 0.7rem;
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+  }
+
+  .game-overlay {
+    justify-content: flex-start;
+    padding: calc(3.5rem + env(safe-area-inset-top)) 0.45rem 0.7rem;
+  }
+
+  .game-header {
+    max-width: calc(100vw - 1rem);
+    margin-bottom: 0.45rem;
+    font-size: clamp(0.86rem, 4vw, 1.05rem);
+    letter-spacing: 0.1em;
+    line-height: 1.25;
+  }
+
+  .game-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: min(520px, calc(100vw - 1.5rem));
+    gap: 0.35rem 0.55rem;
+    margin-bottom: 0.55rem;
+    font-size: clamp(0.68rem, 3vw, 0.8rem);
+    letter-spacing: 0.04em;
+    text-align: center;
+  }
+
+  .game-stats span {
+    min-width: 0;
+    white-space: nowrap;
+  }
+
+  .game-stats span strong {
+    display: inline-block;
+    margin-left: 0.18rem;
+    font-size: clamp(0.95rem, 4vw, 1.15rem);
+  }
+
+  .game-canvas-wrap {
+    width: calc(100vw - 1rem);
+    max-width: 100%;
+  }
+
+  #gameCanvas {
+    max-width: calc(100vw - 1rem);
+    max-height: calc(100svh - 250px);
+  }
+
+  .game-controls {
+    margin-top: 0.55rem;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    line-height: 1.35;
+  }
+
+  .game-buttons {
+    width: min(620px, calc(100vw - 0.9rem));
+    gap: 0.5rem;
+    margin-top: 0.6rem;
+  }
+
+  .game-btn {
+    min-height: 44px;
+    padding: 0.7rem 0.9rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+
+  .locked-feature {
+    min-width: min(46vw, 10rem);
+  }
+
+  .shop-wip {
+    display: none;
+  }
+
+  .game-start-panel.main-menu {
+    width: min(94vw, 520px);
+    max-width: 94vw;
+    max-height: min(72svh, 640px);
+    padding: 1.25rem 0.9rem 1rem;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+  }
+
+  .menu-kicker {
+    font-size: 0.55rem;
+    letter-spacing: 0.22em;
+  }
+
+  .game-start-panel.main-menu .game-title {
+    font-size: clamp(1.65rem, 8vw, 2.35rem);
+    letter-spacing: 0.08em;
+  }
+
+  .game-start-panel.main-menu .menu-subtitle {
+    margin-bottom: 0.85rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+  }
+
+  .menu-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.55rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .menu-actions .menu-btn {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    padding: 0.7rem 0.55rem;
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+  }
+
+  .menu-actions .menu-btn:first-child,
+  .menu-actions .menu-quit-btn {
+    grid-column: 1 / -1;
+  }
+
+  .menu-quote {
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    line-height: 1.35;
+  }
+
+  .shop-panel {
+    left: 50%;
+    top: 0.35rem;
+    width: min(94vw, 560px);
+    max-height: min(78svh, 700px);
+    padding: 1rem 0.85rem;
+    overflow-y: auto;
+    transform: translateX(-50%);
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    touch-action: pan-y;
+  }
+
+  .shop-panel h2 {
+    font-size: clamp(1rem, 5vw, 1.35rem);
+    letter-spacing: 0.08em;
+    line-height: 1.2;
+  }
+
+  .shop-panel .shop-subtitle {
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    line-height: 1.45;
+  }
+
+  .shop-wallet {
+    gap: 0.55rem;
+    font-size: 0.78rem;
+  }
+
+  .shop-item {
+    padding: 0.75rem;
+  }
+
+  .shop-item-title,
+  .skin-name,
+  .achievement-title {
+    overflow-wrap: anywhere;
+  }
+
+  .shop-item-bottom {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .shop-buy-btn {
+    width: 100%;
+    min-height: 44px;
+  }
+
+  .skins-nav {
+    gap: 0.65rem;
+  }
+
+  .skin-avatar-wrap {
+    width: clamp(76px, 24vw, 100px);
+    height: clamp(76px, 24vw, 100px);
+  }
+
+  .skin-arrow,
+  .panel-close-btn {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .skin-desc,
+  .skin-effect,
+  .skin-buff-debuff,
+  .achievement-description {
+    font-size: 0.72rem;
+    overflow-wrap: anywhere;
+  }
+
+  .achievements-panel {
+    max-height: min(78svh, 700px);
+  }
+
+  .achievements-list {
+    grid-template-columns: 1fr;
+  }
+
+  .achievement-top {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .achievement-badge {
+    justify-self: start;
+    white-space: normal;
+  }
+
+  .settings-row {
+    gap: 0.9rem;
+    align-items: center;
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+  }
+
+  .settings-row .hint {
+    font-size: 0.7rem;
+  }
+
+  .toggle {
+    width: 56px;
+    height: 32px;
+  }
+
+  .toggle::after {
+    width: 24px;
+    height: 24px;
+    top: 3px;
+    left: 3px;
+  }
+
+  .toggle.on::after {
+    left: 27px;
+  }
+
+  .cheat-content {
+    max-width: none;
+  }
+
+  .cheat-input {
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  .game-over-panel,
+  .win-panel {
+    left: 50%;
+    top: 50%;
+    width: min(90vw, 420px);
+    max-height: min(74svh, 560px);
+    padding: 1.2rem 0.85rem;
+    overflow-y: auto;
+    transform: translate(-50%, -50%);
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+  }
+
+  .game-over-panel h2,
+  .win-panel h2 {
+    font-size: clamp(1rem, 5vw, 1.35rem);
+    letter-spacing: 0.08em;
+    line-height: 1.25;
+  }
+
+  .game-over-panel .final-score,
+  .win-panel .final-score {
+    font-size: clamp(2rem, 12vw, 3rem);
+  }
+
+  .game-over-panel .death-quote,
+  .win-panel .win-quote {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  .game-over-panel .game-buttons,
+  .win-panel .game-buttons {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) and (orientation: portrait) {
+  .rotate-hint {
+    display: block;
+  }
+}
+
+@media (max-width: 768px) and (orientation: landscape), (max-height: 480px) and (orientation: landscape) {
+  .rotate-hint {
+    display: none;
+  }
+
+  .game-overlay {
+    padding-top: calc(2.8rem + env(safe-area-inset-top));
+  }
+
+  #gameCanvas {
+    max-height: calc(100svh - 165px);
+  }
+
+  .game-start-panel.main-menu {
+    max-height: min(62svh, 520px);
+  }
+
+  .shop-panel,
+  .game-over-panel,
+  .win-panel {
+    max-height: min(60svh, 540px);
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 0.75rem;
+  }
+
+  .top-right-actions {
+    max-width: calc(100vw - 0.8rem);
+  }
+
+  .top-action-btn,
+  .fullscreen-btn {
+    padding-inline: 0.55rem;
+    font-size: 0.62rem;
+  }
+
+  .game-overlay {
+    padding-inline: 0.35rem;
+  }
+
+  .game-stats {
+    width: calc(100vw - 1.5rem);
+  }
+
+  .menu-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .menu-actions .menu-btn {
+    grid-column: auto;
+  }
+
+  .game-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .game-overlay > .game-buttons > .game-btn:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .locked-feature {
+    min-width: 0;
+  }
+
+  .locked-feature .game-btn {
+    width: 100%;
+  }
+
+  .shop-panel {
+    width: min(96vw, 560px);
+  }
+
+  .settings-row {
+    align-items: flex-start;
+  }
+}

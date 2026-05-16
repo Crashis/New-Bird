@@ -31,6 +31,7 @@ window.NWI18n = window.NWI18n || {};
       'hud.yang': 'Yangy:',
       'hud.wallets': 'Peněženky:',
       'hud.controls': 'Mezerník · Klik · Tap pro skok',
+      'rotate.hint': 'Pro lepší hraní otoč mobil na šířku.',
 
       // Main menu
       'menu.kicker': 'Endless grind simulator',
@@ -230,6 +231,7 @@ window.NWI18n = window.NWI18n || {};
       'hud.yang': 'Yangs:',
       'hud.wallets': 'Wallets:',
       'hud.controls': 'Space · Click · Tap to jump',
+      'rotate.hint': 'For a better experience, rotate your phone sideways.',
 
       // Main menu
       'menu.kicker': 'Endless grind simulator',

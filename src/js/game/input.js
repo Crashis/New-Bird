@@ -1,20 +1,32 @@
+function isInteractiveInputTarget(target) {
+  return !!(target && target.closest && target.closest(
+    'button, input, select, textarea, label, .game-start-panel, .shop-panel, .game-over-panel, .win-panel'
+  ));
+}
+
 // Input handling
-function handleInput(e) {
+function handleKeyboardInput(e) {
   const overlay = document.getElementById('gameOverlay');
   if (!overlay.classList.contains('active')) return;
-  if (e.type === 'keydown' && e.code !== 'Space') return;
-  if (e.type === 'keydown') {
-    const tag = (e.target && e.target.tagName) || '';
-    if (tag === 'INPUT' || tag === 'TEXTAREA') return;
-  }
+  if (e.code !== 'Space') return;
+  if (isInteractiveInputTarget(e.target)) return;
   e.preventDefault();
   if (gameState === 'over') return; // ignore inputs on game over (use buttons)
   jump();
 }
 
-document.addEventListener('keydown', handleInput);
-canvas.addEventListener('mousedown', handleInput);
-canvas.addEventListener('touchstart', (e) => { e.preventDefault(); handleInput(e); }, { passive: false });
+function handlePointerJump(e) {
+  const overlay = document.getElementById('gameOverlay');
+  if (!overlay.classList.contains('active')) return;
+  if (e.button !== undefined && e.button !== 0) return;
+  if (isInteractiveInputTarget(e.target)) return;
+  e.preventDefault();
+  if (gameState === 'over') return; // ignore inputs on game over (use buttons)
+  jump();
+}
+
+document.addEventListener('keydown', handleKeyboardInput);
+canvas.addEventListener('pointerdown', handlePointerJump, { passive: false });
 
 // Escape key closes game
 document.addEventListener('keydown', (e) => {
@@ -29,8 +41,10 @@ function resizeCanvas() {
   if (!overlay.classList.contains('active')) return;
   const fs = !!(document.fullscreenElement || document.webkitFullscreenElement);
   const aspect = 1200 / 780;
-  const reservedV = fs ? 170 : 240;
-  const reservedH = fs ? 8 : 24;
+  const mobile = window.matchMedia('(max-width: 768px), (max-height: 480px) and (orientation: landscape)').matches;
+  const landscape = window.matchMedia('(orientation: landscape)').matches;
+  const reservedV = fs ? (mobile ? 120 : 170) : (mobile ? (landscape ? 145 : 250) : 240);
+  const reservedH = fs ? 8 : (mobile ? 18 : 24);
   const maxCap = fs ? 100000 : 1200;
   const maxH = Math.max(200, window.innerHeight - reservedV);
   const maxW = Math.max(280, Math.min(maxCap, window.innerWidth - reservedH));
@@ -43,3 +57,4 @@ function resizeCanvas() {
   }
 }
 window.addEventListener('resize', resizeCanvas);
+window.addEventListener('orientationchange', resizeCanvas);
