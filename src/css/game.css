@@ -360,12 +360,17 @@
     max-width: 100%;
   }
   #gameCanvas {
-    max-width: min(100vw - 1rem, 1000px);
+    max-width: min(100vw - 1rem, 1200px);
     max-height: calc(100vh - 240px);
   }
   .game-overlay:fullscreen { padding: 0.4rem; }
   .game-overlay:-webkit-full-screen { padding: 0.4rem; }
   .game-overlay:fullscreen #gameCanvas {
-    max-width: min(100vw - 0.8rem, calc((100vh - 200px) * 1.282));
+    max-width: min(100vw - 0.8rem, calc((100vh - 200px) * 1.538));
     max-height: calc(100vh - 200px);
+  }
+
+  .countdown-fullscreen-btn {
+    position: fixed;
+    z-index: 20;
   }

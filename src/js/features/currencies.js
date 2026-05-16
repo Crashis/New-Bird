@@ -3,14 +3,10 @@ function updateEconomyUi() {
   const gameWallets = document.getElementById('gameWallets');
   const shopYang = document.getElementById('shopYang');
   const shopWallets = document.getElementById('shopWallets');
-  const menuYang = document.getElementById('menuYang');
-  const menuWallets = document.getElementById('menuWallets');
   if (gameYang) gameYang.textContent = yang;
   if (gameWallets) gameWallets.textContent = wallets;
   if (shopYang) shopYang.textContent = yang;
   if (shopWallets) shopWallets.textContent = wallets;
-  if (menuYang) menuYang.textContent = yang;
-  if (menuWallets) menuWallets.textContent = wallets;
 
   const shieldLevel = document.getElementById('shieldStartLevel');
   const shieldBtn = document.getElementById('buyShieldStartBtn');

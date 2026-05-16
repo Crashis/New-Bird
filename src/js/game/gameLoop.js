@@ -318,6 +318,10 @@ function openGame() {
   const overlayEl = document.getElementById('gameOverlay');
   overlayEl.classList.add('active');
   overlayEl.classList.add('menu-open');
+  if (animationId) {
+    cancelAnimationFrame(animationId);
+    animationId = null;
+  }
   resetEventPhase();
   document.getElementById('gameBest').textContent = bestScore;
   document.getElementById('gameScore').textContent = '0';
@@ -348,6 +352,25 @@ function openGame() {
   setNextVoiceLineScore();
   draw();
   resizeCanvas();
+}
+
+function returnToMainMenu() {
+  stopGameMusic();
+  if ('speechSynthesis' in window) {
+    try { window.speechSynthesis.cancel(); } catch (e) {}
+  }
+  openGame();
+}
+
+function quitGameFromMainMenu() {
+  if (window.opener) {
+    window.close();
+  }
+  setTimeout(() => {
+    if (!window.closed) {
+      showUnlockToast('ZAVŘENÍ ZÁLOŽKY', 'Prohlížeč mi to zatrhl. Zavři záložku ručně.', 'default');
+    }
+  }, 120);
 }
 
 function closeGame() {

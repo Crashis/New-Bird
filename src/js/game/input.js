@@ -19,12 +19,12 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-// Make canvas responsive (internal 1000x780, CSS scales it)
+// Make canvas responsive (internal 1200x780, CSS scales it)
 function resizeCanvas() {
   const overlay = document.getElementById('gameOverlay');
   if (!overlay.classList.contains('active')) return;
   const fs = !!(document.fullscreenElement || document.webkitFullscreenElement);
-  const aspect = 1000 / 780;
+  const aspect = 1200 / 780;
   const reservedV = fs ? 170 : 240;
   const reservedH = fs ? 8 : 24;
   const maxCap = fs ? 100000 : 1200;

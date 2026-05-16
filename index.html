@@ -20,6 +20,7 @@
 <body>
 
 <div class="particles" id="particles"></div>
+<button class="fullscreen-btn countdown-fullscreen-btn" id="countdownFullscreenBtn" onclick="toggleFullscreen()">&#x26F6; Fullscreen</button>
 
 <div class="container">
   <span class="crown-icon">⚔️</span>
@@ -96,19 +97,13 @@
   </div>
 
   <div class="game-canvas-wrap">
-    <canvas id="gameCanvas" width="1000" height="780">>>></canvas>
+    <canvas id="gameCanvas" width="1200" height="780">>>></canvas>
 
     <!-- Start panel / Main menu -->
     <div class="game-start-panel main-menu" id="startPanel">
       <div class="menu-kicker">Endless grind simulator</div>
       <h2 class="game-title">BOJ O AETERNUM</h2>
       <p class="menu-subtitle">Aeternum čeká. Amazon taky.</p>
-
-      <div class="currency-row">
-        <div class="currency-pill">Yangy: <span id="menuYang">0</span></div>
-        <div class="currency-pill">Peněženky: <span id="menuWallets">0</span></div>
-      </div>
-
       <div class="menu-actions">
         <button class="game-btn primary menu-btn" id="startBtn" onclick="startGame()">⚔ Start</button>
         <button class="game-btn menu-btn" id="menuShopBtn" onclick="toggleShop()">🛒 Shop</button>
@@ -116,6 +111,7 @@
         <button class="game-btn menu-btn" id="menuAchievementsBtn" onclick="toggleAchievementsPanel()">🏆 Achievementy</button>
         <button class="game-btn menu-btn" id="menuSettingsBtn" onclick="toggleSettingsPanel()">⚙ Settings</button>
         <button class="game-btn menu-btn" id="menuCheatBtn" onclick="toggleCheatCodesPanel()">⌨ Cheat Codes</button>
+        <button class="game-btn menu-btn menu-quit-btn" id="menuQuitBtn" onclick="quitGameFromMainMenu()">&#x2715; Zav&#345;ít hru</button>
       </div>
 
       <p class="hint menu-quote">Mezerník · Klik · Tap pro skok</p>
@@ -129,7 +125,7 @@
       <p class="death-quote" id="deathQuote">Amazon ti vypnul server.</p>
       <div class="game-buttons">
         <button class="game-btn primary" onclick="startGame()">⚔️ Znovu</button>
-        <button class="game-btn" onclick="closeGame()">✕ Konec</button>
+        <button class="game-btn" onclick="returnToMainMenu()">✕ Konec</button>
       </div>
     </div>
 
@@ -142,7 +138,7 @@
       <div class="game-buttons">
         <button class="game-btn primary" onclick="continueGame()">▶ Pokračovat (Endless)</button>
         <button class="game-btn" onclick="startGame()">⚔️ Znovu</button>
-        <button class="game-btn" onclick="closeGame()">✕ Konec</button>
+        <button class="game-btn" onclick="returnToMainMenu()">✕ Konec</button>
       </div>
     </div>
 

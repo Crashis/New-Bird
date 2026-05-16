@@ -5,23 +5,27 @@ function isFullscreen() {
 
 function toggleFullscreen() {
   const overlay = document.getElementById('gameOverlay');
-  if (!overlay) return;
+  const fullscreenTarget = overlay && overlay.classList.contains('active')
+    ? overlay
+    : document.documentElement;
+
   if (isFullscreen()) {
     const exit = document.exitFullscreen || document.webkitExitFullscreen;
     if (exit) exit.call(document);
   } else {
-    const req = overlay.requestFullscreen || overlay.webkitRequestFullscreen;
+    const req = fullscreenTarget.requestFullscreen || fullscreenTarget.webkitRequestFullscreen;
     if (req) {
-      const p = req.call(overlay);
+      const p = req.call(fullscreenTarget);
       if (p && typeof p.catch === 'function') p.catch(() => {});
     }
   }
 }
 
 function syncFullscreenButton() {
-  const btn = document.getElementById('fullscreenBtn');
-  if (!btn) return;
-  btn.textContent = isFullscreen() ? '⛶ Exit Fullscreen' : '⛶ Fullscreen';
+  const buttons = document.querySelectorAll('#fullscreenBtn, #countdownFullscreenBtn');
+  for (const btn of buttons) {
+    btn.textContent = isFullscreen() ? '⛶ Ukončit fullscreen' : '⛶ Fullscreen';
+  }
   resizeCanvas();
 }
 
