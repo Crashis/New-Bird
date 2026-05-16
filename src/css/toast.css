@@ -1,0 +1,72 @@
+/* ===== UNLOCK / REWARD TOAST ===== */
+  .unlock-toast {
+    position: fixed;
+    left: 50%;
+    top: clamp(1rem, 8vh, 4.5rem);
+    width: min(460px, calc(100vw - 2rem));
+    transform: translateX(-50%) translateY(-12px) scale(0.96);
+    pointer-events: none;
+    z-index: 260;
+    opacity: 0;
+    visibility: hidden;
+    padding: 0.9rem 1.2rem;
+    border: 1px solid var(--gold-dark);
+    border-radius: 4px;
+    text-align: center;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.18), transparent 65%),
+      rgba(10,8,6,0.96);
+    box-shadow:
+      0 0 35px rgba(201,168,76,0.34),
+      inset 0 0 22px rgba(0,0,0,0.55);
+  }
+
+  .unlock-toast.show {
+    visibility: visible;
+    animation: unlockToastInOut 2.6s ease both;
+  }
+
+  .unlock-toast.upgrade { border-color: var(--gold); box-shadow: 0 0 36px rgba(201,168,76,0.4), inset 0 0 22px rgba(0,0,0,0.55); }
+  .unlock-toast.skin { border-color: #d6a8ff; box-shadow: 0 0 36px rgba(164,92,220,0.34), inset 0 0 22px rgba(0,0,0,0.55); }
+  .unlock-toast.wallet { border-color: #f0d080; box-shadow: 0 0 42px rgba(240,208,128,0.42), inset 0 0 22px rgba(0,0,0,0.55); }
+  .unlock-toast.achievement { border-color: #d13a2f; box-shadow: 0 0 42px rgba(209,58,47,0.4), inset 0 0 22px rgba(0,0,0,0.55); }
+
+  .unlock-toast.no-effects {
+    box-shadow: 0 0 12px rgba(0,0,0,0.45);
+  }
+
+  .unlock-toast.no-effects.show {
+    animation: unlockToastSimple 2.4s ease both;
+  }
+
+  .unlock-toast-title {
+    font-family: 'Cinzel Decorative', serif;
+    color: var(--gold-light);
+    font-size: clamp(0.95rem, 3.6vw, 1.25rem);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-shadow: 0 0 18px rgba(240,208,128,0.52);
+    line-height: 1.25;
+  }
+
+  .unlock-toast-subtitle {
+    margin-top: 0.28rem;
+    font-family: 'Lato', sans-serif;
+    color: var(--text-light);
+    font-size: 0.78rem;
+    line-height: 1.35;
+    letter-spacing: 0.06em;
+  }
+
+  @keyframes unlockToastInOut {
+    0% { opacity: 0; transform: translateX(-50%) translateY(-14px) scale(0.94); filter: brightness(0.85); }
+    12% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1.02); filter: brightness(1.25); }
+    20%, 78% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); filter: brightness(1); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-10px) scale(0.98); filter: brightness(0.9); }
+  }
+
+  @keyframes unlockToastSimple {
+    0% { opacity: 0; transform: translateX(-50%) translateY(-8px) scale(0.98); }
+    14%, 82% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-8px) scale(0.98); }
+  }

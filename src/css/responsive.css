@@ -1,0 +1,10 @@
+@media (max-width: 600px) {
+    .game-stats { gap: 1rem; font-size: 0.75rem; }
+    .game-header { font-size: 1rem; }
+  }
+
+  @media (max-width: 600px) {
+    .game-start-panel.main-menu { padding: 1.2rem 1rem 1rem; }
+    .menu-actions .menu-btn { min-width: 7rem; font-size: 0.7rem; padding: 0.6rem 0.8rem; }
+    .game-start-panel.main-menu .game-title { font-size: 1.5rem; letter-spacing: 0.1em; }
+  }

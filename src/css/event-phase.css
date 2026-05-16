@@ -1,0 +1,89 @@
+/* ===== EVENT PHASE (Fáze 2 — corrupted) ===== */
+  .game-overlay.event-phase {
+    background: rgba(20,4,4,0.97);
+  }
+  .game-overlay.event-phase .game-header {
+    color: #ff9a8a;
+    text-shadow: 0 0 22px rgba(180,30,30,0.7);
+    animation: eventHeaderPulse 2.2s ease-in-out infinite;
+  }
+  .game-overlay.event-phase #gameCanvas {
+    border-color: #6a1a1a;
+    box-shadow:
+      0 0 48px rgba(180,30,30,0.55),
+      inset 0 0 30px rgba(60,4,4,0.65);
+    animation: eventCanvasPulse 2.6s ease-in-out infinite;
+  }
+  .game-overlay.event-phase .game-stats span strong {
+    color: #ffb380;
+  }
+
+  @keyframes eventHeaderPulse {
+    0%, 100% { text-shadow: 0 0 18px rgba(180,30,30,0.6); }
+    50% { text-shadow: 0 0 32px rgba(220,40,40,0.95); }
+  }
+  @keyframes eventCanvasPulse {
+    0%, 100% { box-shadow: 0 0 48px rgba(180,30,30,0.45), inset 0 0 30px rgba(60,4,4,0.55); }
+    50% { box-shadow: 0 0 72px rgba(220,40,40,0.7), inset 0 0 36px rgba(80,4,4,0.7); }
+  }
+
+  /* Event phase activation toast */
+  .event-phase-toast {
+    position: absolute;
+    top: 38%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.85);
+    background: rgba(20,4,4,0.92);
+    border: 2px solid #8b1a1a;
+    color: #ffd0c0;
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(1.2rem, 3.6vw, 2.1rem);
+    letter-spacing: 0.28em;
+    padding: 0.9rem 1.6rem;
+    border-radius: 4px;
+    text-shadow: 0 0 22px rgba(255,80,60,0.8);
+    box-shadow: 0 0 50px rgba(180,30,30,0.7), inset 0 0 30px rgba(80,4,4,0.6);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 10;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .event-phase-toast.show {
+    animation: eventToast 1.9s ease forwards;
+  }
+  @keyframes eventToast {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.7); filter: blur(8px); }
+    25% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); filter: blur(0); }
+    75% { opacity: 1; transform: translate(-50%, -50%) scale(1); filter: blur(0); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(1.08); filter: blur(2px); }
+  }
+
+  /* Quick screen-flash on event activation (respects Effects toggle via JS) */
+  .event-phase-flash {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(255,40,40,0.35), rgba(80,4,4,0) 70%);
+    pointer-events: none;
+    z-index: 9;
+    opacity: 0;
+  }
+  .event-phase-flash.show { animation: eventFlash 0.9s ease forwards; }
+  @keyframes eventFlash {
+    0% { opacity: 0; }
+    20% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  /* Subtle shake when event phase activates */
+  .game-canvas-wrap.event-shake {
+    animation: eventShake 0.55s ease;
+  }
+  @keyframes eventShake {
+    0%, 100% { transform: translate(0, 0); }
+    15% { transform: translate(-6px, 3px); }
+    30% { transform: translate(5px, -4px); }
+    45% { transform: translate(-4px, 4px); }
+    60% { transform: translate(4px, -2px); }
+    75% { transform: translate(-2px, 2px); }
+  }
