@@ -940,6 +940,24 @@
         </div>
       </div>
 
+      <div class="shop-item">
+        <div class="shop-item-title">⚡ Delší Double Yang</div>
+        <div class="shop-item-desc">Power-up Double Yang dává po dobu efektu dvojnásobek Yangů. Každý level prodlouží trvání o 2 sekundy. Základ 8s. Maximum 2 levely.</div>
+        <div class="shop-item-bottom">
+          <span class="shop-level" id="doubleYangLevel">Level 0/2 (8.0s)</span>
+          <button class="game-btn shop-buy-btn" id="buyDoubleYangBtn" onclick="buyDoubleYangUpgrade()">Koupit — 100 Yangů</button>
+        </div>
+      </div>
+
+      <div class="shop-item">
+        <div class="shop-item-title">👑 Silnější Crown Bonus</div>
+        <div class="shop-item-desc">Power-up koruny okamžitě přičte skóre. Každý level přidá +1 skóre. Základ +1, max 2 levely (+3 skóre).</div>
+        <div class="shop-item-bottom">
+          <span class="shop-level" id="crownBonusLevel">Level 0/2 (+1 skóre)</span>
+          <button class="game-btn shop-buy-btn" id="buyCrownBonusBtn" onclick="buyCrownBonusUpgrade()">Koupit — 100 Yangů</button>
+        </div>
+      </div>
+
       <div class="shop-message" id="shopMessage"></div>
       <div class="game-buttons" style="margin-top:0.4rem;">
         <button class="game-btn" onclick="toggleShop(false)">✕ Zavřít shop</button>
@@ -1238,7 +1256,6 @@ let framesUntilNextPipe = 0;
 let animationId = null;
 let difficultyLevel = 0; // increases with score
 let endlessMode = false; // set when player continues after winning
-let pipesSinceCoin = 0;
 let invincibleUntil = 0;
 let hasShield = false;
 let shieldPhaseUntil = 0;
@@ -1251,6 +1268,12 @@ let wallets = 0;
 let shieldStartOwned = false;
 let invincibilityLevel = 0;
 let walletAwardedThisRun = false;
+let doubleYangLevel = 0;
+let crownBonusLevel = 0;
+let doubleYangUntil = 0;
+let amazonNerfUntil = 0;
+let amazonNerfSpeedMult = 1.0;
+let pipesSincePowerup = 0;
 
 // Load best score from localStorage
 try {
@@ -1263,6 +1286,8 @@ try {
   wallets = parseInt(localStorage.getItem('nw_flappy_wallets') || '0', 10) || 0;
   shieldStartOwned = localStorage.getItem('nw_flappy_upgrade_shield_start') === '1';
   invincibilityLevel = Math.min(3, Math.max(0, parseInt(localStorage.getItem('nw_flappy_upgrade_invincibility') || '0', 10) || 0));
+  doubleYangLevel = Math.min(2, Math.max(0, parseInt(localStorage.getItem('nw_flappy_upgrade_double_yang') || '0', 10) || 0));
+  crownBonusLevel = Math.min(2, Math.max(0, parseInt(localStorage.getItem('nw_flappy_upgrade_crown_bonus') || '0', 10) || 0));
 } catch (e) {}
 
 function saveEconomy() {
@@ -1271,6 +1296,8 @@ function saveEconomy() {
     localStorage.setItem('nw_flappy_wallets', String(wallets));
     localStorage.setItem('nw_flappy_upgrade_shield_start', shieldStartOwned ? '1' : '0');
     localStorage.setItem('nw_flappy_upgrade_invincibility', String(invincibilityLevel));
+    localStorage.setItem('nw_flappy_upgrade_double_yang', String(doubleYangLevel));
+    localStorage.setItem('nw_flappy_upgrade_crown_bonus', String(crownBonusLevel));
   } catch (e) {}
 }
 
@@ -1300,6 +1327,24 @@ function updateEconomyUi() {
     invBtn.textContent = invincibilityLevel >= 3 ? 'Maximum' : 'Koupit — 100 Yangů';
     invBtn.disabled = invincibilityLevel >= 3 || yang < UPGRADE_COST;
     invBtn.classList.toggle('disabled', invBtn.disabled);
+  }
+
+  const dyLevel = document.getElementById('doubleYangLevel');
+  const dyBtn = document.getElementById('buyDoubleYangBtn');
+  if (dyLevel) dyLevel.textContent = `Level ${doubleYangLevel}/${DOUBLE_YANG_MAX_LEVEL} (${(getDoubleYangDuration() / 1000).toFixed(1)}s)`;
+  if (dyBtn) {
+    dyBtn.textContent = doubleYangLevel >= DOUBLE_YANG_MAX_LEVEL ? 'Maximum' : 'Koupit — 100 Yangů';
+    dyBtn.disabled = doubleYangLevel >= DOUBLE_YANG_MAX_LEVEL || yang < UPGRADE_COST;
+    dyBtn.classList.toggle('disabled', dyBtn.disabled);
+  }
+
+  const cbLevel = document.getElementById('crownBonusLevel');
+  const cbBtn = document.getElementById('buyCrownBonusBtn');
+  if (cbLevel) cbLevel.textContent = `Level ${crownBonusLevel}/${CROWN_BONUS_MAX_LEVEL} (+${getCrownBonusValue()} skóre)`;
+  if (cbBtn) {
+    cbBtn.textContent = crownBonusLevel >= CROWN_BONUS_MAX_LEVEL ? 'Maximum' : 'Koupit — 100 Yangů';
+    cbBtn.disabled = crownBonusLevel >= CROWN_BONUS_MAX_LEVEL || yang < UPGRADE_COST;
+    cbBtn.classList.toggle('disabled', cbBtn.disabled);
   }
 }
 
@@ -1356,8 +1401,62 @@ function buyInvincibilityUpgrade() {
   showShopMessage(`Nesmrtelnost prodloužena na ${(2 + invincibilityLevel * 0.5).toFixed(1)}s.`);
 }
 
+function buyDoubleYangUpgrade() {
+  if (doubleYangLevel >= DOUBLE_YANG_MAX_LEVEL) return;
+  if (!spendYang(UPGRADE_COST)) {
+    showShopMessage('Nemáš dost Yangů. Potřebuješ 100.');
+    return;
+  }
+  doubleYangLevel++;
+  saveEconomy();
+  updateEconomyUi();
+  showShopMessage(`Double Yang prodloužen na ${(getDoubleYangDuration() / 1000).toFixed(1)}s.`);
+}
+
+function buyCrownBonusUpgrade() {
+  if (crownBonusLevel >= CROWN_BONUS_MAX_LEVEL) return;
+  if (!spendYang(UPGRADE_COST)) {
+    showShopMessage('Nemáš dost Yangů. Potřebuješ 100.');
+    return;
+  }
+  crownBonusLevel++;
+  saveEconomy();
+  updateEconomyUi();
+  showShopMessage(`Crown Bonus zvýšen na +${getCrownBonusValue()} skóre.`);
+}
+
 function getInvincibleDurationMs() {
   return INVINCIBLE_DURATION_MS + invincibilityLevel * 500;
+}
+
+function getDoubleYangDuration() {
+  return DOUBLE_YANG_BASE_MS + doubleYangLevel * DOUBLE_YANG_BONUS_MS;
+}
+
+function getCrownBonusValue() {
+  return CROWN_BONUS_BASE + crownBonusLevel;
+}
+
+function isDoubleYangActive() {
+  return performance.now() < doubleYangUntil;
+}
+
+function isAmazonNerfActive() {
+  return performance.now() < amazonNerfUntil;
+}
+
+function getAmazonNerfSpeedMultiplier() {
+  return isAmazonNerfActive() ? amazonNerfSpeedMult : 1.0;
+}
+
+function pickPowerupType() {
+  const r = Math.random();
+  let acc = 0;
+  for (const [type, weight] of POWERUP_TYPE_WEIGHTS) {
+    acc += weight;
+    if (r < acc) return type;
+  }
+  return POWERUP_TYPE_WEIGHTS[0][0];
 }
 
 // === BASE PARAMETERS (very gentle start) ===
@@ -1369,9 +1468,6 @@ const PIPE_GAP_BASE = 320;
 const PIPE_WIDTH = 80;
 const PIPE_INTERVAL_BASE = 255; // big gaps between pipes — calm start
 const COIN_RADIUS = 18;
-const COIN_MIN_PIPES = 6;
-const COIN_FORCE_PIPES = 11;
-const COIN_CHANCE = 0.28;
 const YANG_RADIUS = 15;
 const YANG_VALUE = 2;
 const YANG_MIN_PIPES = 3;
@@ -1379,6 +1475,27 @@ const YANG_FORCE_PIPES = 8;
 const YANG_CHANCE = 0.22;
 const UPGRADE_COST = 100;
 const INVINCIBLE_DURATION_MS = 2000;
+const DOUBLE_YANG_BASE_MS = 8000;
+const DOUBLE_YANG_BONUS_MS = 2000; // per shop level
+const DOUBLE_YANG_MAX_LEVEL = 2;
+const CROWN_BONUS_BASE = 1;
+const CROWN_BONUS_MAX_LEVEL = 2;
+const AMAZON_NERF_DURATION_MS = 5000;
+const AMAZON_NERF_SLOW_MULT = 0.85;
+const AMAZON_NERF_SPEED_MULT = 1.15;
+const AMAZON_NERF_SLOW_CHANCE = 0.425;
+const AMAZON_NERF_SPEED_CHANCE = 0.425; // doubleScore = 1 - slow - speed = 0.15
+const POWERUP_MIN_PIPES = 4;
+const POWERUP_FORCE_PIPES = 14;
+const POWERUP_CHANCE = 0.18;
+// Distribution of power-up types when a power-up slot fires.
+// Weights must sum to 1.0.
+const POWERUP_TYPE_WEIGHTS = [
+  ['invincibility', 0.35],
+  ['doubleYang',    0.30],
+  ['crownBonus',    0.25],
+  ['amazonNerf',    0.10]
+];
 
 // === DIFFICULTY SCALING (gradual ramp, one step per 4 passed pipes) ===
 function getDifficultyStep() {
@@ -1396,7 +1513,7 @@ function getGravity() {
 }
 function getPipeSpeed() {
   const d = getEffectiveDifficulty();
-  return PIPE_SPEED_BASE + Math.min(1.35, d * 0.13);
+  return (PIPE_SPEED_BASE + Math.min(1.35, d * 0.13)) * getAmazonNerfSpeedMultiplier();
 }
 function getPipeGap() {
   const d = getEffectiveDifficulty();
@@ -1409,7 +1526,53 @@ function getPipeInterval() {
 function getNextPipeDelay() {
   // Dedicated delay avoids the old modulo bug where a changed interval could spawn
   // two pipe pairs almost next to each other.
-  return getPipeInterval();
+  // Divide interval by Amazon Nerf multiplier so the pixel spacing between pipes
+  // stays the same (faster speed → shorter frame countdown, slower speed → longer).
+  // This keeps the safe horizontal gap pattern intact even during the effect.
+  const mult = getAmazonNerfSpeedMultiplier();
+  return Math.max(80, Math.round(getPipeInterval() / mult));
+}
+
+// Centralised score increment so pipe-pass, Crown Bonus and Amazon double-score
+// all share the same win-trigger / particle / sound / voice-line logic.
+function addScore(amount) {
+  if (!Number.isFinite(amount) || amount <= 0) return;
+  if (gameState !== 'playing') return;
+  const before = score;
+  score += amount;
+  const gameScoreEl = document.getElementById('gameScore');
+  if (gameScoreEl) gameScoreEl.textContent = score;
+  difficultyLevel = getDifficultyStep();
+
+  // HMM sound when crossing any new multiple of 10.
+  if (Math.floor(score / 10) > Math.floor(before / 10) && score >= 10) {
+    playHmm();
+  }
+
+  // Random taunting voice line milestone.
+  if (score >= nextVoiceLineScore) {
+    showVoiceLine();
+    setNextVoiceLineScore();
+  }
+
+  // Burst of gold particles.
+  for (let i = 0; i < 8; i++) {
+    particles.push({
+      x: player.x,
+      y: player.y,
+      vx: (Math.random() - 0.5) * 4,
+      vy: (Math.random() - 0.5) * 4,
+      life: 35,
+      size: 1.5 + Math.random() * 2,
+      color: '#f0d080'
+    });
+  }
+
+  // Win trigger fires exactly once when the score crosses WIN_SCORE.
+  if (before < WIN_SCORE && score >= WIN_SCORE && !endlessMode) {
+    awardShield();
+    winGame();
+  }
 }
 function isInvincible() {
   return performance.now() < invincibleUntil;
@@ -1616,9 +1779,12 @@ function startGame() {
   difficultyLevel = 0;
   framesUntilNextPipe = 95;
   endlessMode = false;
-  pipesSinceCoin = 0;
+  pipesSincePowerup = 0;
   pipesSinceYang = 0;
   invincibleUntil = 0;
+  doubleYangUntil = 0;
+  amazonNerfUntil = 0;
+  amazonNerfSpeedMult = 1.0;
   hasShield = shieldStartOwned;
   walletAwardedThisRun = false;
   shieldPhaseUntil = 0;
@@ -1701,9 +1867,12 @@ function continueGame() {
   pipes = [];
   frameCount = 0;
   framesUntilNextPipe = 95;
-  pipesSinceCoin = 0;
+  pipesSincePowerup = 0;
   pipesSinceYang = 0;
   shieldPhaseUntil = 0;
+  doubleYangUntil = 0;
+  amazonNerfUntil = 0;
+  amazonNerfSpeedMult = 1.0;
   activeVoiceLine = null;
   activeVoiceLineUntil = 0;
   setNextVoiceLineScore();
@@ -1724,40 +1893,115 @@ function spawnPipe() {
     gapTop: gapTop,
     gap: gap,
     passed: false,
-    coin: null,
-    yang: null
+    coin: null, // power-up (invincibility / doubleYang / crownBonus / amazonNerf)
+    yang: null  // Yang currency
   };
 
-  pipesSinceCoin++;
-  const shouldSpawnCoin = pipesSinceCoin >= COIN_MIN_PIPES &&
-    (Math.random() < COIN_CHANCE || pipesSinceCoin >= COIN_FORCE_PIPES);
-  if (shouldSpawnCoin) {
-    pipe.coin = {
+  // Každá mezera má max JEDNU collectable věc, aby se Yang, nesmrtelnost, Double
+  // Yang, Crown Bonus a Amazon Nerf nikdy nepřekrývaly. Yang se zkouší první
+  // (nejčastější), pak power-up. Anti-bad-luck forcing po delší době bez nálezu.
+  pipesSinceYang++;
+  pipesSincePowerup++;
+
+  const yangAllowed = pipesSinceYang >= YANG_MIN_PIPES &&
+    (Math.random() < YANG_CHANCE || pipesSinceYang >= YANG_FORCE_PIPES);
+
+  if (yangAllowed) {
+    pipe.yang = {
       x: canvas.width + PIPE_WIDTH / 2,
       y: gapTop + gap / 2,
-      r: COIN_RADIUS,
+      r: YANG_RADIUS,
+      value: YANG_VALUE,
       collected: false
     };
-    pipesSinceCoin = 0;
+    pipesSinceYang = 0;
   } else {
-    // Yangy jsou běžná měna: 2 Yangy za pickup. Spawnují se také uprostřed mezery,
-    // ale nikdy na stejném sloupu jako power-up mince, aby se nepřekrývaly.
-    pipesSinceYang++;
-    const shouldSpawnYang = pipesSinceYang >= YANG_MIN_PIPES &&
-      (Math.random() < YANG_CHANCE || pipesSinceYang >= YANG_FORCE_PIPES);
-    if (shouldSpawnYang) {
-      pipe.yang = {
+    const powerupAllowed = pipesSincePowerup >= POWERUP_MIN_PIPES &&
+      (Math.random() < POWERUP_CHANCE || pipesSincePowerup >= POWERUP_FORCE_PIPES);
+    if (powerupAllowed) {
+      const type = pickPowerupType();
+      pipe.coin = {
+        type: type,
         x: canvas.width + PIPE_WIDTH / 2,
         y: gapTop + gap / 2,
-        r: YANG_RADIUS,
-        value: YANG_VALUE,
+        r: COIN_RADIUS,
         collected: false
       };
-      pipesSinceYang = 0;
+      pipesSincePowerup = 0;
     }
   }
 
   pipes.push(pipe);
+}
+
+function applyPowerup(coin) {
+  if (!coin) return;
+  const type = coin.type || 'invincibility';
+  switch (type) {
+    case 'invincibility': {
+      invincibleUntil = performance.now() + getInvincibleDurationMs();
+      activeVoiceLine = `NESMRTELNOST ${(getInvincibleDurationMs() / 1000).toFixed(1)}s`;
+      activeVoiceLineUntil = performance.now() + 2000;
+      spawnPickupParticles(coin, '#f0d080', '#8a6a1f', 24);
+      break;
+    }
+    case 'doubleYang': {
+      const dur = getDoubleYangDuration();
+      // Overlapping pickups reset to the full duration (don't stack additively).
+      doubleYangUntil = performance.now() + dur;
+      activeVoiceLine = `DOUBLE YANG ${(dur / 1000).toFixed(1)}s aktivováno`;
+      activeVoiceLineUntil = performance.now() + 2400;
+      spawnPickupParticles(coin, '#80f0c0', '#f0d080', 24);
+      break;
+    }
+    case 'crownBonus': {
+      const bonus = getCrownBonusValue();
+      activeVoiceLine = `+${bonus} skóre — Crown Bonus!`;
+      activeVoiceLineUntil = performance.now() + 2400;
+      spawnPickupParticles(coin, '#fff2a8', '#f0d080', 26);
+      // Goes through addScore → win / wallet / shield trigger handled uniformly.
+      addScore(bonus);
+      break;
+    }
+    case 'amazonNerf': {
+      const roll = Math.random();
+      let primary = '#ff8a3c';
+      if (roll < AMAZON_NERF_SLOW_CHANCE) {
+        amazonNerfSpeedMult = AMAZON_NERF_SLOW_MULT;
+        amazonNerfUntil = performance.now() + AMAZON_NERF_DURATION_MS;
+        activeVoiceLine = 'Amazon omylem optimalizoval servery.';
+        primary = '#80c8ff';
+      } else if (roll < AMAZON_NERF_SLOW_CHANCE + AMAZON_NERF_SPEED_CHANCE) {
+        amazonNerfSpeedMult = AMAZON_NERF_SPEED_MULT;
+        amazonNerfUntil = performance.now() + AMAZON_NERF_DURATION_MS;
+        activeVoiceLine = 'Amazon vydal balance patch. Bohužel.';
+        primary = '#ff5050';
+      } else {
+        // Doubling score: pass current score back through addScore so the
+        // WIN_SCORE crossover (and Peněženky reward + shield) still fires.
+        activeVoiceLine = 'Amazon účetní chyba: skóre zdvojnásobeno.';
+        primary = '#f0d080';
+        if (score > 0) addScore(score);
+      }
+      activeVoiceLineUntil = performance.now() + 2800;
+      spawnPickupParticles(coin, primary, '#3a2e1a', 28);
+      break;
+    }
+  }
+}
+
+function spawnPickupParticles(coin, c1, c2, count) {
+  for (let i = 0; i < count; i++) {
+    particles.push({
+      x: coin.x,
+      y: coin.y,
+      vx: (Math.random() - 0.5) * 6,
+      vy: (Math.random() - 0.5) * 6,
+      life: 45 + Math.random() * 20,
+      size: 2 + Math.random() * 2.5,
+      color: Math.random() > 0.45 ? c1 : c2
+    });
+  }
 }
 
 function update() {
@@ -1784,38 +2028,15 @@ function update() {
     if (p.yang && !p.yang.collected) p.yang.x -= speed;
     if (!p.passed && p.x + PIPE_WIDTH < player.x) {
       p.passed = true;
-      score++;
-      difficultyLevel = getDifficultyStep(); // ramp up only every 4 passed pipes
-      document.getElementById('gameScore').textContent = score;
-      // HMM sound every 10 points!
-      if (score % 10 === 0) playHmm();
-      if (score >= nextVoiceLineScore) {
-        showVoiceLine();
-        setNextVoiceLineScore();
-      }
-      // Score particles
-      for (let i = 0; i < 8; i++) {
-        particles.push({
-          x: player.x,
-          y: player.y,
-          vx: (Math.random() - 0.5) * 4,
-          vy: (Math.random() - 0.5) * 4,
-          life: 35,
-          size: 1.5 + Math.random() * 2,
-          color: '#f0d080'
-        });
-      }
-      // WIN check! (only if not already in endless mode)
-      if (score >= WIN_SCORE && !endlessMode) {
-        awardShield();
-        winGame();
-        return;
-      }
+      addScore(1);
+      if (gameState !== 'playing') return;
     }
   }
   pipes = pipes.filter(p => p.x + PIPE_WIDTH > 0);
 
-  // Coin pickup: coin is always attached to the middle of a pipe gap.
+  // Power-up pickup (invincibility / doubleYang / crownBonus / amazonNerf).
+  // Each pipe pair holds at most one collectable (Yang or coin), so picking a
+  // coin can never collide with picking a Yang in the same gap.
   for (const p of pipes) {
     const coin = p.coin;
     if (!coin || coin.collected) continue;
@@ -1823,22 +2044,12 @@ function update() {
     const dy = player.y - coin.y;
     if (Math.hypot(dx, dy) < player.r + coin.r) {
       coin.collected = true;
-      invincibleUntil = performance.now() + getInvincibleDurationMs();
-      for (let i = 0; i < 24; i++) {
-        particles.push({
-          x: coin.x,
-          y: coin.y,
-          vx: (Math.random() - 0.5) * 6,
-          vy: (Math.random() - 0.5) * 6,
-          life: 45 + Math.random() * 20,
-          size: 2 + Math.random() * 2.5,
-          color: Math.random() > 0.35 ? '#f0d080' : '#8a6a1f'
-        });
-      }
+      applyPowerup(coin);
+      if (gameState !== 'playing') return;
     }
   }
 
-  // Yang pickup: běžná měna do shopu, vždy uprostřed mezery a bez překryvu s power-upem.
+  // Yang pickup: běžná měna do shopu. Během Double Yang efektu dvojnásobek.
   for (const p of pipes) {
     const coin = p.yang;
     if (!coin || coin.collected) continue;
@@ -1846,10 +2057,12 @@ function update() {
     const dy = player.y - coin.y;
     if (Math.hypot(dx, dy) < player.r + coin.r) {
       coin.collected = true;
-      yang += coin.value;
+      const mult = isDoubleYangActive() ? 2 : 1;
+      const earned = coin.value * mult;
+      yang += earned;
       saveEconomy();
       updateEconomyUi();
-      activeVoiceLine = `+${coin.value} Yangy`;
+      activeVoiceLine = mult > 1 ? `+${earned} Yangy (Double!)` : `+${earned} Yangy`;
       activeVoiceLineUntil = performance.now() + 1800;
       for (let i = 0; i < 18; i++) {
         particles.push({
@@ -1859,7 +2072,7 @@ function update() {
           vy: (Math.random() - 0.5) * 5,
           life: 35 + Math.random() * 18,
           size: 1.8 + Math.random() * 2.2,
-          color: Math.random() > 0.35 ? '#f0d080' : '#c9a84c'
+          color: Math.random() > 0.35 ? '#f0d080' : (mult > 1 ? '#80f0c0' : '#c9a84c')
         });
       }
     }
@@ -1963,27 +2176,56 @@ function drawBackground() {
   }
 }
 
+const COIN_STYLES = {
+  invincibility: {
+    inner: '#fff2a8', mid: '#f0d080', outer: '#8a6a1f',
+    glow: 'rgba(240,208,128,0.45)', ring: '#fff2a8',
+    label: 'I', font: 'bold 18px Cinzel, serif', textColor: '#3a2e1a',
+    pulseSpeed: 0.18, spinSpeed: 0.04
+  },
+  doubleYang: {
+    inner: '#d8fff0', mid: '#5fd0a0', outer: '#1f5a48',
+    glow: 'rgba(120,240,200,0.5)', ring: '#d8fff0',
+    label: '2x', font: 'bold 13px Cinzel, serif', textColor: '#0f2a20',
+    pulseSpeed: 0.20, spinSpeed: 0.045
+  },
+  crownBonus: {
+    inner: '#fff2c8', mid: '#f0c060', outer: '#6a4818',
+    glow: 'rgba(255,210,120,0.55)', ring: '#fff5d0',
+    label: '👑', font: 'bold 18px serif', textColor: '#3a2e1a',
+    pulseSpeed: 0.16, spinSpeed: 0
+  },
+  amazonNerf: {
+    inner: '#ffd0a0', mid: '#ff8030', outer: '#5a1f0a',
+    glow: 'rgba(255,140,60,0.55)', ring: '#ffd0a0',
+    label: '📦', font: 'bold 17px serif', textColor: '#3a2e1a',
+    pulseSpeed: 0.24, spinSpeed: 0
+  }
+};
+
 function drawCoin(coin) {
   if (!coin || coin.collected) return;
-  const pulse = Math.sin(frameCount * 0.18) * 2;
+  const style = COIN_STYLES[coin.type] || COIN_STYLES.invincibility;
+  const pulse = Math.sin(frameCount * style.pulseSpeed) * 2;
   const r = coin.r + pulse;
 
   ctx.save();
   ctx.translate(coin.x, coin.y);
-  ctx.rotate(frameCount * 0.04);
+  const spinAngle = frameCount * style.spinSpeed;
+  ctx.rotate(spinAngle);
 
   const glow = ctx.createRadialGradient(0, 0, r * 0.5, 0, 0, r * 2.4);
-  glow.addColorStop(0, 'rgba(240,208,128,0.45)');
-  glow.addColorStop(1, 'rgba(240,208,128,0)');
+  glow.addColorStop(0, style.glow);
+  glow.addColorStop(1, 'rgba(0,0,0,0)');
   ctx.fillStyle = glow;
   ctx.beginPath();
   ctx.arc(0, 0, r * 2.4, 0, Math.PI * 2);
   ctx.fill();
 
   const coinGrad = ctx.createRadialGradient(-r * 0.35, -r * 0.45, 2, 0, 0, r);
-  coinGrad.addColorStop(0, '#fff2a8');
-  coinGrad.addColorStop(0.35, '#f0d080');
-  coinGrad.addColorStop(1, '#8a6a1f');
+  coinGrad.addColorStop(0, style.inner);
+  coinGrad.addColorStop(0.35, style.mid);
+  coinGrad.addColorStop(1, style.outer);
   ctx.fillStyle = coinGrad;
   ctx.beginPath();
   ctx.arc(0, 0, r, 0, Math.PI * 2);
@@ -1993,17 +2235,19 @@ function drawCoin(coin) {
   ctx.lineWidth = 2;
   ctx.stroke();
 
-  ctx.strokeStyle = '#fff2a8';
+  ctx.strokeStyle = style.ring;
   ctx.lineWidth = 2;
   ctx.beginPath();
   ctx.arc(0, 0, r * 0.58, 0, Math.PI * 2);
   ctx.stroke();
 
-  ctx.fillStyle = '#3a2e1a';
-  ctx.font = 'bold 18px Cinzel, serif';
+  // Counter-rotate the label so it stays upright even when the coin spins.
+  ctx.rotate(-spinAngle);
+  ctx.fillStyle = style.textColor;
+  ctx.font = style.font;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText('I', 0, 1);
+  ctx.fillText(style.label, 0, 1);
 
   ctx.restore();
 }
@@ -2237,6 +2481,27 @@ function drawScore() {
     ctx.fillText(`NESMRTELNOST ${invincibleLeft.toFixed(1)}s`, canvas.width / 2, statusY);
     statusY += 30;
   }
+  const doubleYangLeft = Math.ceil((doubleYangUntil - performance.now()) / 100) / 10;
+  if (doubleYangLeft > 0) {
+    ctx.shadowBlur = 16;
+    ctx.font = 'bold 20px "Cinzel", serif';
+    ctx.fillStyle = '#80f0c0';
+    ctx.fillText(`DOUBLE YANG ${doubleYangLeft.toFixed(1)}s`, canvas.width / 2, statusY);
+    statusY += 30;
+  }
+  const nerfLeft = Math.ceil((amazonNerfUntil - performance.now()) / 100) / 10;
+  if (nerfLeft > 0) {
+    ctx.shadowBlur = 16;
+    ctx.font = 'bold 20px "Cinzel", serif';
+    if (amazonNerfSpeedMult < 1) {
+      ctx.fillStyle = '#80c8ff';
+      ctx.fillText(`AMAZON SLOW ${nerfLeft.toFixed(1)}s`, canvas.width / 2, statusY);
+    } else {
+      ctx.fillStyle = '#ff8a8a';
+      ctx.fillText(`AMAZON SPEED ${nerfLeft.toFixed(1)}s`, canvas.width / 2, statusY);
+    }
+    statusY += 30;
+  }
   if (hasShield) {
     ctx.shadowBlur = 16;
     ctx.font = 'bold 20px "Cinzel", serif';
@@ -2290,9 +2555,12 @@ function openGame() {
   particles = [];
   difficultyLevel = 0;
   endlessMode = false;
-  pipesSinceCoin = 0;
+  pipesSincePowerup = 0;
   pipesSinceYang = 0;
   invincibleUntil = 0;
+  doubleYangUntil = 0;
+  amazonNerfUntil = 0;
+  amazonNerfSpeedMult = 1.0;
   hasShield = false;
   walletAwardedThisRun = false;
   shieldPhaseUntil = 0;
