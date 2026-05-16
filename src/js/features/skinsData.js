@@ -6,29 +6,142 @@ const ctx = canvas.getContext('2d');
 const headImg = new Image();
 headImg.src = HEAD_B64;
 
+const UNLOCKED_SKINS_KEY = 'nw_flappy_unlocked_skins';
+const SKIN_PRICE_WALLETS = 2;
+const CRASHIS_SMAZENY_SKIN_ID = 'crashis-smazeny';
+const MARTIN_SLUNECNY_SKIN_ID = 'martin-slunecny';
+const MARTIN_SLUNECNY_BUFF_MS = 10000;
+
 const SKINS = [
   {
     id: 'godias-zubaty',
     name: 'Godias Zubatý',
     desc: 'Původní New World hrdina. Zubatý úsměv straší Amazonce ve snech.',
     src: null,
-    unlocked: true
+    priceWallets: 0,
+    unlockedByDefault: true
   },
   {
     id: 'saradyn-z-hoodu',
     name: 'Saradyn z Hoodu',
     desc: 'Záhadný lukostřelec z temných lesů. Střílí šípy, NE dotazy na zásoby.',
     src: 'assets/skins/saradyn-z-hoodu.png',
-    unlocked: true
+    priceWallets: 0,
+    unlockedByDefault: true
   },
   {
     id: 'crashis-confused',
     name: 'Crashis Confused',
     desc: 'Nikdo neví, jak se sem dostal. Ani on sám. Přesto nějak přežívá.',
     src: 'assets/skins/crashis-confused.png',
-    unlocked: true
+    priceWallets: 0,
+    unlockedByDefault: true
+  },
+  {
+    id: CRASHIS_SMAZENY_SKIN_ID,
+    name: 'Crashis Smažený',
+    desc: 'Usmažený build, usmažené nervy.',
+    src: 'assets/skins/Crashis-Smažený.png',
+    priceWallets: SKIN_PRICE_WALLETS,
+    unlockedByDefault: false,
+    effectDescription: '25% šance ztratit 2 Yangy po smrti.'
+  },
+  {
+    id: 'dominik-nemrkaci',
+    name: 'Dominik Nemrkací',
+    desc: 'Nemrkne ani když mu Amazon vypne server.',
+    src: 'assets/skins/Dominik-Nemrkací.png',
+    priceWallets: SKIN_PRICE_WALLETS,
+    unlockedByDefault: false
+  },
+  {
+    id: 'godias-prekvapeny',
+    name: 'Godias Překvapený',
+    desc: 'Někdo mu právě řekl o datu vypnutí serverů.',
+    src: 'assets/skins/Godias-Překvapený.png',
+    priceWallets: SKIN_PRICE_WALLETS,
+    unlockedByDefault: false
+  },
+  {
+    id: 'kolurklaster',
+    name: 'Kolurklášter',
+    desc: 'Mnich z kláštera, kde se modlí za stabilní ping.',
+    src: 'assets/skins/Kolurklášter.png',
+    priceWallets: SKIN_PRICE_WALLETS,
+    unlockedByDefault: false
+  },
+  {
+    id: MARTIN_SLUNECNY_SKIN_ID,
+    name: 'Martin Slunečný',
+    desc: 'Svítí tak moc, že i bugy radši utečou.',
+    src: 'assets/skins/Martin-Slunečný.png',
+    priceWallets: SKIN_PRICE_WALLETS,
+    unlockedByDefault: false,
+    effectDescription: 'Prvních 10 sekund runu máš dvojnásobné Yangy.'
+  },
+  {
+    id: 'moucha',
+    name: 'Moucha',
+    desc: 'Aeternum ji nikdo nezval. Stejně tu pořád lítá.',
+    src: 'assets/skins/Moucha.png',
+    priceWallets: SKIN_PRICE_WALLETS,
+    unlockedByDefault: false
+  },
+  {
+    id: 'pavel-ocko',
+    name: 'Pavel Očko',
+    desc: 'Vidí lag na míli daleko. Stejně do něj naletí.',
+    src: 'assets/skins/Pavel-Očko.png',
+    priceWallets: SKIN_PRICE_WALLETS,
+    unlockedByDefault: false
+  },
+  {
+    id: 'saradyn-dlouhokrk',
+    name: 'Saradyn DlouhoKrk',
+    desc: 'Vyhlíží další patch. Pořád.',
+    src: 'assets/skins/Saradyn-DlouhoKrk.png',
+    priceWallets: SKIN_PRICE_WALLETS,
+    unlockedByDefault: false
+  },
+  {
+    id: 'skleny-hydratovany',
+    name: 'Skleny Hydratovaný',
+    desc: 'Dvě deci vody, jedna deci kódu.',
+    src: 'assets/skins/Skleny-Hydratovaný.png',
+    priceWallets: SKIN_PRICE_WALLETS,
+    unlockedByDefault: false
+  },
+  {
+    id: 'sklenar-holoprd',
+    name: 'Sklenář Holoprd',
+    desc: 'Legenda říká, že tenhle skin dropnul z produkce.',
+    src: 'assets/skins/Sklenář-Holoprd.png',
+    priceWallets: SKIN_PRICE_WALLETS,
+    unlockedByDefault: false
   }
 ];
+
+(function applyUnlockedSkinsFromStorage() {
+  let saved = [];
+  try {
+    const raw = localStorage.getItem(UNLOCKED_SKINS_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) saved = parsed;
+    }
+  } catch (e) {}
+  const savedSet = new Set(saved);
+  for (const skin of SKINS) {
+    skin.unlocked = !!skin.unlockedByDefault || savedSet.has(skin.id);
+  }
+})();
+
+function saveUnlockedSkins() {
+  try {
+    const ids = SKINS.filter(s => s.unlocked && !s.unlockedByDefault).map(s => s.id);
+    localStorage.setItem(UNLOCKED_SKINS_KEY, JSON.stringify(ids));
+  } catch (e) {}
+}
 
 const ACHIEVEMENT_REWARD_YANG = 10;
 const ACHIEVEMENT_STORAGE_KEY = 'nw_flappy_achievements';

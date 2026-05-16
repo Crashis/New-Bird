@@ -53,6 +53,7 @@ function startGame() {
   document.getElementById('gameScore').textContent = '0';
   updateEconomyUi();
   closeAllPanels();
+  applySelectedSkinStartEffects();
   startGameMusic();
   if (animationId) cancelAnimationFrame(animationId);
   loop();
@@ -61,6 +62,7 @@ function startGame() {
 function endGame() {
   gameState = 'over';
   stopGameMusic();
+  applySelectedSkinEndGameEffects();
   const isNewRecord = score > bestScore;
   if (isNewRecord) {
     bestScore = score;

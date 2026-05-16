@@ -54,6 +54,16 @@
     letter-spacing: 0.08em;
   }
 
+  .skin-effect {
+    font-family: 'Lato', sans-serif;
+    color: var(--gold-light);
+    font-size: 0.72rem;
+    text-align: center;
+    line-height: 1.4;
+    margin-bottom: 0.35rem;
+    letter-spacing: 0.05em;
+  }
+
   .skin-arrow {
     font-size: 1.1rem;
     padding: 0.5rem 1.1rem;
