@@ -118,6 +118,14 @@ function renderSkinsPanel() {
     effectEl.className = 'skin-effect';
     descEl.parentNode.insertBefore(effectEl, descEl.nextSibling);
   }
+  let buffDebuffEl = document.getElementById('skinPreviewBuffDebuff');
+  if (!buffDebuffEl && descEl && descEl.parentNode) {
+    buffDebuffEl = document.createElement('div');
+    buffDebuffEl.id = 'skinPreviewBuffDebuff';
+    buffDebuffEl.className = 'skin-buff-debuff';
+    const refNode = effectEl ? effectEl.nextSibling : descEl.nextSibling;
+    descEl.parentNode.insertBefore(buffDebuffEl, refNode);
+  }
 
   if (nameEl) nameEl.textContent = skin.name;
   if (descEl) descEl.textContent = skin.desc;
@@ -128,6 +136,27 @@ function renderSkinsPanel() {
     } else {
       effectEl.textContent = '';
       effectEl.style.display = 'none';
+    }
+  }
+  if (buffDebuffEl) {
+    if (skin.buffText || skin.debuffText) {
+      buffDebuffEl.innerHTML = '';
+      if (skin.buffText) {
+        const b = document.createElement('span');
+        b.className = 'skin-buff';
+        b.textContent = `Buff: ${skin.buffText}`;
+        buffDebuffEl.appendChild(b);
+      }
+      if (skin.debuffText) {
+        const d = document.createElement('span');
+        d.className = 'skin-debuff';
+        d.textContent = `Debuff: ${skin.debuffText}`;
+        buffDebuffEl.appendChild(d);
+      }
+      buffDebuffEl.style.display = '';
+    } else {
+      buffDebuffEl.innerHTML = '';
+      buffDebuffEl.style.display = 'none';
     }
   }
 

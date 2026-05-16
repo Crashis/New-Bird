@@ -118,6 +118,16 @@ const SKINS = [
     src: 'assets/skins/Sklenář-Holoprd.png',
     priceWallets: SKIN_PRICE_WALLETS,
     unlockedByDefault: false
+  },
+  {
+    id: 'vseho-s-mirou',
+    name: 'Všeho s Mírou',
+    desc: 'Amazon mu dovolil jeden respawn. Použil ho na nákup LEGO.',
+    src: 'assets/skins/Všeho-s-Mírou.png',
+    priceWallets: SKIN_PRICE_WALLETS,
+    unlockedByDefault: false,
+    buffText: 'Má LEGO Barad-dûr.',
+    debuffText: 'Nemá webkameru.'
   }
 ];
 
