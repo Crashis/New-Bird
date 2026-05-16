@@ -50,6 +50,11 @@ function startGame() {
   document.getElementById('startPanel').classList.add('hidden');
   document.getElementById('gameOverPanel').classList.remove('active');
   document.getElementById('winPanel').classList.remove('active');
+  const bezosPanel = document.getElementById('bezosPanel');
+  if (bezosPanel) bezosPanel.classList.remove('active');
+  const finalPanel = document.getElementById('finalPanel');
+  if (finalPanel) finalPanel.classList.remove('active');
+  document.body.classList.remove('modal-open');
   document.getElementById('gameScore').textContent = '0';
   updateEconomyUi();
   closeAllPanels();
@@ -76,7 +81,10 @@ function endGame() {
   const deathPool = (window.NWI18n && window.NWI18n.getDeathQuotes()) || DEATH_QUOTES;
   document.getElementById('deathQuote').textContent =
     deathPool[Math.floor(Math.random() * deathPool.length)];
-  document.getElementById('gameOverPanel').classList.add('active');
+  const gameOverPanel = document.getElementById('gameOverPanel');
+  gameOverPanel.classList.add('active');
+  document.body.classList.add('modal-open');
+  applyModalButtonCooldown(gameOverPanel, 320);
 }
 
 function winGame() {
@@ -115,13 +123,17 @@ function winGame() {
   const winPool = (window.NWI18n && window.NWI18n.getWinQuotes()) || WIN_QUOTES;
   document.getElementById('winQuote').textContent =
     winPool[Math.floor(Math.random() * winPool.length)];
-  document.getElementById('winPanel').classList.add('active');
+  const winPanel = document.getElementById('winPanel');
+  winPanel.classList.add('active');
+  document.body.classList.add('modal-open');
+  applyModalButtonCooldown(winPanel, 320);
 }
 
 function continueGame() {
   // Resume in endless mode: bigger gaps, slower ramp-up
   gameState = 'playing';
   endlessMode = true;
+  document.body.classList.remove('modal-open');
   // Reset difficulty so we have a "rest" — gaps will be big again
   difficultyLevel = 0;
   // Clear pipes so the next one spawns fresh after a break
@@ -147,9 +159,17 @@ function continueGame() {
 }
 
 function drawBackground() {
-  // Dark sky gradient (Aeternum night) — switches to corrupted red tones in event phase.
+  // Dark sky gradient — barva závisí na aktuální fázi.
   const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
-  if (eventPhaseActive) {
+  if (currentGamePhase === GAME_PHASES.VOID) {
+    grad.addColorStop(0, '#1a0628');
+    grad.addColorStop(0.5, '#0c0214');
+    grad.addColorStop(1, '#06010a');
+  } else if (currentGamePhase === GAME_PHASES.FROST) {
+    grad.addColorStop(0, '#06182e');
+    grad.addColorStop(0.5, '#030b1a');
+    grad.addColorStop(1, '#01060e');
+  } else if (eventPhaseActive) {
     grad.addColorStop(0, '#2c0a08');
     grad.addColorStop(0.5, '#170504');
     grad.addColorStop(1, '#0a0302');
@@ -161,14 +181,18 @@ function drawBackground() {
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Lehký pulzující rudý overlay v event fázi (respektuje Effects toggle).
-  // Na mobilu (PERF_MOBILE) overlay i atmosférické částice vypneme — celoplošný
-  // alpha fill + 15× fillRect každý frame zbytečně tahá za fillrate.
+  // Pulzující overlay (red/blue/violet podle fáze) — respektuje Effects toggle.
   const perfMobile = window.PERF_MOBILE;
-  if (eventPhaseActive && settings.effects && !perfMobile) {
-    const pulse = 0.07 + Math.sin(frameCount * 0.04) * 0.04;
-    ctx.fillStyle = `rgba(140, 20, 20, ${pulse})`;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  if (settings.effects && !perfMobile) {
+    let overlayColor = null;
+    if (currentGamePhase === GAME_PHASES.VOID) overlayColor = '160, 60, 220';
+    else if (currentGamePhase === GAME_PHASES.FROST) overlayColor = '60, 120, 220';
+    else if (eventPhaseActive) overlayColor = '140, 20, 20';
+    if (overlayColor) {
+      const pulse = 0.07 + Math.sin(frameCount * 0.04) * 0.04;
+      ctx.fillStyle = `rgba(${overlayColor}, ${pulse})`;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
   }
 
   // Distant mountains silhouette (parallax)
@@ -343,6 +367,11 @@ function openGame() {
   document.getElementById('startPanel').classList.remove('hidden');
   document.getElementById('gameOverPanel').classList.remove('active');
   document.getElementById('winPanel').classList.remove('active');
+  const bezosPanel = document.getElementById('bezosPanel');
+  if (bezosPanel) bezosPanel.classList.remove('active');
+  const finalPanel = document.getElementById('finalPanel');
+  if (finalPanel) finalPanel.classList.remove('active');
+  document.body.classList.remove('modal-open');
   gameState = 'idle';
   // Draw initial idle frame
   player = { x: 160, y: canvas.height / 2, vy: 0, r: 38, rotation: 0 };
@@ -378,6 +407,80 @@ function quitGameFromMainMenu() {
   closeGame();
 }
 
+// ===== Milestone modals (Bezos / Final) =====
+function pauseForMilestone(panelId, titleKey, subtitleKey, quoteKey) {
+  gameState = 'over'; // pauses the rAF loop
+  stopGameMusic();
+  document.body.classList.add('modal-open');
+  const panel = document.getElementById(panelId);
+  if (!panel) return;
+  const titleEl = panel.querySelector('[data-milestone-title]');
+  const subEl = panel.querySelector('[data-milestone-subtitle]');
+  const scoreEl = panel.querySelector('[data-milestone-score]');
+  const quoteEl = panel.querySelector('[data-milestone-quote]');
+  if (titleEl && titleKey) titleEl.textContent = t(titleKey);
+  if (subEl && subtitleKey) subEl.textContent = t(subtitleKey);
+  if (scoreEl) scoreEl.textContent = score;
+  if (quoteEl && quoteKey) quoteEl.textContent = t(quoteKey);
+  panel.classList.add('active');
+  applyModalButtonCooldown(panel, 320);
+}
+
+function applyModalButtonCooldown(panel, ms) {
+  const btns = panel.querySelectorAll('button');
+  btns.forEach(b => { b.disabled = true; });
+  setTimeout(() => { btns.forEach(b => { b.disabled = false; }); }, ms);
+}
+
+function resumeFromMilestone(panelId, onResume) {
+  const panel = document.getElementById(panelId);
+  if (panel) panel.classList.remove('active');
+  document.body.classList.remove('modal-open');
+  if (typeof onResume === 'function') onResume();
+  gameState = 'playing';
+  // Drobné očištění frame countdownu, ať další sloup nepřijde okamžitě po pauze.
+  framesUntilNextPipe = Math.max(framesUntilNextPipe, 60);
+  activeVoiceLine = null;
+  activeVoiceLineUntil = 0;
+  startGameMusic();
+  if (animationId) cancelAnimationFrame(animationId);
+  loop();
+}
+
+function triggerBezosMilestone() {
+  if (score100MilestoneShown) return;
+  score100MilestoneShown = true;
+  pauseForMilestone('bezosPanel', 'milestone.bezos.title', 'milestone.bezos.subtitle', 'milestone.bezos.quote');
+}
+
+function continueFromBezos() {
+  resumeFromMilestone('bezosPanel', () => {
+    activateVoidPhase();
+  });
+}
+
+function triggerFinalMilestone() {
+  if (score500FinalShown) return;
+  score500FinalShown = true;
+  pauseForMilestone('finalPanel', 'milestone.final.title', 'milestone.final.subtitle', 'milestone.final.quote');
+}
+
+function continueFromFinal() {
+  resumeFromMilestone('finalPanel', null);
+}
+
+// Vrací true, pokud je otevřený jakýkoli blokující dialog,
+// při kterém nesmí hra reagovat na klik/tap/space pro skok.
+function isBlockingModalOpen() {
+  if (document.body.classList.contains('modal-open')) return true;
+  const ids = ['gameOverPanel', 'winPanel', 'bezosPanel', 'finalPanel'];
+  for (const id of ids) {
+    const el = document.getElementById(id);
+    if (el && el.classList.contains('active')) return true;
+  }
+  return false;
+}
+
 function closeGame() {
   stopGameMusic();
   if ('speechSynthesis' in window) {
@@ -385,6 +488,11 @@ function closeGame() {
   }
   closeAllPanels();
   resetEventPhase();
+  document.body.classList.remove('modal-open');
+  ['gameOverPanel', 'winPanel', 'bezosPanel', 'finalPanel'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('active');
+  });
   const overlayEl = document.getElementById('gameOverlay');
   overlayEl.classList.remove('active');
   overlayEl.classList.remove('menu-open');

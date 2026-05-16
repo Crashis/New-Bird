@@ -255,22 +255,41 @@ function drawPipe(pipe) {
 function drawAmazonBlade(x, y, w, h, pointingDown) {
   // V event fázi je celý blade tmavší, s tlumenějšími kovy a rudým glow.
   const ev = eventPhaseActive;
+  const phase = currentGamePhase;
+  const isFrost = phase === GAME_PHASES.FROST;
+  const isVoid = phase === GAME_PHASES.VOID;
 
-  // Red glow halo around the blade body (jemné, mimo Effects vypnuto).
-  // Mobile perf mode: shadowBlur na celém sloupu × 2 sloupy × N viditelných pipes
-  // je řádově nejdražší věc ve frame — na mobilu úplně skipnout.
-  if (ev && settings.effects && !window.PERF_MOBILE) {
-    ctx.save();
-    ctx.shadowColor = 'rgba(200, 30, 30, 0.55)';
-    ctx.shadowBlur = 18;
-    ctx.fillStyle = 'rgba(40,0,0,0.85)';
-    ctx.fillRect(x - 1, y - 1, w + 2, h + 2);
-    ctx.restore();
+  // Glow halo around the blade body — color závisí na fázi (na mobilu vypnuto).
+  if (settings.effects && !window.PERF_MOBILE) {
+    let glow = null;
+    if (isVoid) glow = 'rgba(180, 80, 230, 0.55)';
+    else if (isFrost) glow = 'rgba(80, 160, 255, 0.55)';
+    else if (ev) glow = 'rgba(200, 30, 30, 0.55)';
+    if (glow) {
+      ctx.save();
+      ctx.shadowColor = glow;
+      ctx.shadowBlur = 18;
+      ctx.fillStyle = 'rgba(10,4,16,0.85)';
+      ctx.fillRect(x - 1, y - 1, w + 2, h + 2);
+      ctx.restore();
+    }
   }
 
-  // Main blade body — dark metallic with gold trim (or corrupted in event phase)
+  // Main blade body — barva podle fáze.
   const grad = ctx.createLinearGradient(x, 0, x + w, 0);
-  if (ev) {
+  if (isVoid) {
+    grad.addColorStop(0, '#100422');
+    grad.addColorStop(0.3, '#2a0d4a');
+    grad.addColorStop(0.5, '#451670');
+    grad.addColorStop(0.7, '#2a0d4a');
+    grad.addColorStop(1, '#100422');
+  } else if (isFrost) {
+    grad.addColorStop(0, '#04162e');
+    grad.addColorStop(0.3, '#0c2c5a');
+    grad.addColorStop(0.5, '#1a4a90');
+    grad.addColorStop(0.7, '#0c2c5a');
+    grad.addColorStop(1, '#04162e');
+  } else if (ev) {
     grad.addColorStop(0, '#180404');
     grad.addColorStop(0.3, '#3a1010');
     grad.addColorStop(0.5, '#5a1414');
@@ -286,8 +305,12 @@ function drawAmazonBlade(x, y, w, h, pointingDown) {
   ctx.fillStyle = grad;
   ctx.fillRect(x, y, w, h);
 
-  // Edges — gold normally, rust-red in event phase.
-  ctx.fillStyle = ev ? '#a82828' : '#c9a84c';
+  // Edges — gold normally, jiná barva v každé fázi.
+  let edge = '#c9a84c';
+  if (isVoid) edge = '#b070e0';
+  else if (isFrost) edge = '#5aa8ff';
+  else if (ev) edge = '#a82828';
+  ctx.fillStyle = edge;
   ctx.fillRect(x, y, 2, h);
   ctx.fillRect(x + w - 2, y, 2, h);
 
@@ -297,7 +320,7 @@ function drawAmazonBlade(x, y, w, h, pointingDown) {
   ctx.strokeRect(x, y, w, h);
 
   // Decorative diamond pattern (New World style)
-  ctx.fillStyle = ev ? '#c84040' : '#c9a84c';
+  ctx.fillStyle = isVoid ? '#c890ff' : isFrost ? '#80c8ff' : ev ? '#c84040' : '#c9a84c';
   const diamondSpacing = 50;
   const startOffset = pointingDown ? h % diamondSpacing : 0;
   for (let dy = startOffset + 20; dy < h - 20; dy += diamondSpacing) {

@@ -194,6 +194,19 @@ window.NWI18n = window.NWI18n || {};
       'event.walletWonSub': 'První výplata z Aeterna.',
       'event.walletVoice': '+1 Peněženka za záchranu Aeterna',
 
+      // Phase milestones (score 60 / 100 / 500)
+      'milestone.frost.toast': 'FÁZE 3 — FROST CORE',
+      'milestone.void.toast': 'FÁZE 4 — VOID PROTOCOL',
+      'milestone.bezos.title': 'BEZOS PORAŽEN',
+      'milestone.bezos.subtitle': 'Jeff právě rozbil další raketu. Pokračuj, než ti zdaní i skok.',
+      'milestone.bezos.quote': 'Bezos křičí na CFO. Server pláče v rohu.',
+      'milestone.final.title': 'FINÁLE AETERNA',
+      'milestone.final.subtitle': 'Došel jsi dál než celý roadmap tým. Bezos uninstalluje realitu.',
+      'milestone.final.quote': 'Tohle je strop. Hrej dál, nebo si dej čaj.',
+      'milestone.continue': '▶ Pokračovat',
+      'milestone.keepPlaying': '▶ Hrát dál',
+      'milestone.end': '✕ Konec',
+
       // Toast titles
       'toast.upgradeUnlocked': 'UPGRADE ODEMČEN',
       'toast.upgradeSubtitle': 'Amazon účetní oddělení nesouhlasí.',
@@ -393,6 +406,19 @@ window.NWI18n = window.NWI18n || {};
       'event.walletWon': '+1 Wallet',
       'event.walletWonSub': 'First paycheck from Aeternum.',
       'event.walletVoice': '+1 Wallet for saving Aeternum',
+
+      // Phase milestones (score 60 / 100 / 500)
+      'milestone.frost.toast': 'PHASE 3 — FROST CORE',
+      'milestone.void.toast': 'PHASE 4 — VOID PROTOCOL',
+      'milestone.bezos.title': 'BEZOS DEFEATED',
+      'milestone.bezos.subtitle': 'Jeff just smashed another rocket. Keep going before he taxes your jumps.',
+      'milestone.bezos.quote': 'Bezos is yelling at his CFO. The server cries in the corner.',
+      'milestone.final.title': 'AETERNUM FINALE',
+      'milestone.final.subtitle': 'You went further than the entire roadmap team. Bezos is uninstalling reality.',
+      'milestone.final.quote': 'This is the ceiling. Keep playing, or go have some tea.',
+      'milestone.continue': '▶ Continue',
+      'milestone.keepPlaying': '▶ Keep playing',
+      'milestone.end': '✕ Menu',
 
       // Toast titles
       'toast.upgradeUnlocked': 'UPGRADE UNLOCKED',

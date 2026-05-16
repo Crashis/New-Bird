@@ -87,3 +87,75 @@
     60% { transform: translate(4px, -2px); }
     75% { transform: translate(-2px, 2px); }
   }
+
+  /* ===== PHASE 3 — FROST (score 60) ===== */
+  .game-overlay.phase-frost {
+    background: rgba(4,10,22,0.97);
+  }
+  .game-overlay.phase-frost .game-header {
+    color: #9ad6ff;
+    text-shadow: 0 0 22px rgba(80,160,255,0.7);
+    animation: frostHeaderPulse 2.4s ease-in-out infinite;
+  }
+  .game-overlay.phase-frost #gameCanvas {
+    border-color: #1a3a6a;
+    box-shadow:
+      0 0 48px rgba(80,160,255,0.5),
+      inset 0 0 30px rgba(10,30,80,0.6);
+    animation: frostCanvasPulse 2.8s ease-in-out infinite;
+  }
+  .game-overlay.phase-frost .game-stats span strong { color: #b0e0ff; }
+  @keyframes frostHeaderPulse {
+    0%, 100% { text-shadow: 0 0 18px rgba(80,160,255,0.55); }
+    50% { text-shadow: 0 0 32px rgba(140,200,255,0.95); }
+  }
+  @keyframes frostCanvasPulse {
+    0%, 100% { box-shadow: 0 0 48px rgba(80,160,255,0.4), inset 0 0 30px rgba(10,30,80,0.55); }
+    50% { box-shadow: 0 0 72px rgba(140,200,255,0.7), inset 0 0 36px rgba(20,40,100,0.7); }
+  }
+
+  /* ===== PHASE 4 — VOID (score 100) ===== */
+  .game-overlay.phase-void {
+    background: rgba(14,4,22,0.97);
+  }
+  .game-overlay.phase-void .game-header {
+    color: #d6a6ff;
+    text-shadow: 0 0 22px rgba(160,60,220,0.75);
+    animation: voidHeaderPulse 2.2s ease-in-out infinite;
+  }
+  .game-overlay.phase-void #gameCanvas {
+    border-color: #4a1a6a;
+    box-shadow:
+      0 0 48px rgba(160,60,220,0.55),
+      inset 0 0 30px rgba(40,4,60,0.65);
+    animation: voidCanvasPulse 2.6s ease-in-out infinite;
+  }
+  .game-overlay.phase-void .game-stats span strong { color: #e0b8ff; }
+  @keyframes voidHeaderPulse {
+    0%, 100% { text-shadow: 0 0 18px rgba(160,60,220,0.6); }
+    50% { text-shadow: 0 0 34px rgba(200,100,240,0.95); }
+  }
+  @keyframes voidCanvasPulse {
+    0%, 100% { box-shadow: 0 0 48px rgba(160,60,220,0.45), inset 0 0 30px rgba(40,4,60,0.55); }
+    50% { box-shadow: 0 0 80px rgba(200,100,240,0.75), inset 0 0 38px rgba(60,4,80,0.7); }
+  }
+
+  /* ===== Milestone modal disabled state (anti-double-tap) ===== */
+  .milestone-panel .game-btn[disabled],
+  .game-over-panel .game-btn[disabled],
+  .win-panel .game-btn[disabled] {
+    opacity: 0.45;
+    pointer-events: none;
+    cursor: default;
+  }
+
+  /* Bezos vs Final milestone tinting */
+  .milestone-bezos { border-color: #d6a6ff !important; box-shadow: 0 0 60px rgba(160,60,220,0.6), inset 0 0 30px rgba(160,60,220,0.1) !important; }
+  .milestone-bezos h2 { color: #d6a6ff !important; text-shadow: 0 0 25px rgba(200,100,240,0.85) !important; }
+  .milestone-final { border-color: #f0d080 !important; }
+  .milestone-final h2 { color: #f0d080 !important; }
+
+  /* Blokovat klik na pozadí když je modal-open, aby canvas/overlay nedostal omylem klik */
+  body.modal-open #gameCanvas {
+    pointer-events: none;
+  }

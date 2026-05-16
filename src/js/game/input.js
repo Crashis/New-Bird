@@ -12,6 +12,7 @@ function handleKeyboardInput(e) {
   if (isInteractiveInputTarget(e.target)) return;
   e.preventDefault();
   if (gameState === 'over') return; // ignore inputs on game over (use buttons)
+  if (typeof isBlockingModalOpen === 'function' && isBlockingModalOpen()) return;
   jump();
 }
 
@@ -22,6 +23,7 @@ function handlePointerJump(e) {
   if (isInteractiveInputTarget(e.target)) return;
   e.preventDefault();
   if (gameState === 'over') return; // ignore inputs on game over (use buttons)
+  if (typeof isBlockingModalOpen === 'function' && isBlockingModalOpen()) return;
   jump();
 }
 

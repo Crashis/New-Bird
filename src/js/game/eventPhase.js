@@ -2,10 +2,14 @@
 function activateEventPhase() {
   if (eventPhaseActive) return;
   eventPhaseActive = true;
+  currentGamePhase = GAME_PHASES.CORRUPTED;
   if (score >= EVENT_PHASE_TRIGGER_SCORE) unlockAchievement('survived_amazon');
 
   const overlay = document.getElementById('gameOverlay');
-  if (overlay) overlay.classList.add('event-phase');
+  if (overlay) {
+    overlay.classList.remove('phase-frost', 'phase-void');
+    overlay.classList.add('event-phase', 'phase-corrupted');
+  }
 
   applyEventPhaseMusic();
 
@@ -47,16 +51,15 @@ function activateEventPhase() {
 }
 
 function resetEventPhase() {
-  if (!eventPhaseActive) {
-    // Pojistka: odstraň class i tak, kdyby zůstala z dřívějška.
-    const overlay = document.getElementById('gameOverlay');
-    if (overlay) overlay.classList.remove('event-phase');
-    applyEventPhaseMusic();
-    return;
-  }
   eventPhaseActive = false;
+  currentGamePhase = GAME_PHASES.NORMAL;
+  score60PhaseActivated = false;
+  score100MilestoneShown = false;
+  score500FinalShown = false;
   const overlay = document.getElementById('gameOverlay');
-  if (overlay) overlay.classList.remove('event-phase');
+  if (overlay) {
+    overlay.classList.remove('event-phase', 'phase-corrupted', 'phase-frost', 'phase-void');
+  }
   applyEventPhaseMusic();
 }
 
@@ -64,6 +67,53 @@ function maybeActivateEventPhase() {
   if (!eventPhaseActive && endlessMode && score >= EVENT_PHASE_TRIGGER_SCORE) {
     activateEventPhase();
   }
+}
+
+// Score 60 — modrá fáze, bez modalu, jen vizuál.
+function activateFrostPhase() {
+  if (score60PhaseActivated) return;
+  score60PhaseActivated = true;
+  currentGamePhase = GAME_PHASES.FROST;
+  const overlay = document.getElementById('gameOverlay');
+  if (overlay) {
+    overlay.classList.remove('event-phase', 'phase-corrupted', 'phase-void');
+    overlay.classList.add('phase-frost');
+  }
+  showPhaseToast(t('milestone.frost.toast'));
+}
+
+function maybeActivateFrostPhase() {
+  if (!score60PhaseActivated && score >= FROST_PHASE_TRIGGER_SCORE) {
+    activateFrostPhase();
+  }
+}
+
+// Score 100 — boss Bezos modal, po potvrzení fialová.
+function activateVoidPhase() {
+  currentGamePhase = GAME_PHASES.VOID;
+  const overlay = document.getElementById('gameOverlay');
+  if (overlay) {
+    overlay.classList.remove('event-phase', 'phase-corrupted', 'phase-frost');
+    overlay.classList.add('phase-void');
+  }
+  showPhaseToast(t('milestone.void.toast'));
+}
+
+function showPhaseToast(text) {
+  const wrap = document.querySelector('.game-canvas-wrap');
+  if (!wrap || !text) return;
+  let toast = document.getElementById('eventPhaseToast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'eventPhaseToast';
+    toast.className = 'event-phase-toast';
+    wrap.appendChild(toast);
+  }
+  toast.textContent = text;
+  toast.classList.remove('show');
+  void toast.offsetWidth;
+  toast.classList.add('show');
+  setTimeout(() => { toast.classList.remove('show'); }, 1900);
 }
 
 function showEventPhaseToast() {

@@ -43,6 +43,21 @@ function addScore(amount) {
   // Pojistka: pokud bychom někdy získali skóre >= 20 v endless módu bez aktivace,
   // event fáze nakopne sama. Hlavní trigger je v continueGame().
   maybeActivateEventPhase();
+
+  // Score 60: tichá modrá fáze, bez modalu / bez pauzy.
+  if (before < FROST_PHASE_TRIGGER_SCORE && score >= FROST_PHASE_TRIGGER_SCORE) {
+    maybeActivateFrostPhase();
+  }
+
+  // Score 100: boss Bezos milestone — pauza + modal.
+  if (before < BEZOS_MILESTONE_SCORE && score >= BEZOS_MILESTONE_SCORE && !score100MilestoneShown) {
+    triggerBezosMilestone();
+  }
+
+  // Score 500: final milestone — pauza + modal.
+  if (before < FINAL_MILESTONE_SCORE && score >= FINAL_MILESTONE_SCORE && !score500FinalShown) {
+    triggerFinalMilestone();
+  }
 }
 function hasAdminSkinInvincibility() {
   return typeof ADMIN_SKIN_ID !== 'undefined' && selectedSkinId === ADMIN_SKIN_ID;

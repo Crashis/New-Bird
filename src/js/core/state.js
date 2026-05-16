@@ -36,6 +36,22 @@ let immortalityUses = 0;
 let unlockToastTimer = null;
 const EVENT_PHASE_TRIGGER_SCORE = 20;
 
+// ===== Multi-phase / milestone state =====
+const GAME_PHASES = {
+  NORMAL: 'normal',
+  CORRUPTED: 'corrupted', // score 20
+  FROST: 'frost',         // score 60
+  VOID: 'void'            // score 100
+};
+const FROST_PHASE_TRIGGER_SCORE = 60;
+const BEZOS_MILESTONE_SCORE = 100;
+const FINAL_MILESTONE_SCORE = 500;
+
+let currentGamePhase = GAME_PHASES.NORMAL;
+let score60PhaseActivated = false;
+let score100MilestoneShown = false;
+let score500FinalShown = false;
+
 const settings = {
   sfx: true,
   music: true,
