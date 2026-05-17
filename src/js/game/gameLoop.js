@@ -1,6 +1,17 @@
+// ===== COUNTDOWN BEFORE GAME START =====
+let isStartingCountdown = false;
+let startCountdownTimeout = null;
+
+function clearStartCountdownTimeout() {
+  if (startCountdownTimeout !== null) {
+    clearTimeout(startCountdownTimeout);
+    startCountdownTimeout = null;
+  }
+}
+
 function jump() {
   if (gameState === 'idle') {
-    startGame();
+    startGameCountdown();
     return;
   }
   if (gameState === 'playing') {
@@ -20,7 +31,31 @@ function jump() {
   }
 }
 
+function startGameCountdown() {
+  if (isStartingCountdown) return;
+
+  isStartingCountdown = true;
+  clearStartCountdownTimeout();
+
+  const startBtn = document.getElementById('startBtn');
+  if (startBtn) startBtn.disabled = true;
+
+  if (animationId) cancelAnimationFrame(animationId);
+  loop();
+
+  startCountdownTimeout = setTimeout(() => {
+    isStartingCountdown = false;
+    startCountdownTimeout = null;
+    if (startBtn) startBtn.disabled = false;
+    startGameNow();
+  }, 1000);
+}
+
 function startGame() {
+  startGameCountdown();
+}
+
+function startGameNow() {
   gameState = 'playing';
   player = { x: 160, y: canvas.height / 2, vy: 0, r: 38, rotation: 0 };
   pipes = [];
@@ -70,6 +105,7 @@ function startGame() {
 }
 
 function endGame() {
+  clearStartCountdownTimeout();
   if (typeof tryPotionRevive === 'function' && tryPotionRevive()) return;
   gameState = 'over';
   stopGameMusic();
@@ -96,6 +132,7 @@ function endGame() {
 }
 
 function winGame() {
+  clearStartCountdownTimeout();
   gameState = 'over';
   stopGameMusic();
   playHmm(); // celebratory HMM
@@ -271,6 +308,25 @@ function drawParticles() {
   ctx.globalAlpha = 1;
 }
 
+function drawCountdownText() {
+  if (!isStartingCountdown) return;
+  ctx.save();
+  ctx.font = 'bold 72px "Cinzel Decorative", serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'rgba(0,0,0,0.6)';
+  ctx.fillText('Ready?', canvas.width / 2 + 3, canvas.height / 2 + 3);
+  ctx.fillStyle = '#c9a84c';
+  ctx.fillText('Ready?', canvas.width / 2, canvas.height / 2);
+  const perf = window.PERF_MOBILE;
+  if (!perf) {
+    ctx.shadowColor = 'rgba(201,168,76,0.8)';
+    ctx.shadowBlur = 30;
+    ctx.fillText('Ready?', canvas.width / 2, canvas.height / 2);
+  }
+  ctx.restore();
+}
+
 function drawScore() {
   if (gameState !== 'playing') return;
   const perf = window.PERF_MOBILE;
@@ -353,6 +409,7 @@ function draw() {
   if (typeof drawRockets === 'function') drawRockets();
   drawScore();
   if (typeof drawRocketHud === 'function') drawRocketHud();
+  drawCountdownText();
 }
 
 function loop() {
@@ -360,12 +417,16 @@ function loop() {
     update();
   }
   draw();
-  if (gameState === 'playing') {
+  if (gameState === 'playing' || isStartingCountdown) {
     animationId = requestAnimationFrame(loop);
   }
 }
 
 function openGame() {
+  clearStartCountdownTimeout();
+  isStartingCountdown = false;
+  const startBtn = document.getElementById('startBtn');
+  if (startBtn) startBtn.disabled = false;
   const overlayEl = document.getElementById('gameOverlay');
   overlayEl.classList.add('active');
   overlayEl.classList.add('menu-open');
@@ -500,6 +561,7 @@ function isBlockingModalOpen() {
 }
 
 function closeGame() {
+  clearStartCountdownTimeout();
   stopGameMusic();
   if ('speechSynthesis' in window) {
     try { window.speechSynthesis.cancel(); } catch (e) {}
