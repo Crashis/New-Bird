@@ -40,6 +40,19 @@ function startGameCountdown() {
   const startBtn = document.getElementById('startBtn');
   if (startBtn) startBtn.disabled = true;
 
+  // Hned schovej start menu / game-over / win panel + zavři ostatní overlaye,
+  // ať hráč vidí jen herní plochu s odpočtem.
+  const startPanelEl = document.getElementById('startPanel');
+  if (startPanelEl) startPanelEl.classList.add('hidden');
+  const overlayEl = document.getElementById('gameOverlay');
+  if (overlayEl) overlayEl.classList.remove('menu-open');
+  const gameOverPanelEl = document.getElementById('gameOverPanel');
+  if (gameOverPanelEl) gameOverPanelEl.classList.remove('active');
+  const winPanelEl = document.getElementById('winPanel');
+  if (winPanelEl) winPanelEl.classList.remove('active');
+  document.body.classList.remove('modal-open');
+  if (typeof closeAllPanels === 'function') closeAllPanels();
+
   if (animationId) cancelAnimationFrame(animationId);
   loop();
 
@@ -107,6 +120,7 @@ function startGameNow() {
 function endGame() {
   clearStartCountdownTimeout();
   if (typeof tryPotionRevive === 'function' && tryPotionRevive()) return;
+  if (typeof notifyRunEnded === 'function') notifyRunEnded();
   gameState = 'over';
   stopGameMusic();
   if (typeof applySelectedSkinRunStopEffects === 'function') applySelectedSkinRunStopEffects();
@@ -133,6 +147,7 @@ function endGame() {
 
 function winGame() {
   clearStartCountdownTimeout();
+  if (typeof notifyRunEnded === 'function') notifyRunEnded();
   gameState = 'over';
   stopGameMusic();
   playHmm(); // celebratory HMM

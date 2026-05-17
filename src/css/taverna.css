@@ -495,6 +495,284 @@
 }
 
 /* ═══════════════════════════════════════════════════════
+   PIRÁTSKÁ MAPA
+   ═══════════════════════════════════════════════════════ */
+
+.pirate-map-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 70px);
+  grid-gap: 0.5rem;
+  justify-content: center;
+  margin: 0.9rem auto 0.5rem;
+}
+
+.pirate-map-tile {
+  width: 70px;
+  height: 70px;
+  background:
+    linear-gradient(135deg, rgba(120, 80, 30, 0.25), rgba(60, 38, 12, 0.45));
+  border: 1px solid var(--gold-dark);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.7rem;
+  color: var(--gold-light);
+  font-family: 'Cinzel', serif;
+  user-select: none;
+  cursor: default;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.pirate-map-tile.clickable {
+  cursor: pointer;
+}
+.pirate-map-tile.clickable:hover {
+  transform: translateY(-3px) scale(1.05);
+  border-color: var(--gold);
+  box-shadow: 0 4px 14px rgba(201, 168, 76, 0.35);
+}
+
+.pirate-map-tile.revealed {
+  border-color: var(--gold);
+  background: rgba(201, 168, 76, 0.13);
+  box-shadow: 0 0 14px rgba(201, 168, 76, 0.4);
+}
+
+.pirate-map-tile.dimmed {
+  opacity: 0.35;
+  filter: grayscale(0.6);
+}
+
+.pirate-map-tile.locked { opacity: 0.4; }
+
+.pirate-map-status {
+  min-height: 1.8rem;
+  font-family: 'Lato', sans-serif;
+  font-size: 0.72rem;
+  text-align: center;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin: 0.3rem 0 0.1rem;
+  line-height: 1.45;
+  padding: 0 0.5rem;
+}
+.pirate-map-status.win   { color: #86f786; }
+.pirate-map-status.lose  { color: #ff8a8a; }
+.pirate-map-status.error { color: #ffaa7a; }
+.pirate-map-status.info  { color: var(--gold-light); }
+
+/* ═══════════════════════════════════════════════════════
+   DRAČÍ VEJCE
+   ═══════════════════════════════════════════════════════ */
+
+.dragon-egg-art {
+  font-size: 4rem;
+  text-align: center;
+  margin: 0.4rem 0 0.2rem;
+  line-height: 1;
+}
+
+.dragon-egg-progress {
+  font-family: 'Cinzel', serif;
+  color: var(--gold-light);
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-align: center;
+  margin: 0.2rem 0 0.1rem;
+}
+
+.dragon-egg-daily {
+  font-family: 'Lato', sans-serif;
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  text-align: center;
+  margin-bottom: 0.4rem;
+}
+
+.dragon-egg-hint {
+  color: var(--text-muted);
+  font-family: 'Lato', sans-serif;
+  font-size: 0.66rem;
+  line-height: 1.55;
+  text-align: center;
+  margin: 0.3rem auto 0.4rem;
+  max-width: 360px;
+}
+
+.dragon-egg-status {
+  min-height: 1.8rem;
+  font-family: 'Lato', sans-serif;
+  font-size: 0.72rem;
+  text-align: center;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin: 0.3rem 0 0.1rem;
+  line-height: 1.45;
+  padding: 0 0.5rem;
+}
+.dragon-egg-status.win   { color: #86f786; }
+.dragon-egg-status.lose  { color: #ff8a8a; }
+.dragon-egg-status.error { color: #ffaa7a; }
+.dragon-egg-status.info  { color: var(--gold-light); }
+
+/* ═══════════════════════════════════════════════════════
+   KOVÁŘOVA VÝZVA
+   ═══════════════════════════════════════════════════════ */
+
+.blacksmith-bet-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin: 0.5rem 0 0.3rem;
+}
+
+.blacksmith-label {
+  color: var(--text-muted);
+  font-family: 'Lato', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.07em;
+}
+
+.blacksmith-input {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--gold-dark);
+  color: var(--gold-light);
+  font-family: 'Cinzel', serif;
+  font-size: 0.88rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 3px;
+  width: 110px;
+  text-align: center;
+}
+.blacksmith-input:focus { outline: none; border-color: var(--gold); }
+
+.blacksmith-hits {
+  display: flex;
+  justify-content: center;
+  gap: 1.2rem;
+  margin: 0.4rem 0 0.2rem;
+  font-family: 'Cinzel', serif;
+  color: var(--gold-light);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+}
+
+.blacksmith-range {
+  position: relative;
+  width: min(420px, 100%);
+  height: 48px;
+  margin: 0.7rem auto 0.55rem;
+  border: 1px solid var(--gold-dark);
+  border-radius: 6px;
+  background:
+    linear-gradient(90deg, rgba(40, 18, 6, 0.95), rgba(20, 10, 4, 0.96)),
+    repeating-linear-gradient(90deg, transparent 0 9%, rgba(240,208,128,0.08) 9% 10%);
+  box-shadow: inset 0 0 18px rgba(0,0,0,0.55), 0 0 18px rgba(201,168,76,0.16);
+  overflow: hidden;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.blacksmith-zone,
+.blacksmith-target,
+.blacksmith-marker {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  pointer-events: none;
+}
+
+.blacksmith-zone {
+  background: rgba(255, 180, 80, 0.32);
+  box-shadow: 0 0 16px rgba(255, 140, 50, 0.55);
+}
+
+.blacksmith-target {
+  width: 2px;
+  background: rgba(255, 245, 200, 0.7);
+}
+
+.blacksmith-marker {
+  width: 4px;
+  transform: translateX(-50%);
+  background: #ffeb88;
+  box-shadow: 0 0 12px rgba(255, 230, 100, 0.85);
+}
+
+.blacksmith-range.hit  { animation: blacksmithHit 0.4s ease; }
+.blacksmith-range.miss { animation: blacksmithMiss 0.35s ease; }
+
+@keyframes blacksmithHit {
+  0%, 100% { box-shadow: inset 0 0 18px rgba(0,0,0,0.55), 0 0 18px rgba(201,168,76,0.16); }
+  50% { box-shadow: inset 0 0 18px rgba(0,0,0,0.55), 0 0 38px rgba(255,180,80,0.85); }
+}
+@keyframes blacksmithMiss {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+.blacksmith-strike-btn { min-width: 160px; }
+
+.blacksmith-status {
+  min-height: 2.4rem;
+  font-family: 'Lato', sans-serif;
+  font-size: 0.72rem;
+  text-align: center;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin: 0.35rem 0 0.1rem;
+  line-height: 1.45;
+  padding: 0 0.5rem;
+}
+.blacksmith-status.win   { color: #86f786; }
+.blacksmith-status.lose  { color: #ff8a8a; }
+.blacksmith-status.error { color: #ffaa7a; }
+.blacksmith-status.info  { color: var(--gold-light); }
+
+/* ═══════════════════════════════════════════════════════
+   KOLO ŠTĚSTÍ
+   ═══════════════════════════════════════════════════════ */
+
+.wheel-display {
+  font-size: 5rem;
+  text-align: center;
+  margin: 0.6rem 0 0.3rem;
+  line-height: 1;
+  user-select: none;
+  display: block;
+}
+
+.wheel-display.spinning {
+  animation: wheelSpin 0.35s linear infinite;
+}
+
+@keyframes wheelSpin {
+  0%   { transform: rotate(-14deg) scale(1.05); }
+  50%  { transform: rotate(14deg)  scale(0.95); }
+  100% { transform: rotate(-14deg) scale(1.05); }
+}
+
+.wheel-status {
+  min-height: 1.8rem;
+  font-family: 'Lato', sans-serif;
+  font-size: 0.74rem;
+  text-align: center;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin: 0.3rem 0 0.1rem;
+  line-height: 1.45;
+  padding: 0 0.5rem;
+}
+.wheel-status.win   { color: #86f786; }
+.wheel-status.lose  { color: #ff8a8a; }
+.wheel-status.error { color: #ffaa7a; }
+.wheel-status.info  { color: var(--gold-light); }
+
+/* ═══════════════════════════════════════════════════════
    MOBILNÍ LAYOUT
    ═══════════════════════════════════════════════════════ */
 
@@ -558,4 +836,20 @@
     width: 100%;
     min-height: 48px;
   }
+
+  .pirate-map-grid {
+    grid-template-columns: repeat(3, 56px);
+    grid-gap: 0.4rem;
+  }
+  .pirate-map-tile {
+    width: 56px;
+    height: 56px;
+    font-size: 1.4rem;
+  }
+
+  .blacksmith-range { height: 56px; }
+  .blacksmith-strike-btn { width: 100%; min-height: 48px; }
+
+  .wheel-display { font-size: 4rem; }
+  .dragon-egg-art { font-size: 3rem; }
 }

@@ -596,6 +596,159 @@
           </div>
         </div>
 
+        <div class="taverna-card" onclick="openTavernaGame('pirateMap')">
+          <div class="taverna-card-art">🗺️</div>
+          <div class="taverna-card-body">
+            <div class="taverna-card-name">Pirátská mapa</div>
+            <div class="taverna-card-desc">Zaplať 1 Err kostku, vyber jedno políčko na mapě 3×3 a doufej v poklad.</div>
+            <div class="taverna-card-price">🎲 Vstup 1 Err kostka</div>
+          </div>
+        </div>
+
+        <div class="taverna-card" onclick="openTavernaGame('dragonEgg')">
+          <div class="taverna-card-art">🥚</div>
+          <div class="taverna-card-body">
+            <div class="taverna-card-name">Dračí vejce</div>
+            <div class="taverna-card-desc">Kup vejce a zahřívej ho přes runy. Čím déle čekáš, tím lepší odměna.</div>
+            <div class="taverna-card-price">💰 Cena 25 Yangů · max 3× denně</div>
+          </div>
+        </div>
+
+        <div class="taverna-card" onclick="openTavernaGame('blacksmith')">
+          <div class="taverna-card-art">⚒️</div>
+          <div class="taverna-card-body">
+            <div class="taverna-card-name">Kovářova výzva</div>
+            <div class="taverna-card-desc">Sázej Yangy a třikrát kuj do kovadliny ve správný okamžik. Každé kolo je rychlejší.</div>
+            <div class="taverna-card-price">💰 Sázka v Yangách (min 10)</div>
+          </div>
+        </div>
+
+        <div class="taverna-card" onclick="openTavernaGame('wheelOfFortune')">
+          <div class="taverna-card-art">🎡</div>
+          <div class="taverna-card-body">
+            <div class="taverna-card-name">Kolo štěstí</div>
+            <div class="taverna-card-desc">Roztoč kolo a získej náhodnou odměnu. Včetně jackpotu — pokud máš štěstí.</div>
+            <div class="taverna-card-price">💰 Vstup 10 Yangů · 1× denně</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── Pirátská mapa panel ─────────────────────── -->
+    <div class="shop-panel" id="pirateMapPanel" style="text-align:center;">
+      <div class="panel-header">
+        <h2>🗺️ Pirátská mapa</h2>
+        <button class="game-btn panel-close-btn" onclick="togglePirateMapPanel(false)">×</button>
+      </div>
+      <div class="shop-subtitle">Zaplať 1 Err kostku, vyber jedno políčko na mapě a doufej v poklad.</div>
+
+      <div class="shop-wallet">
+        <span>Yangy: <strong id="pirateMapYangs">0</strong></span>
+        <span>🎲 Err kostky: <strong id="pirateMapErrCubes">0</strong></span>
+      </div>
+
+      <div id="pirateMapGrid" class="pirate-map-grid"></div>
+      <p id="pirateMapStatus" class="pirate-map-status"></p>
+
+      <div class="game-buttons" style="margin-top:0.6rem; justify-content:center; flex-wrap:wrap;">
+        <button class="game-btn primary" id="pirateMapStartBtn" onclick="startPirateMapAttempt()">Začít pokus (1 Err kostka)</button>
+        <button class="game-btn" onclick="backToTaverna()">← Taverna</button>
+        <button class="game-btn" onclick="togglePirateMapPanel(false)">✕ Zavřít</button>
+      </div>
+    </div>
+
+    <!-- ── Dračí vejce panel ───────────────────────── -->
+    <div class="shop-panel" id="dragonEggPanel" style="text-align:center;">
+      <div class="panel-header">
+        <h2>🥚 Dračí vejce</h2>
+        <button class="game-btn panel-close-btn" onclick="toggleDragonEggPanel(false)">×</button>
+      </div>
+      <div class="shop-subtitle">Kup vejce a zahřívej ho přes runy. Limit 3 použití denně.</div>
+
+      <div class="shop-wallet">
+        <span>Yangy: <strong id="dragonEggYangs">0</strong></span>
+        <span>Peněženky: <strong id="dragonEggWallets">0</strong></span>
+        <span>Dračí mince: <strong id="dragonEggDragonCoins">0</strong></span>
+      </div>
+
+      <div class="dragon-egg-art">🥚</div>
+      <div class="dragon-egg-progress" id="dragonEggProgress">No egg active.</div>
+      <div class="dragon-egg-daily">Today: <strong id="dragonEggDailyUsesLabel">0 / 3</strong></div>
+
+      <p class="dragon-egg-hint">
+        Break now: small chance for 10 Yang.<br>
+        After 3 runs: chance for 20 Yang.<br>
+        After 7 runs: 30–50 Yang + chance for Wallet or Dragon Coin.
+      </p>
+
+      <p id="dragonEggStatus" class="dragon-egg-status"></p>
+
+      <div class="game-buttons" style="margin-top:0.6rem; justify-content:center; flex-wrap:wrap;">
+        <button class="game-btn primary" id="dragonEggBuyBtn" onclick="buyDragonEgg()">Buy Egg (25 Yang)</button>
+        <button class="game-btn" id="dragonEggBreakBtn" onclick="breakDragonEgg()">Break now</button>
+        <button class="game-btn" onclick="backToTaverna()">← Taverna</button>
+        <button class="game-btn" onclick="toggleDragonEggPanel(false)">✕ Zavřít</button>
+      </div>
+    </div>
+
+    <!-- ── Kovářova výzva panel ────────────────────── -->
+    <div class="shop-panel" id="blacksmithPanel" style="text-align:center;">
+      <div class="panel-header">
+        <h2>⚒️ Kovářova výzva</h2>
+        <button class="game-btn panel-close-btn" onclick="toggleBlacksmithPanel(false)">×</button>
+      </div>
+      <div class="shop-subtitle">Sázej Yangy, třikrát kuj ve správný moment. 0 tref = prohra, 1 = vrácení, 2 = 2×, 3 = 3× (+ šance na Dračí minci).</div>
+
+      <div class="shop-wallet">
+        <span>Yangy: <strong id="blacksmithYangs">0</strong></span>
+      </div>
+
+      <div class="blacksmith-bet-row">
+        <label for="blacksmithBetInput" class="blacksmith-label">Sázka (Yangy)</label>
+        <input id="blacksmithBetInput" type="number" min="10" step="1" class="blacksmith-input" placeholder="Min 10">
+        <button class="game-btn primary" id="blacksmithStartBtn" onclick="startBlacksmithAttempt()">Začít</button>
+      </div>
+
+      <div class="blacksmith-hits">
+        <span>Hits: <strong id="blacksmithHitsLabel">0 / 3</strong></span>
+        <span><strong id="blacksmithStrikeLabel">Strike 1 / 3</strong></span>
+      </div>
+
+      <div class="blacksmith-range" id="blacksmithRange" onclick="blacksmithStrikeNow()" role="button">
+        <div class="blacksmith-zone" id="blacksmithZone"></div>
+        <div class="blacksmith-target" id="blacksmithTarget"></div>
+        <div class="blacksmith-marker" id="blacksmithMarker"></div>
+      </div>
+
+      <p id="blacksmithStatus" class="blacksmith-status"></p>
+
+      <div class="game-buttons" style="margin-top:0.6rem; justify-content:center; flex-wrap:wrap;">
+        <button class="game-btn primary blacksmith-strike-btn" id="blacksmithStrikeBtn" onclick="blacksmithStrikeNow()" disabled>⚒ Strike</button>
+        <button class="game-btn" onclick="backToTaverna()">← Taverna</button>
+        <button class="game-btn" onclick="toggleBlacksmithPanel(false)">✕ Zavřít</button>
+      </div>
+    </div>
+
+    <!-- ── Kolo štěstí panel ───────────────────────── -->
+    <div class="shop-panel" id="wheelOfFortunePanel" style="text-align:center;">
+      <div class="panel-header">
+        <h2>🎡 Kolo štěstí</h2>
+        <button class="game-btn panel-close-btn" onclick="toggleWheelOfFortunePanel(false)">×</button>
+      </div>
+      <div class="shop-subtitle">Vstup 10 Yangů. 1× denně. Velmi vzácně padne jackpot.</div>
+
+      <div class="shop-wallet">
+        <span>Yangy: <strong id="wheelYangs">0</strong></span>
+      </div>
+
+      <div class="wheel-display" id="wheelFace">🎡</div>
+      <p id="wheelStatus" class="wheel-status"></p>
+
+      <div class="game-buttons" style="margin-top:0.6rem; justify-content:center; flex-wrap:wrap;">
+        <button class="game-btn primary" id="wheelSpinBtn" onclick="startWheelSpin()">Spin (10 Yang)</button>
+        <button class="game-btn" onclick="backToTaverna()">← Taverna</button>
+        <button class="game-btn" onclick="toggleWheelOfFortunePanel(false)">✕ Zavřít</button>
       </div>
     </div>
 

@@ -36,6 +36,25 @@ function updateEconomyUi() {
   if (daDC)    daDC.textContent    = typeof dragonCoins === 'number' ? dragonCoins : 0;
   if (heirloomErr) heirloomErr.textContent = String((typeof errCubes === 'number') ? errCubes : 0);
 
+  // Nové minihry v Taverně — pouze sync čítačů.
+  const pmYangs = document.getElementById('pirateMapYangs');
+  const pmErr   = document.getElementById('pirateMapErrCubes');
+  if (pmYangs) pmYangs.textContent = yang;
+  if (pmErr)   pmErr.textContent   = String((typeof errCubes === 'number') ? errCubes : 0);
+
+  const deYangs = document.getElementById('dragonEggYangs');
+  const deWallets = document.getElementById('dragonEggWallets');
+  const deDC = document.getElementById('dragonEggDragonCoins');
+  if (deYangs) deYangs.textContent = yang;
+  if (deWallets) deWallets.textContent = wallets;
+  if (deDC) deDC.textContent = (typeof dragonCoins === 'number') ? dragonCoins : 0;
+
+  const bsYangs = document.getElementById('blacksmithYangs');
+  if (bsYangs) bsYangs.textContent = yang;
+
+  const wfYangs = document.getElementById('wheelYangs');
+  if (wfYangs) wfYangs.textContent = yang;
+
   const shieldLevel = document.getElementById('shieldStartLevel');
   const shieldBtn = document.getElementById('buyShieldStartBtn');
   if (shieldLevel) shieldLevel.textContent = shieldStartOwned ? t('economy.owned') : t('economy.notOwned');

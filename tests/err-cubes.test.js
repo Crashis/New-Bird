@@ -153,8 +153,8 @@ test('adding an Err cube increments, persists, and updates currency UI', () => {
   assert.strictEqual(env.elements.heirloomErrCubes.textContent, '1');
 });
 
-test('spawnPipe can add a rare Err cube to an otherwise empty pipe below 3 percent', () => {
-  const env = loadErrCubeEnv({ randomValues: [0.5, 0.029] });
+test('spawnPipe can add a rare Err cube to an otherwise empty pipe below 2 percent', () => {
+  const env = loadErrCubeEnv({ randomValues: [0.5, 0.019] });
 
   env.context.spawnPipe();
 
@@ -164,8 +164,8 @@ test('spawnPipe can add a rare Err cube to an otherwise empty pipe below 3 perce
   assert.strictEqual(pipes[0].yang, null);
 });
 
-test('spawnPipe does not add an Err cube at the old 5 percent rate', () => {
-  const env = loadErrCubeEnv({ randomValues: [0.5, 0.049] });
+test('spawnPipe does not add an Err cube at the old 3 percent rate', () => {
+  const env = loadErrCubeEnv({ randomValues: [0.5, 0.029] });
 
   env.context.spawnPipe();
 

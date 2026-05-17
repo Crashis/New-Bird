@@ -2,7 +2,8 @@ const ALL_PANEL_IDS = [
   'shopPanel', 'skinsPanel', 'achievementsPanel', 'cheatCodesPanel',
   'settingsPanel', 'shellGamePanel', 'heirloomPanel',
   'tavernaPanel', 'threeChestsPanel', 'dragonDicePanel',
-  'drunkArcherPanel', 'battlepassPanel', 'upgradesPanel'
+  'drunkArcherPanel', 'battlepassPanel', 'upgradesPanel',
+  'pirateMapPanel', 'dragonEggPanel', 'blacksmithPanel', 'wheelOfFortunePanel'
 ];
 
 function toggleUpgradesPanel(forceOpen) {
@@ -30,6 +31,12 @@ function closeOtherPanels(keepId) {
       el.classList.remove('active');
       if (id === 'drunkArcherPanel' && typeof stopDrunkArcherAnimation === 'function') {
         stopDrunkArcherAnimation();
+      }
+      if (id === 'blacksmithPanel' && typeof stopBlacksmithAnimation === 'function') {
+        stopBlacksmithAnimation();
+      }
+      if (id === 'wheelOfFortunePanel' && typeof stopWheelAnimation === 'function') {
+        stopWheelAnimation();
       }
     }
   }
@@ -147,6 +154,14 @@ function openTavernaGame(game) {
     toggleDragonDicePanel(true);
   } else if (game === 'drunkArcher') {
     toggleDrunkArcherPanel(true);
+  } else if (game === 'pirateMap') {
+    togglePirateMapPanel(true);
+  } else if (game === 'dragonEgg') {
+    toggleDragonEggPanel(true);
+  } else if (game === 'blacksmith') {
+    toggleBlacksmithPanel(true);
+  } else if (game === 'wheelOfFortune') {
+    toggleWheelOfFortunePanel(true);
   }
 }
 
@@ -217,4 +232,70 @@ function toggleDrunkArcherPanel(forceOpen) {
   panel.classList.toggle('active', open);
   if (!open && typeof stopDrunkArcherAnimation === 'function') stopDrunkArcherAnimation();
   if (open && typeof initDrunkArcher === 'function') initDrunkArcher();
+}
+
+// ── Pirátská mapa ────────────────────────────────────────
+
+function togglePirateMapPanel(forceOpen) {
+  const panel = document.getElementById('pirateMapPanel');
+  if (!panel) return;
+  const open = typeof forceOpen === 'boolean' ? forceOpen : !panel.classList.contains('active');
+  if (open && gameState === 'playing') {
+    activeVoiceLine = t('panel.tavernaBlocked');
+    activeVoiceLineUntil = performance.now() + 2800;
+    return;
+  }
+  closeOtherPanels('pirateMapPanel');
+  panel.classList.toggle('active', open);
+  if (open && typeof initPirateMap === 'function') initPirateMap();
+}
+
+// ── Dračí vejce ──────────────────────────────────────────
+
+function toggleDragonEggPanel(forceOpen) {
+  const panel = document.getElementById('dragonEggPanel');
+  if (!panel) return;
+  const open = typeof forceOpen === 'boolean' ? forceOpen : !panel.classList.contains('active');
+  if (open && gameState === 'playing') {
+    activeVoiceLine = t('panel.tavernaBlocked');
+    activeVoiceLineUntil = performance.now() + 2800;
+    return;
+  }
+  closeOtherPanels('dragonEggPanel');
+  panel.classList.toggle('active', open);
+  if (open && typeof initDragonEgg === 'function') initDragonEgg();
+}
+
+// ── Kovářova výzva ───────────────────────────────────────
+
+function toggleBlacksmithPanel(forceOpen) {
+  const panel = document.getElementById('blacksmithPanel');
+  if (!panel) return;
+  const open = typeof forceOpen === 'boolean' ? forceOpen : !panel.classList.contains('active');
+  if (open && gameState === 'playing') {
+    activeVoiceLine = t('panel.tavernaBlocked');
+    activeVoiceLineUntil = performance.now() + 2800;
+    return;
+  }
+  closeOtherPanels('blacksmithPanel');
+  panel.classList.toggle('active', open);
+  if (!open && typeof stopBlacksmithAnimation === 'function') stopBlacksmithAnimation();
+  if (open && typeof initBlacksmith === 'function') initBlacksmith();
+}
+
+// ── Kolo štěstí ──────────────────────────────────────────
+
+function toggleWheelOfFortunePanel(forceOpen) {
+  const panel = document.getElementById('wheelOfFortunePanel');
+  if (!panel) return;
+  const open = typeof forceOpen === 'boolean' ? forceOpen : !panel.classList.contains('active');
+  if (open && gameState === 'playing') {
+    activeVoiceLine = t('panel.tavernaBlocked');
+    activeVoiceLineUntil = performance.now() + 2800;
+    return;
+  }
+  closeOtherPanels('wheelOfFortunePanel');
+  panel.classList.toggle('active', open);
+  if (!open && typeof stopWheelAnimation === 'function') stopWheelAnimation();
+  if (open && typeof initWheelOfFortune === 'function') initWheelOfFortune();
 }
