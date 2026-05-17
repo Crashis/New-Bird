@@ -312,13 +312,18 @@ function toggleBlacksmithPanel(forceOpen) {
 
 function renderDungeonsPanel() {
   const unlocked = (typeof isBezosBossTicketUnlocked === 'function') && isBezosBossTicketUnlocked();
+  const wonToday = (typeof wasBezosBossWonToday === 'function') && wasBezosBossWonToday();
   const startBtn = document.getElementById('dungeonBezosStartBtn');
   const statusEl = document.getElementById('dungeonBezosStatus');
   const hintEl = document.getElementById('dungeonBezosHint');
-  if (startBtn) startBtn.disabled = !unlocked;
-  if (statusEl) statusEl.textContent = unlocked ? '🎫' : '🔒';
+  if (startBtn) startBtn.disabled = !unlocked || wonToday;
+  if (statusEl) statusEl.textContent = !unlocked ? '🔒' : (wonToday ? '⏳' : '🎫');
   if (hintEl) {
-    hintEl.textContent = t(unlocked ? 'dungeons.bezos.unlockedHint' : 'dungeons.bezos.lockedHint');
+    let key;
+    if (!unlocked) key = 'dungeons.bezos.lockedHint';
+    else if (wonToday) key = 'dungeons.bezos.cooldownHint';
+    else key = 'dungeons.bezos.availableHint';
+    hintEl.textContent = t(key);
   }
 }
 

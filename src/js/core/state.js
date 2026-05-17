@@ -81,6 +81,7 @@ const DRAGON_COINS_KEY = 'nw_flappy_dragon_coins';
 const ERR_CUBES_KEY = 'nw_flappy_err_cubes';
 const HEIRLOOM_ROCKET_PURCHASED_KEY = 'heirloomRocketPurchased';
 const BEZOS_BOSS_TICKET_KEY = 'bezosBossTicketUnlocked';
+const BEZOS_BOSS_LAST_WIN_KEY = 'bezosBossLastWinDate';
 
 let bezosBossTicketUnlocked = false;
 try {
@@ -93,6 +94,26 @@ function unlockBezosBossTicket() {
   if (bezosBossTicketUnlocked) return;
   bezosBossTicketUnlocked = true;
   try { localStorage.setItem(BEZOS_BOSS_TICKET_KEY, '1'); } catch (e) {}
+}
+
+function getTodayLocalDateString() {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
+function getBezosBossLastWinDate() {
+  try { return localStorage.getItem(BEZOS_BOSS_LAST_WIN_KEY) || ''; } catch (e) { return ''; }
+}
+
+function setBezosBossLastWinToday() {
+  try { localStorage.setItem(BEZOS_BOSS_LAST_WIN_KEY, getTodayLocalDateString()); } catch (e) {}
+}
+
+function wasBezosBossWonToday() {
+  return getBezosBossLastWinDate() === getTodayLocalDateString();
 }
 
 // Load best score from localStorage

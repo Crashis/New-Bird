@@ -69,6 +69,11 @@ function startBezosBossFight() {
   if (typeof isBezosBossTicketUnlocked === 'function' && !isBezosBossTicketUnlocked()) {
     return;
   }
+  // Denní cooldown — pokud hráč dnes už vyhrál, nepouštět ho znovu (ochrana, kdyby
+  // se obešel UI guard v Dungeons panelu).
+  if (typeof wasBezosBossWonToday === 'function' && wasBezosBossWonToday()) {
+    return;
+  }
   currentGameMode = 'bezosBoss';
   // Zavřít všechny menu panely + nastavit overlay do herního stavu.
   if (typeof closeAllPanels === 'function') closeAllPanels();
@@ -110,10 +115,15 @@ const BOSS_REWARD = { yang: 100, wallets: 6, dragonCoins: 5, errCubes: 2 };
 function claimBossVictoryReward() {
   if (bossRewardClaimed) return;
   bossRewardClaimed = true;
+  // Denní cooldown — reward jen jednou za kalendářní den (lokální datum).
+  if (typeof wasBezosBossWonToday === 'function' && wasBezosBossWonToday()) {
+    return;
+  }
   yang += BOSS_REWARD.yang;
   wallets += BOSS_REWARD.wallets;
   dragonCoins += BOSS_REWARD.dragonCoins;
   errCubes += BOSS_REWARD.errCubes;
+  if (typeof setBezosBossLastWinToday === 'function') setBezosBossLastWinToday();
   if (typeof saveEconomy === 'function') saveEconomy();
   if (typeof saveDragonCoins === 'function') saveDragonCoins();
   if (typeof saveErrCubes === 'function') saveErrCubes();
