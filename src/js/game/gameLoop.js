@@ -290,7 +290,7 @@ function drawScore() {
   ctx.shadowBlur = perf ? 0 : 10;
   ctx.font = 'bold 17px "Cinzel", serif';
   ctx.fillStyle = '#f0d080';
-  ctx.fillText(t('canvas.yang', { yang, wallets }), canvas.width / 2, 98);
+  ctx.fillText(t('canvas.yang', { yang, wallets, errCubes }), canvas.width / 2, 98);
 
   const invincibleLeft = Math.ceil((invincibleUntil - performance.now()) / 100) / 10;
   let statusY = 130;

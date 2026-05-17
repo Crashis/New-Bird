@@ -22,6 +22,7 @@ let yang = 0;
 let runYangs = 0; // yangs earned in the current run (reset on startGame)
 let wallets = 0;
 let dragonCoins = 0;
+let errCubes = 0;
 let dragonCoinAwardedThisRun = false;
 let shieldStartOwned = false;
 let invincibilityLevel = 0;
@@ -76,6 +77,7 @@ const SETTINGS_KEYS = {
 };
 const MUSIC_VOLUME_KEY = 'nw_flappy_settings_music_volume';
 const DRAGON_COINS_KEY = 'nw_flappy_dragon_coins';
+const ERR_CUBES_KEY = 'nw_flappy_err_cubes';
 const HEIRLOOM_ROCKET_PURCHASED_KEY = 'heirloomRocketPurchased';
 
 // Load best score from localStorage
@@ -88,6 +90,7 @@ try {
   yang = parseInt(localStorage.getItem('nw_flappy_yang') || '0', 10) || 0;
   wallets = parseInt(localStorage.getItem('nw_flappy_wallets') || '0', 10) || 0;
   dragonCoins = Math.max(0, parseInt(localStorage.getItem(DRAGON_COINS_KEY) || '0', 10) || 0);
+  errCubes = Math.max(0, parseInt(localStorage.getItem(ERR_CUBES_KEY) || '0', 10) || 0);
   shieldStartOwned = localStorage.getItem('nw_flappy_upgrade_shield_start') === '1';
   invincibilityLevel = Math.min(3, Math.max(0, parseInt(localStorage.getItem('nw_flappy_upgrade_invincibility') || '0', 10) || 0));
   doubleYangLevel = Math.min(2, Math.max(0, parseInt(localStorage.getItem('nw_flappy_upgrade_double_yang') || '0', 10) || 0));
@@ -137,6 +140,20 @@ function saveDragonCoins() {
 
 function getDragonCoins() { return dragonCoins; }
 
+function saveErrCubes() {
+  try { localStorage.setItem(ERR_CUBES_KEY, String(errCubes)); } catch (e) {}
+}
+
+function getErrCubes() { return errCubes; }
+
+function addErrCubes(amount) {
+  const n = Math.max(0, Math.floor(Number(amount) || 0));
+  if (!n) return;
+  errCubes += n;
+  saveErrCubes();
+  if (typeof updateEconomyUi === 'function') updateEconomyUi();
+}
+
 function addDragonCoins(amount) {
   const n = Math.max(0, Math.floor(Number(amount) || 0));
   if (!n) return;
@@ -175,6 +192,7 @@ function saveEconomy() {
   try {
     localStorage.setItem('nw_flappy_yang', String(yang));
     localStorage.setItem('nw_flappy_wallets', String(wallets));
+    localStorage.setItem(ERR_CUBES_KEY, String(errCubes));
     localStorage.setItem('nw_flappy_upgrade_shield_start', shieldStartOwned ? '1' : '0');
     localStorage.setItem('nw_flappy_upgrade_invincibility', String(invincibilityLevel));
     localStorage.setItem('nw_flappy_upgrade_double_yang', String(doubleYangLevel));

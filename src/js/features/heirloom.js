@@ -528,9 +528,11 @@ function renderHeirloomPanel() {
   const yangEl = document.getElementById('heirloomYangs');
   const walletsEl = document.getElementById('heirloomWallets');
   const dcEl = document.getElementById('heirloomDragonCoins');
+  const errEl = document.getElementById('heirloomErrCubes');
   if (yangEl && typeof yang === 'number') yangEl.textContent = String(yang);
   if (walletsEl && typeof wallets === 'number') walletsEl.textContent = String(wallets);
   if (dcEl && typeof dragonCoins === 'number') dcEl.textContent = String(dragonCoins);
+  if (errEl && typeof errCubes === 'number') errEl.textContent = String(errCubes);
 
   // ── Rocket ──
   const rocketStatusEl = document.getElementById('heirloomRocketStatus');

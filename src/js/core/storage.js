@@ -4,6 +4,7 @@ window.NWStorage.STORAGE_KEYS = {
   BEST: 'nw_flappy_best',
   YANG: 'nw_flappy_yang',
   WALLETS: 'nw_flappy_wallets',
+  ERR_CUBES: 'nw_flappy_err_cubes',
   UPGRADE_SHIELD_START: 'nw_flappy_upgrade_shield_start',
   UPGRADE_INVINCIBILITY: 'nw_flappy_upgrade_invincibility',
   UPGRADE_DOUBLE_YANG: 'nw_flappy_upgrade_double_yang',

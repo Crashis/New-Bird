@@ -231,7 +231,9 @@ window.NWI18n = window.NWI18n || {};
       'settings.musicVolume.value': '{value} %',
       'settings.footer': 'Víc si toho nenastavíš ty mamrde',
       'currency.dragonCoins': 'Dračí mince',
+      'currency.errCubes': 'Err kostky',
       'hud.dragonCoins': 'Dračí mince:',
+      'hud.errCubes': 'Err kostky:',
       'toast.dragonCoinPhase3.title': '+1 Dračí mince',
       'toast.dragonCoinPhase3.subtitle': 'Fáze 3 tě pustila mezi dračí účetnictví.',
       'shellGame.subtitle': 'Kámen, nůžky nebo papír. Výhra vrátí 2× sázku, remíza hraje dál.',
@@ -287,7 +289,7 @@ window.NWI18n = window.NWI18n || {};
       'panel.tavernaBlocked': 'Tavernu otevřeš až mimo aktivní let. Hazard počká.',
 
       // Canvas status text
-      'canvas.yang': 'Yangy {yang}  ·  Peněženky {wallets}',
+      'canvas.yang': 'Yangy {yang}  ·  Peněženky {wallets}  ·  Err kostky {errCubes}',
       'canvas.invincible': 'NESMRTELNOST {time}s',
       'canvas.doubleYang': 'DOUBLE YANG {time}s',
       'canvas.amazonSlow': 'AMAZON SLOW {time}s',
@@ -600,7 +602,9 @@ window.NWI18n = window.NWI18n || {};
       'settings.musicVolume.value': '{value} %',
       'settings.footer': "You can't configure anything else, you bastard",
       'currency.dragonCoins': 'Dragon Coins',
+      'currency.errCubes': 'Err Cubes',
       'hud.dragonCoins': 'Dragon Coins:',
+      'hud.errCubes': 'Err Cubes:',
       'toast.dragonCoinPhase3.title': '+1 Dragon Coin',
       'toast.dragonCoinPhase3.subtitle': 'Phase 3 let you into dragon accounting.',
       'shellGame.subtitle': 'Rock, scissors or paper. Win returns 2× your bet, draw plays again.',
@@ -650,7 +654,7 @@ window.NWI18n = window.NWI18n || {};
       'panel.tavernaBlocked': 'Taverna opens outside active flight. Gambling can wait.',
 
       // Canvas status text
-      'canvas.yang': 'Yangs {yang}  ·  Wallets {wallets}',
+      'canvas.yang': 'Yangs {yang}  ·  Wallets {wallets}  ·  Err Cubes {errCubes}',
       'canvas.invincible': 'IMMORTALITY {time}s',
       'canvas.doubleYang': 'DOUBLE YANG {time}s',
       'canvas.amazonSlow': 'AMAZON SLOW {time}s',

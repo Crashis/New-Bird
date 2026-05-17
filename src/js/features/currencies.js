@@ -2,13 +2,17 @@ function updateEconomyUi() {
   const gameYang = document.getElementById('gameYang');
   const gameWallets = document.getElementById('gameWallets');
   const gameDragonCoins = document.getElementById('gameDragonCoins');
+  const gameErrCubes = document.getElementById('gameErrCubes');
   const shopYang = document.getElementById('shopYang');
   const shopWallets = document.getElementById('shopWallets');
+  const shopErrCubes = document.getElementById('shopErrCubes');
   if (gameYang) gameYang.textContent = yang;
   if (gameWallets) gameWallets.textContent = wallets;
   if (gameDragonCoins) gameDragonCoins.textContent = (typeof dragonCoins === 'number') ? dragonCoins : 0;
+  if (gameErrCubes) gameErrCubes.textContent = String((typeof errCubes === 'number') ? errCubes : 0);
   if (shopYang) shopYang.textContent = yang;
   if (shopWallets) shopWallets.textContent = wallets;
+  if (shopErrCubes) shopErrCubes.textContent = String((typeof errCubes === 'number') ? errCubes : 0);
   if (typeof renderShellGamePanel === 'function') renderShellGamePanel();
   if (typeof renderHeirloomPanel === 'function') renderHeirloomPanel();
   if (typeof renderUpgradesPanel === 'function') renderUpgradesPanel();
@@ -16,9 +20,11 @@ function updateEconomyUi() {
   const tcYangs = document.getElementById('threeChestsYangs');
   const tcDC    = document.getElementById('threeChestsDragonCoins');
   const ddDC    = document.getElementById('dragonDiceDragonCoins');
+  const heirloomErr = document.getElementById('heirloomErrCubes');
   if (tcYangs) tcYangs.textContent = yang;
   if (tcDC)    tcDC.textContent    = typeof dragonCoins === 'number' ? dragonCoins : 0;
   if (ddDC)    ddDC.textContent    = typeof dragonCoins === 'number' ? dragonCoins : 0;
+  if (heirloomErr) heirloomErr.textContent = String((typeof errCubes === 'number') ? errCubes : 0);
 
   const shieldLevel = document.getElementById('shieldStartLevel');
   const shieldBtn = document.getElementById('buyShieldStartBtn');

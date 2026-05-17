@@ -91,6 +91,17 @@
     margin-left: 0.4rem;
   }
 
+  .err-cubes-stat {
+    color: #f2b4d0;
+    opacity: 0.9;
+  }
+
+  .game-stats .err-cubes-stat strong,
+  .shop-wallet .err-cubes-stat strong {
+    color: #ff8fbd;
+    text-shadow: 0 0 10px rgba(255,80,150,0.35);
+  }
+
   #gameCanvas {
     border: 2px solid var(--gold-dark);
     border-radius: 4px;

@@ -69,7 +69,37 @@ function spawnPipe() {
     }
   }
 
+  if (!pipe.yang && !pipe.coin && Math.random() < ERR_CUBE_CHANCE) {
+    pipe.coin = {
+      type: 'errCube',
+      x: canvas.width + PIPE_WIDTH / 2,
+      y: gapTop + gap / 2,
+      r: COIN_RADIUS,
+      collected: false
+    };
+  }
+
   pipes.push(pipe);
+}
+
+function playErrCubeVoiceLine() {
+  if (!settings.voiceLines) return;
+  activeVoiceLine = ERR_CUBE_VOICE_LINE;
+  activeVoiceLineUntil = performance.now() + 4200;
+
+  if ('speechSynthesis' in window) {
+    try {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(ERR_CUBE_VOICE_LINE);
+      utterance.lang = window.NWI18n && window.NWI18n.getCurrentLanguage() === 'en' ? 'en-US' : 'cs-CZ';
+      utterance.rate = 0.92;
+      utterance.pitch = 0.75;
+      utterance.volume = 0.45;
+      window.speechSynthesis.speak(utterance);
+    } catch (e) {
+      // Canvas text still works when speech synthesis is unavailable.
+    }
+  }
 }
 
 function applyPowerup(coin) {
@@ -122,6 +152,12 @@ function applyPowerup(coin) {
       activeVoiceLine = `+${earned} Dračí mince!`;
       activeVoiceLineUntil = performance.now() + 2400;
       spawnPickupParticles(coin, '#ff8030', '#5a1f0a', 28);
+      break;
+    }
+    case 'errCube': {
+      if (typeof addErrCubes === 'function') addErrCubes(1);
+      playErrCubeVoiceLine();
+      spawnPickupParticles(coin, '#ff4c7a', '#9b5cff', 30);
       break;
     }
     case 'amazonNerf': {
@@ -204,11 +240,21 @@ const COIN_STYLES = {
     glow: 'rgba(255,160,80,0.6)', ring: '#fff2c8',
     label: '🐲', font: 'bold 17px serif', textColor: '#3a2e1a',
     pulseSpeed: 0.22, spinSpeed: 0.02
+  },
+  errCube: {
+    inner: '#ffd0e0', mid: '#9b5cff', outer: '#3a0a28',
+    glow: 'rgba(255,70,120,0.65)', ring: '#ff4c7a',
+    label: 'ERR', font: 'bold 10px Cinzel, serif', textColor: '#ffe8f2',
+    pulseSpeed: 0.34, spinSpeed: 0.035
   }
 };
 
 function drawCoin(coin) {
   if (!coin || coin.collected) return;
+  if (coin.type === 'errCube') {
+    drawErrCube(coin);
+    return;
+  }
   const style = COIN_STYLES[coin.type] || COIN_STYLES.invincibility;
   const pulse = Math.sin(frameCount * style.pulseSpeed) * 2;
   const r = coin.r + pulse;
@@ -249,6 +295,46 @@ function drawCoin(coin) {
 
   // Counter-rotate the label so it stays upright even when the coin spins.
   ctx.rotate(-spinAngle);
+  ctx.fillStyle = style.textColor;
+  ctx.font = style.font;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(style.label, 0, 1);
+
+  ctx.restore();
+}
+
+function drawErrCube(coin) {
+  const style = COIN_STYLES.errCube;
+  const pulse = Math.sin(frameCount * style.pulseSpeed) * 2;
+  const r = coin.r + pulse;
+  const flicker = Math.sin(frameCount * 0.75) > 0.72 ? 0.65 : 1;
+
+  ctx.save();
+  ctx.translate(coin.x, coin.y);
+  ctx.rotate(Math.PI / 4 + frameCount * style.spinSpeed);
+  ctx.globalAlpha = flicker;
+
+  if (settings.effects && !window.PERF_MOBILE) {
+    ctx.shadowColor = style.glow;
+    ctx.shadowBlur = 22;
+  }
+
+  const size = r * 1.55;
+  const grad = ctx.createLinearGradient(-size / 2, -size / 2, size / 2, size / 2);
+  grad.addColorStop(0, style.inner);
+  grad.addColorStop(0.5, style.mid);
+  grad.addColorStop(1, style.outer);
+  ctx.fillStyle = grad;
+  ctx.fillRect(-size / 2, -size / 2, size, size);
+
+  ctx.strokeStyle = style.ring;
+  ctx.lineWidth = 2;
+  ctx.strokeRect(-size / 2, -size / 2, size, size);
+
+  ctx.rotate(-Math.PI / 4 - frameCount * style.spinSpeed);
+  ctx.shadowBlur = 0;
+  ctx.globalAlpha = 1;
   ctx.fillStyle = style.textColor;
   ctx.font = style.font;
   ctx.textAlign = 'center';
