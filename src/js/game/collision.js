@@ -54,7 +54,8 @@ function update() {
     if (Math.hypot(dx, dy) < player.r + coin.r) {
       coin.collected = true;
       const mult = isDoubleYangActive() ? 2 : 1;
-      const earned = coin.value * mult;
+      const godiaMult = (typeof getGodiasWalletMultiplier === 'function') ? getGodiasWalletMultiplier() : 1;
+      const earned = coin.value * mult * godiaMult;
       addYangs(earned);
       runYangs += earned;
       activeVoiceLine = mult > 1 ? `+${earned} Yangy (Double!)` : `+${earned} Yangy`;

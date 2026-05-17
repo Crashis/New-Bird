@@ -363,21 +363,50 @@
       </div>
       <div class="shop-subtitle" data-i18n="heirloom.subtitle">Univerzální vybavení pro všechny skiny. Stav se ukládá lokálně.</div>
 
+      <!-- Měny -->
+      <div class="shop-item-desc" style="margin-bottom:0.4rem;">
+        <span data-i18n="shop.yang">Yangy:</span> <strong id="heirloomYangs">0</strong>
+        &nbsp;·&nbsp;
+        <span data-i18n="hud.wallets">Peněženky:</span> <strong id="heirloomWallets">0</strong>
+        &nbsp;·&nbsp;
+        <span data-i18n="currency.dragonCoins">Dračí mince</span>: <strong id="heirloomDragonCoins">0</strong>
+      </div>
+
+      <!-- Raketomet -->
       <div class="shop-item">
         <div class="shop-item-title" data-i18n="heirloom.rocket.name">🚀 Raketomet</div>
         <div class="shop-item-desc" data-i18n="heirloom.rocket.description">Pravým tlačítkem vystřelíš raketu, která zničí první překážku před tebou.</div>
         <div class="shop-item-desc" data-i18n="heirloom.rocket.ammoInfo">1 náboj na run. Náboj se obnoví po dosažení 100 bodů.</div>
         <div class="shop-item-desc" data-i18n="heirloom.rocket.price">Cena: 1000 Yangů + 10 Dračích mincí</div>
-        <div class="shop-item-desc">
-          <span data-i18n="shop.yang">Yangy:</span> <strong id="heirloomYangs">0</strong>
-          &nbsp;·&nbsp;
-          <span data-i18n="currency.dragonCoins">Dračí mince</span>: <strong id="heirloomDragonCoins">0</strong>
-        </div>
         <div class="shop-item-bottom">
           <span class="shop-level" id="heirloomRocketStatus">Zamčeno</span>
           <button class="game-btn shop-buy-btn" id="toggleHeirloomRocketBtn">Odemknout</button>
         </div>
         <div class="shop-message" id="heirloomRocketMessage"></div>
+      </div>
+
+      <!-- Lektvar Aeternum -->
+      <div class="shop-item">
+        <div class="shop-item-title" data-i18n="heirloom.potion.name">🧪 Lektvar Aeternum</div>
+        <div class="shop-item-desc" data-i18n="heirloom.potion.description">Po smrti máš šanci na oživení. Základ 50 %, klesá po každém úspěšném oživení na min. 10 %.</div>
+        <div class="shop-item-desc" data-i18n="heirloom.potion.price">Cena: 5 000 Yangů · 50 Peněženek · 25 Dračích mincí</div>
+        <div class="shop-item-bottom">
+          <span class="shop-level" id="heirloomPotionStatus">Zamčeno</span>
+          <button class="game-btn shop-buy-btn" id="toggleHeirloomPotionBtn">Koupit</button>
+        </div>
+        <div class="shop-message" id="heirloomPotionMessage"></div>
+      </div>
+
+      <!-- Godiasova peněženka -->
+      <div class="shop-item">
+        <div class="shop-item-title" data-i18n="heirloom.godias.name">👛 Godiasova peněženka</div>
+        <div class="shop-item-desc" data-i18n="heirloom.godias.description">Všechny získané měny ×3: yangy, peněženky i dračí mince.</div>
+        <div class="shop-item-desc" data-i18n="heirloom.godias.price">Cena: 10 000 Yangů · 100 Peněženek · 100 Dračích mincí</div>
+        <div class="shop-item-bottom">
+          <span class="shop-level" id="heirloomGodiasStatus">Zamčeno</span>
+          <button class="game-btn shop-buy-btn" id="toggleHeirloomGodiasBtn">Koupit</button>
+        </div>
+        <div class="shop-message" id="heirloomGodiasMessage"></div>
       </div>
 
       <div class="game-buttons" style="margin-top:0.6rem;">

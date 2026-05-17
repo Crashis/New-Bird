@@ -69,6 +69,7 @@ function startGame() {
 }
 
 function endGame() {
+  if (typeof tryPotionRevive === 'function' && tryPotionRevive()) return;
   gameState = 'over';
   stopGameMusic();
   applySelectedSkinEndGameEffects();
@@ -103,7 +104,8 @@ function winGame() {
   document.getElementById('gameBest').textContent = bestScore;
   if (!walletAwardedThisRun && score >= WIN_SCORE) {
     walletAwardedThisRun = true;
-    wallets += 1;
+    const _walletMult = (typeof getGodiasWalletMultiplier === 'function') ? getGodiasWalletMultiplier() : 1;
+    wallets += _walletMult;
     saveEconomy();
     showUnlockToast(t('event.walletWon'), t('event.walletWonSub'), 'wallet');
     activeVoiceLine = t('event.walletVoice');

@@ -84,7 +84,10 @@ function activateFrostPhase() {
   // +1 Dračí mince za dosažení fáze 3 (score 60+), jen jednou za run.
   if (!dragonCoinAwardedThisRun) {
     dragonCoinAwardedThisRun = true;
-    if (typeof addDragonCoins === 'function') addDragonCoins(1);
+    if (typeof addDragonCoins === 'function') {
+      const _dcMult = (typeof getGodiasWalletMultiplier === 'function') ? getGodiasWalletMultiplier() : 1;
+      addDragonCoins(_dcMult);
+    }
     if (typeof showUnlockToast === 'function') {
       showUnlockToast(t('toast.dragonCoinPhase3.title'), t('toast.dragonCoinPhase3.subtitle'), 'upgrade');
     }
