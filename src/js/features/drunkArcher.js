@@ -99,7 +99,7 @@ function stopDrunkArcherAnimation() {
 function startDrunkArcherAttempt() {
   if (drunkArcherState === 'aiming') return;
   if (errCubes < DRUNK_ARCHER_ENTRY_COST) {
-    setDrunkArcherStatus('You don\'t have any Err Cubes.', 'error');
+    setDrunkArcherStatus(t('drunkArcher.noErrCubes'), 'error');
     renderDrunkArcherPanel();
     return;
   }
@@ -114,16 +114,16 @@ function startDrunkArcherAttempt() {
   drunkArcherStartedAt = performance.now();
   drunkArcherShotResolved = false;
   drunkArcherState = 'aiming';
-  setDrunkArcherStatus('Aiming... click Shoot at the right moment.', 'info');
+  setDrunkArcherStatus(t('drunkArcher.aiming'), 'info');
   renderDrunkArcherPanel();
   stopDrunkArcherAnimation();
   drunkArcherAnimId = requestAnimationFrame(animateDrunkArcher);
 }
 
 function buildDrunkArcherRewardText(prefix, yangReward, walletBonus, dragonCoinBonus) {
-  let msg = `${prefix} You gained ${yangReward} yangs.`;
-  if (walletBonus) msg += ' You also get 1 wallet.';
-  if (dragonCoinBonus) msg += ' You also get 1 dragon coin.';
+  let msg = t('drunkArcher.gainedYang', { prefix: prefix, amount: yangReward });
+  if (walletBonus) msg += t('drunkArcher.bonusWallet');
+  if (dragonCoinBonus) msg += t('drunkArcher.bonusDragonCoin');
   return msg;
 }
 
@@ -137,14 +137,14 @@ function applyDrunkArcherReward(kind) {
     yangReward = randomIntInclusive(40, 50);
     walletBonus = Math.random() < 0.20;
     dragonCoinBonus = Math.random() < 0.10;
-    msg = buildDrunkArcherRewardText('Perfect shot!', yangReward, walletBonus, dragonCoinBonus);
+    msg = buildDrunkArcherRewardText(t('drunkArcher.perfect'), yangReward, walletBonus, dragonCoinBonus);
   } else if (kind === 'good') {
     yangReward = randomIntInclusive(20, 35);
     walletBonus = Math.random() < 0.08;
     dragonCoinBonus = Math.random() < 0.02;
-    msg = buildDrunkArcherRewardText('Nice shot!', yangReward, walletBonus, dragonCoinBonus);
+    msg = buildDrunkArcherRewardText(t('drunkArcher.nice'), yangReward, walletBonus, dragonCoinBonus);
   } else {
-    msg = 'You missed. The Err Cube is gone.';
+    msg = t('drunkArcher.missed');
   }
 
   if (yangReward > 0) yang += yangReward;
@@ -187,6 +187,6 @@ function initDrunkArcher() {
   drunkArcherShotResolved = false;
   setNewDrunkArcherTarget();
   resetDrunkArcherEffects();
-  setDrunkArcherStatus('Each attempt costs 1 Err Cube. Hit the center of the moving target.', 'info');
+  setDrunkArcherStatus(t('drunkArcher.statusInit'), 'info');
   renderDrunkArcherPanel();
 }

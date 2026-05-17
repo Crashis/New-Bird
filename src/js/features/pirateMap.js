@@ -93,7 +93,7 @@ function startPirateMapAttempt() {
   pirateMapBusy = true;
 
   if ((typeof errCubes !== 'number') || errCubes < PIRATE_MAP_ENTRY_COST) {
-    setPirateMapStatus("You don't have any Err Cubes.", 'error');
+    setPirateMapStatus(t('pirateMap.noErrCubes'), 'error');
     pirateMapBusy = false;
     renderPirateMapGrid();
     return;
@@ -106,7 +106,7 @@ function startPirateMapAttempt() {
   pirateMapTiles = generatePirateMapTiles();
   pirateMapOpenedIndex = -1;
   pirateMapState = 'active';
-  setPirateMapStatus('Pick one tile on the map.', 'info');
+  setPirateMapStatus(t('pirateMap.pickTile'), 'info');
   renderPirateMapGrid();
   pirateMapBusy = false;
 }
@@ -128,27 +128,27 @@ function openPirateMapTile(index) {
     const reward = pirateRandInt(20, 40);
     yang += reward;
     saveEconomy();
-    msg = `💰 Big treasure! +${reward} Yang.`;
+    msg = window.t('pirateMap.bigTreasure', { amount: reward });
     kind = 'win';
   } else if (t === 'small') {
     const reward = pirateRandInt(10, 20);
     yang += reward;
     saveEconomy();
-    msg = `🪙 Small treasure! +${reward} Yang.`;
+    msg = window.t('pirateMap.smallTreasure', { amount: reward });
     kind = 'win';
   } else if (t === 'trap') {
     const lost = Math.min(5, yang);
     yang = Math.max(0, yang - 5);
     saveEconomy();
-    msg = `💀 Trap! You lost ${lost} Yang.`;
+    msg = window.t('pirateMap.trap', { amount: lost });
     kind = 'lose';
   } else if (t === 'err') {
     errCubes += 1;
     saveErrCubes();
-    msg = '🎲 You found another Err Cube!';
+    msg = window.t('pirateMap.foundErrCube');
     kind = 'win';
   } else {
-    msg = 'Nothing… the chest was empty.';
+    msg = window.t('pirateMap.emptyChest');
     kind = 'info';
   }
 
@@ -163,6 +163,6 @@ function initPirateMap() {
   pirateMapOpenedIndex = -1;
   pirateMapTiles = [];
   pirateMapBusy = false;
-  setPirateMapStatus('Pay 1 Err Cube, pick one tile on the map and hope for treasure.', 'info');
+  setPirateMapStatus(t('pirateMap.statusInit'), 'info');
   renderPirateMapGrid();
 }

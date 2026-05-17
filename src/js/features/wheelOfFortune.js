@@ -58,30 +58,30 @@ function pickWheelOutcome() {
 function applyWheelOutcome(slice) {
   switch (slice.id) {
     case 'nothing':
-      return 'Nothing… better luck tomorrow.';
+      return t('wheel.nothing');
     case 'smallYang': {
       const r = 10 + Math.floor(Math.random() * 11); // 10–20
       yang += r; saveEconomy();
-      return `+${r} Yang!`;
+      return t('wheel.smallYang', { amount: r });
     }
     case 'bigYang': {
       const r = 30 + Math.floor(Math.random() * 31); // 30–60
       yang += r; saveEconomy();
-      return `+${r} Yang!`;
+      return t('wheel.bigYang', { amount: r });
     }
     case 'wallet':
       wallets += 1; saveEconomy();
-      return '+1 Wallet!';
+      return t('wheel.wallet');
     case 'dragonCoin':
       dragonCoins += 1; saveDragonCoins();
-      return '+1 Dragon Coin!';
+      return t('wheel.dragonCoin');
     case 'errCube':
       errCubes += 1; saveErrCubes();
-      return '+1 Err Cube!';
+      return t('wheel.errCube');
     case 'jackpot':
       yang += 100; wallets += 3; dragonCoins += 2;
       saveEconomy(); saveDragonCoins();
-      return '🏆 JACKPOT! +100 Yang, +3 Wallets, +2 Dragon Coins!';
+      return t('wheel.jackpot');
   }
   return '';
 }
@@ -108,7 +108,7 @@ function renderWheelPanel() {
     const playedToday = wheelPlayedToday();
     spinBtn.disabled = wheelBusy || wheelState === 'spinning' || playedToday || yang < WHEEL_ENTRY_COST;
     spinBtn.classList.toggle('disabled', spinBtn.disabled);
-    spinBtn.textContent = `Spin (${WHEEL_ENTRY_COST} Yang)`;
+    spinBtn.textContent = t('wheel.spinBtn', { cost: WHEEL_ENTRY_COST });
   }
 }
 
@@ -129,11 +129,11 @@ function startWheelSpin() {
   if (wheelBusy) return;
   if (wheelState === 'spinning') return;
   if (wheelPlayedToday()) {
-    setWheelStatus('You already spun the Wheel of Fortune today. Come back after midnight.', 'error');
+    setWheelStatus(t('wheel.playedToday'), 'error');
     return;
   }
   if (yang < WHEEL_ENTRY_COST) {
-    setWheelStatus(`Not enough Yang. You need ${WHEEL_ENTRY_COST}.`, 'error');
+    setWheelStatus(t('wheel.notEnough', { cost: WHEEL_ENTRY_COST }), 'error');
     return;
   }
   wheelBusy = true;
@@ -144,7 +144,7 @@ function startWheelSpin() {
   wheelState = 'spinning';
   wheelSpinUntil = performance.now() + WHEEL_SPIN_DURATION_MS;
   wheelDisplayIndex = 0;
-  setWheelStatus('The wheel is spinning...', 'info');
+  setWheelStatus(t('wheel.spinning'), 'info');
   renderWheelPanel();
   if (wheelSpinAnimId) { clearTimeout(wheelSpinAnimId); wheelSpinAnimId = null; }
   wheelSpinAnimId = setTimeout(spinWheelAnimate, 90);
@@ -162,7 +162,7 @@ function finishWheelSpin() {
   wheelState = 'done';
   saveWheelPlayed();
   if (typeof updateEconomyUi === 'function') updateEconomyUi();
-  setWheelStatus(`You won: ${msg}`, outcome.id === 'nothing' ? 'info' : 'win');
+  setWheelStatus(t('wheel.youWon', { msg: msg }), outcome.id === 'nothing' ? 'info' : 'win');
   wheelBusy = false;
   renderWheelPanel();
 }
@@ -176,9 +176,9 @@ function initWheelOfFortune() {
   if (wheelState === 'spinning') wheelState = 'idle';
   wheelBusy = false;
   if (wheelPlayedToday()) {
-    setWheelStatus('You already spun the Wheel of Fortune today. Come back after midnight.', 'error');
+    setWheelStatus(t('wheel.playedToday'), 'error');
   } else {
-    setWheelStatus(`Spin once per day for ${WHEEL_ENTRY_COST} Yang. Jackpot is rare but real.`, 'info');
+    setWheelStatus(t('wheel.statusInit', { cost: WHEEL_ENTRY_COST }), 'info');
   }
   renderWheelPanel();
 }

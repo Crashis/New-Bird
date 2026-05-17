@@ -42,11 +42,11 @@ function setThreeChestsStatus(msg, type) {
 
 function startThreeChests() {
   if (threeChestsPlayedToday()) {
-    setThreeChestsStatus('You already played Five Chests today. Come back after midnight.', 'error');
+    setThreeChestsStatus(t('threeChests.playedToday'), 'error');
     return;
   }
   if (yang < CHEST_ENTRY_COST) {
-    setThreeChestsStatus(`Not enough Yangs to enter. You need ${CHEST_ENTRY_COST} Yangs.`, 'error');
+    setThreeChestsStatus(t('threeChests.notEnough', { cost: CHEST_ENTRY_COST }), 'error');
     return;
   }
 
@@ -63,7 +63,7 @@ function startThreeChests() {
   threeChestsRewardMap = indices;
   threeChestsOpenedIndex = -1;
   threeChestsState = 'active';
-  setThreeChestsStatus('Pick one chest!', 'info');
+  setThreeChestsStatus(t('threeChests.pickOne'), 'info');
   renderThreeChestsGrid();
 }
 
@@ -85,11 +85,9 @@ function openChest(chestIndex) {
   updateEconomyUi();
   saveThreeChestsPlayed();
 
-  let msg = `You opened a chest and got: ${reward.yang} Yangs`;
-  if (reward.wallets > 0)     msg += `, ${reward.wallets} Wallets`;
-  if (reward.dragonCoins > 0) msg += `, ${reward.dragonCoins} Dragon Coins`;
-  msg += '!';
-  setThreeChestsStatus(msg, 'win');
+  const wTxt = reward.wallets > 0 ? t('threeChests.openedWallets', { amount: reward.wallets }) : '';
+  const dcTxt = reward.dragonCoins > 0 ? t('threeChests.openedDragonCoins', { amount: reward.dragonCoins }) : '';
+  setThreeChestsStatus(t('threeChests.opened', { y: reward.yang, wallets: wTxt, dragonCoins: dcTxt }), 'win');
 
   if (typeof unlockAchievement === 'function') unlockAchievement('chest_hunter');
 
@@ -139,9 +137,9 @@ function initThreeChests() {
   threeChestsRewardMap = [];
 
   if (threeChestsPlayedToday()) {
-    setThreeChestsStatus('You already played Five Chests today. Come back after midnight.', 'error');
+    setThreeChestsStatus(t('threeChests.playedToday'), 'error');
   } else {
-    setThreeChestsStatus(`Entry costs ${CHEST_ENTRY_COST} Yangs. Pick one of five chests.`, 'info');
+    setThreeChestsStatus(t('threeChests.statusInit', { cost: CHEST_ENTRY_COST }), 'info');
   }
   renderThreeChestsGrid();
 }

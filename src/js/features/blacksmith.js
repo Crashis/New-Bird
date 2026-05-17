@@ -31,7 +31,7 @@ function renderBlacksmithPanel() {
   if (hitsEl) hitsEl.textContent = `${blacksmithHits} / 3`;
 
   const strikesEl = document.getElementById('blacksmithStrikeLabel');
-  if (strikesEl) strikesEl.textContent = `Strike ${Math.min(blacksmithStrike + 1, 3)} / 3`;
+  if (strikesEl) strikesEl.textContent = t('blacksmith.strikeLabel', { cur: Math.min(blacksmithStrike + 1, 3) });
 
   const target = document.getElementById('blacksmithTarget');
   const zone = document.getElementById('blacksmithZone');
@@ -90,11 +90,11 @@ function startBlacksmithAttempt() {
   const bet = parseInt(betInput && betInput.value, 10);
 
   if (!Number.isFinite(bet) || bet < BLACKSMITH_MIN_BET) {
-    setBlacksmithStatus(`Minimum bet is ${BLACKSMITH_MIN_BET} Yang.`, 'error');
+    setBlacksmithStatus(t('blacksmith.minBet', { min: BLACKSMITH_MIN_BET }), 'error');
     return;
   }
   if (yang < bet) {
-    setBlacksmithStatus('Not enough Yang for that bet.', 'error');
+    setBlacksmithStatus(t('blacksmith.notEnough'), 'error');
     return;
   }
 
@@ -111,7 +111,7 @@ function startBlacksmithAttempt() {
   blacksmithStartedAt = performance.now();
   blacksmithState = 'aiming';
   blacksmithStrikeBusy = false;
-  setBlacksmithStatus('Strike when the marker is on the target!', 'info');
+  setBlacksmithStatus(t('blacksmith.strikeOnTarget'), 'info');
   renderBlacksmithPanel();
   stopBlacksmithAnimation();
   blacksmithAnimId = requestAnimationFrame(animateBlacksmith);
@@ -147,7 +147,7 @@ function blacksmithStrikeNow() {
   blacksmithSpeed += BLACKSMITH_SPEED_STEP;
   setBlacksmithNewTarget();
   blacksmithStartedAt = performance.now();
-  setBlacksmithStatus(hit ? `Hit! ${blacksmithHits}/3` : `Miss! ${blacksmithHits}/3`, hit ? 'win' : 'lose');
+  setBlacksmithStatus(hit ? t('blacksmith.hit', { hits: blacksmithHits }) : t('blacksmith.miss', { hits: blacksmithHits }), hit ? 'win' : 'lose');
   blacksmithStrikeBusy = false;
   renderBlacksmithPanel();
 }
@@ -164,16 +164,16 @@ function resolveBlacksmith() {
 
   let msg = '';
   if (blacksmithHits === 0) {
-    msg = `No hits. You lost ${blacksmithBet} Yang.`;
+    msg = t('blacksmith.noHits', { bet: blacksmithBet });
     setBlacksmithStatus(msg, 'lose');
   } else if (blacksmithHits === 1) {
-    msg = `1 hit — your bet was returned (+${payout} Yang).`;
+    msg = t('blacksmith.oneHit', { payout: payout });
     setBlacksmithStatus(msg, 'info');
   } else if (blacksmithHits === 2) {
-    msg = `2 hits — you won ${payout} Yang!`;
+    msg = t('blacksmith.twoHits', { payout: payout });
     setBlacksmithStatus(msg, 'win');
   } else {
-    msg = `3 hits! You won ${payout} Yang${bonusDc ? ' + 1 Dragon Coin!' : '!'}`;
+    msg = t('blacksmith.threeHits', { payout: payout, bonus: bonusDc ? t('blacksmith.threeHitsBonus') : '!' });
     setBlacksmithStatus(msg, 'win');
   }
 }
@@ -187,6 +187,6 @@ function initBlacksmith() {
   blacksmithMarkerPos = 0;
   blacksmithStrikeBusy = false;
   setBlacksmithNewTarget();
-  setBlacksmithStatus('Place a bet and hit the moving target 3 times. Each strike gets faster.', 'info');
+  setBlacksmithStatus(t('blacksmith.statusInit'), 'info');
   renderBlacksmithPanel();
 }

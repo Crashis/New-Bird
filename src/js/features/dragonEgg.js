@@ -1,8 +1,8 @@
 // Dračí vejce — dlouhodobá progression minihra.
-// Hráč koupí vejce (25Y), zahřívá ho přes runy a pak rozbije pro odměnu.
+// Hráč koupí vejce (10Y), zahřívá ho přes runy a pak rozbije pro odměnu.
 // Denní limit: max 3 koupě za den (reset o půlnoci lokálního času).
 
-const DRAGON_EGG_PRICE = 25;
+const DRAGON_EGG_PRICE = 10;
 const DRAGON_EGG_DAILY_LIMIT = 3;
 const DRAGON_EGG_DATE_KEY = 'dragonEggDailyDate';
 const DRAGON_EGG_USES_KEY = 'dragonEggDailyUses';
@@ -78,9 +78,9 @@ function renderDragonEggPanel() {
   if (statusEl) {
     if (dragonEggState.active) {
       const w = Math.max(0, dragonEggState.warmedRuns | 0);
-      statusEl.textContent = `Warmed runs: ${w} / 7`;
+      statusEl.textContent = t('dragonEgg.warmedRuns', { w: w });
     } else {
-      statusEl.textContent = 'No egg active.';
+      statusEl.textContent = t('dragonEgg.noEgg');
     }
   }
 
@@ -90,8 +90,9 @@ function renderDragonEggPanel() {
   if (buyBtn) {
     buyBtn.disabled = dragonEggBusy || dragonEggState.active || usedUp || yang < DRAGON_EGG_PRICE;
     buyBtn.classList.toggle('disabled', buyBtn.disabled);
-    buyBtn.textContent = `Buy Egg (${DRAGON_EGG_PRICE} Yang)`;
+    buyBtn.textContent = t('dragonEgg.buyBtn', { price: DRAGON_EGG_PRICE });
   }
+  if (breakBtn) breakBtn.textContent = t('dragonEgg.breakBtn');
   if (breakBtn) {
     breakBtn.disabled = dragonEggBusy || !dragonEggState.active;
     breakBtn.classList.toggle('disabled', breakBtn.disabled);
@@ -101,15 +102,15 @@ function renderDragonEggPanel() {
 function buyDragonEgg() {
   if (dragonEggBusy) return;
   if (dragonEggState.active) {
-    setDragonEggStatus('You already have an active egg. Break it first or wait longer.', 'error');
+    setDragonEggStatus(t('dragonEgg.alreadyActive'), 'error');
     return;
   }
   if (dragonEggDailyUsesToday() >= DRAGON_EGG_DAILY_LIMIT) {
-    setDragonEggStatus('Dragon Egg can be used only 3 times per day. Come back after midnight.', 'error');
+    setDragonEggStatus(t('dragonEgg.dailyLimit'), 'error');
     return;
   }
   if (yang < DRAGON_EGG_PRICE) {
-    setDragonEggStatus(`Not enough Yang. You need ${DRAGON_EGG_PRICE}.`, 'error');
+    setDragonEggStatus(t('dragonEgg.notEnough', { price: DRAGON_EGG_PRICE }), 'error');
     return;
   }
   dragonEggBusy = true;
@@ -119,7 +120,7 @@ function buyDragonEgg() {
   saveDragonEggState();
   bumpDragonEggDailyUses();
   if (typeof updateEconomyUi === 'function') updateEconomyUi();
-  setDragonEggStatus('You bought a Dragon Egg. Play runs to warm it up!', 'win');
+  setDragonEggStatus(t('dragonEgg.bought'), 'win');
   dragonEggBusy = false;
   renderDragonEggPanel();
 }
@@ -127,7 +128,7 @@ function buyDragonEgg() {
 function breakDragonEgg() {
   if (dragonEggBusy) return;
   if (!dragonEggState.active) {
-    setDragonEggStatus('You have no active egg to break.', 'error');
+    setDragonEggStatus(t('dragonEgg.noActive'), 'error');
     return;
   }
   dragonEggBusy = true;
@@ -138,28 +139,28 @@ function breakDragonEgg() {
   if (w < 3) {
     if (Math.random() < 0.5) {
       yang += 10;
-      msg = 'A weak crack… you got 10 Yang.';
+      msg = t('dragonEgg.weakCrack');
       kind = 'win';
     } else {
-      msg = 'The egg was empty. Nothing happened.';
+      msg = t('dragonEgg.empty');
       kind = 'info';
     }
   } else if (w < 7) {
     if (Math.random() < 0.6) {
       yang += 20;
-      msg = 'A solid crack! You got 20 Yang.';
+      msg = t('dragonEgg.solidCrack');
       kind = 'win';
     } else {
-      msg = 'The egg was hollow. Nothing happened.';
+      msg = t('dragonEgg.hollow');
       kind = 'info';
     }
   } else {
     const reward = 30 + Math.floor(Math.random() * 21); // 30–50
     yang += reward;
     const extras = [];
-    if (Math.random() < 0.20) { wallets += 1; extras.push('+1 Wallet'); }
-    if (Math.random() < 0.05) { dragonCoins += 1; saveDragonCoins(); extras.push('+1 Dragon Coin'); }
-    msg = `A dragon hatched! +${reward} Yang${extras.length ? ' · ' + extras.join(' · ') : ''}.`;
+    if (Math.random() < 0.20) { wallets += 1; extras.push(t('dragonEgg.extraWallet')); }
+    if (Math.random() < 0.05) { dragonCoins += 1; saveDragonCoins(); extras.push(t('dragonEgg.extraDragonCoin')); }
+    msg = t('dragonEgg.hatched', { reward: reward, extras: extras.length ? ' · ' + extras.join(' · ') : '' });
     kind = 'win';
   }
 
@@ -182,10 +183,7 @@ function notifyRunEnded() {
 
 function initDragonEgg() {
   loadDragonEggState();
-  setDragonEggStatus(
-    'Break now: small chance for 10 Yang. After 3 runs: chance for 20 Yang. After 7 runs: 30–50 Yang + chance for Wallet or Dragon Coin.',
-    'info'
-  );
+  setDragonEggStatus('', 'info');
   renderDragonEggPanel();
 }
 

@@ -132,7 +132,7 @@
         <button class="game-btn menu-btn" id="menuCheatBtn" onclick="toggleCheatCodesPanel()" data-i18n="menu.cheats">⌨ Cheat Codes</button>
         <button class="game-btn menu-btn" id="heirloomBtn" onclick="toggleHeirloomPanel()" data-i18n="menu.heirloom">🚀 Heirloom</button>
         <button class="game-btn menu-btn" id="menuUpgradesBtn" onclick="toggleUpgradesPanel()" data-i18n="menu.upgrades">⚡ Upgrady</button>
-        <button class="game-btn menu-btn" id="menuBattlepassBtn" onclick="toggleBattlepassPanel()">🎟️ Battlepass</button>
+        <button class="game-btn menu-btn" id="menuBattlepassBtn" onclick="toggleBattlepassPanel()" data-i18n="menu.battlepass">🎟️ Battlepass</button>
         <button class="game-btn menu-btn menu-quit-btn" id="menuQuitBtn" onclick="quitGameFromMainMenu()" data-i18n="menu.quit">✕ Zavřít hru</button>
       </div>
 
@@ -152,13 +152,13 @@
 
       <!-- Share section -->
       <div class="share-section" id="shareSection">
-        <div class="share-title">Sdílej svůj výsledek</div>
-        <div class="share-subtitle">Pochlub se skóre kamarádům.</div>
+        <div class="share-title" data-i18n="share.title">Sdílej svůj výsledek</div>
+        <div class="share-subtitle" data-i18n="share.subtitle">Pochlub se skóre kamarádům.</div>
         <div class="share-buttons">
-          <button class="game-btn share-btn" id="shareNativeBtn" onclick="shareResult()">📤 Sdílet výsledek</button>
-          <button class="game-btn share-btn" id="shareCopyBtn" onclick="copyShareResult()">📋 Kopírovat výsledek</button>
-          <button class="game-btn share-btn" id="shareFbBtn" onclick="shareResultFacebook()">📘 Facebook</button>
-          <button class="game-btn share-btn" id="shareMsgBtn" onclick="shareResultMessenger()">💬 Messenger</button>
+          <button class="game-btn share-btn" id="shareNativeBtn" onclick="shareResult()" data-i18n="share.native">📤 Sdílet výsledek</button>
+          <button class="game-btn share-btn" id="shareCopyBtn" onclick="copyShareResult()" data-i18n="share.copy">📋 Kopírovat výsledek</button>
+          <button class="game-btn share-btn" id="shareFbBtn" onclick="shareResultFacebook()" data-i18n="share.fb">📘 Facebook</button>
+          <button class="game-btn share-btn" id="shareMsgBtn" onclick="shareResultMessenger()" data-i18n="share.msg">💬 Messenger</button>
         </div>
         <div class="share-status" id="shareStatus" aria-live="polite"></div>
       </div>
@@ -281,7 +281,7 @@
       <div class="skin-status" id="skinPreviewStatus"></div>
 
       <div class="game-buttons" style="margin-top:0.6rem;">
-        <button class="game-btn primary" id="skinSelectBtn" onclick="selectCurrentSkin()">Vybrat</button>
+        <button class="game-btn primary" id="skinSelectBtn" onclick="selectCurrentSkin()" data-i18n="skins.selectBtn">Vybrat</button>
         <button class="game-btn" onclick="toggleSkinsPanel(false)" data-i18n="skins.close">✕ Zavřít</button>
       </div>
     </div>
@@ -577,82 +577,82 @@
     <!-- ── Taverna panel ───────────────────────────── -->
     <div class="taverna-panel" id="tavernaPanel">
       <div class="taverna-header">
-        <h2 class="taverna-title">🍺 Taverna</h2>
+        <h2 class="taverna-title" data-i18n="taverna.title">🍺 Taverna</h2>
         <button class="game-btn panel-close-btn" onclick="toggleTavernaPanel(false)">×</button>
       </div>
-      <p class="taverna-subtitle">Vyber si hazardníka, kterému svěříš své měny.</p>
+      <p class="taverna-subtitle" data-i18n="taverna.subtitle">Vyber si hazardníka, kterému svěříš své měny.</p>
 
       <div class="taverna-cards">
 
         <div class="taverna-card" onclick="openTavernaGame('shellGame')">
           <div class="taverna-card-art">🎰</div>
           <div class="taverna-card-body">
-            <div class="taverna-card-name">Skořápkář</div>
-            <div class="taverna-card-desc">Podivný hazardér s trojicí kelímků. Kámen, nůžky nebo papír — kdo přečte nepřítele?</div>
-            <div class="taverna-card-price">💰 Libovolné Yangy</div>
+            <div class="taverna-card-name" data-i18n="taverna.card.shellGame.name">Skořápkář</div>
+            <div class="taverna-card-desc" data-i18n="taverna.card.shellGame.desc">Podivný hazardér s trojicí kelímků. Kámen, nůžky nebo papír — kdo přečte nepřítele?</div>
+            <div class="taverna-card-price" data-i18n="taverna.card.shellGame.price">💰 Libovolné Yangy</div>
           </div>
         </div>
 
         <div class="taverna-card" onclick="openTavernaGame('threeChests')">
           <div class="taverna-card-art">🏴‍☠️</div>
           <div class="taverna-card-body">
-            <div class="taverna-card-name">Tři truhly</div>
-            <div class="taverna-card-desc">Pirát s pěti bednami plnými pokladů. Každý den jedno otevření — která skrývá největší bohatství?</div>
-            <div class="taverna-card-price">💰 Vstup 10 Yangů · 1× denně</div>
+            <div class="taverna-card-name" data-i18n="taverna.card.threeChests.name">Tři truhly</div>
+            <div class="taverna-card-desc" data-i18n="taverna.card.threeChests.desc">Pirát s pěti bednami plnými pokladů. Každý den jedno otevření — která skrývá největší bohatství?</div>
+            <div class="taverna-card-price" data-i18n="taverna.card.threeChests.price">💰 Vstup 10 Yangů · 1× denně</div>
           </div>
         </div>
 
         <div class="taverna-card" onclick="openTavernaGame('dragonDice')">
           <div class="taverna-card-art">🐉</div>
           <div class="taverna-card-body">
-            <div class="taverna-card-name">Dračí kostka</div>
-            <div class="taverna-card-desc">Zahalený kostkař s dračím rituálem. Sázej mince na číslo nebo sudé/liché — osud rozhodne.</div>
-            <div class="taverna-card-price">🐲 Dračí mince</div>
+            <div class="taverna-card-name" data-i18n="taverna.card.dragonDice.name">Dračí kostka</div>
+            <div class="taverna-card-desc" data-i18n="taverna.card.dragonDice.desc">Zahalený kostkař s dračím rituálem. Sázej mince na číslo nebo sudé/liché — osud rozhodne.</div>
+            <div class="taverna-card-price" data-i18n="taverna.card.dragonDice.price">🐲 Dračí mince</div>
           </div>
         </div>
 
         <div class="taverna-card" onclick="openTavernaGame('drunkArcher')">
           <div class="taverna-card-art">🏹</div>
           <div class="taverna-card-body">
-            <div class="taverna-card-name">Opilý lukostřelec</div>
-            <div class="taverna-card-desc">Rozkývaný střelec míří na terč. Zaplať Err kostku a vystřel přesně ve chvíli, kdy marker trefí střed.</div>
-            <div class="taverna-card-price">🎲 Vstup 1 Err kostka</div>
+            <div class="taverna-card-name" data-i18n="taverna.card.drunkArcher.name">Opilý lukostřelec</div>
+            <div class="taverna-card-desc" data-i18n="taverna.card.drunkArcher.desc">Rozkývaný střelec míří na terč. Zaplať Err kostku a vystřel přesně ve chvíli, kdy marker trefí střed.</div>
+            <div class="taverna-card-price" data-i18n="taverna.card.drunkArcher.price">🎲 Vstup 1 Err kostka</div>
           </div>
         </div>
 
         <div class="taverna-card" onclick="openTavernaGame('pirateMap')">
           <div class="taverna-card-art">🗺️</div>
           <div class="taverna-card-body">
-            <div class="taverna-card-name">Pirátská mapa</div>
-            <div class="taverna-card-desc">Zaplať 1 Err kostku, vyber jedno políčko na mapě 3×3 a doufej v poklad.</div>
-            <div class="taverna-card-price">🎲 Vstup 1 Err kostka</div>
+            <div class="taverna-card-name" data-i18n="taverna.card.pirateMap.name">Pirátská mapa</div>
+            <div class="taverna-card-desc" data-i18n="taverna.card.pirateMap.desc">Zaplať 1 Err kostku, vyber jedno políčko na mapě 3×3 a doufej v poklad.</div>
+            <div class="taverna-card-price" data-i18n="taverna.card.pirateMap.price">🎲 Vstup 1 Err kostka</div>
           </div>
         </div>
 
         <div class="taverna-card" onclick="openTavernaGame('dragonEgg')">
           <div class="taverna-card-art">🥚</div>
           <div class="taverna-card-body">
-            <div class="taverna-card-name">Dračí vejce</div>
-            <div class="taverna-card-desc">Kup vejce a zahřívej ho přes runy. Čím déle čekáš, tím lepší odměna.</div>
-            <div class="taverna-card-price">💰 Cena 25 Yangů · max 3× denně</div>
+            <div class="taverna-card-name" data-i18n="taverna.card.dragonEgg.name">Dračí vejce</div>
+            <div class="taverna-card-desc" data-i18n="taverna.card.dragonEgg.desc">Kup vejce a zahřívej ho přes runy. Čím déle čekáš, tím lepší odměna.</div>
+            <div class="taverna-card-price" data-i18n="taverna.card.dragonEgg.price">💰 Cena 10 Yangů · max 3× denně</div>
           </div>
         </div>
 
         <div class="taverna-card" onclick="openTavernaGame('blacksmith')">
           <div class="taverna-card-art">⚒️</div>
           <div class="taverna-card-body">
-            <div class="taverna-card-name">Kovářova výzva</div>
-            <div class="taverna-card-desc">Sázej Yangy a třikrát kuj do kovadliny ve správný okamžik. Každé kolo je rychlejší.</div>
-            <div class="taverna-card-price">💰 Sázka v Yangách (min 10)</div>
+            <div class="taverna-card-name" data-i18n="taverna.card.blacksmith.name">Kovářova výzva</div>
+            <div class="taverna-card-desc" data-i18n="taverna.card.blacksmith.desc">Sázej Yangy a třikrát kuj do kovadliny ve správný okamžik. Každé kolo je rychlejší.</div>
+            <div class="taverna-card-price" data-i18n="taverna.card.blacksmith.price">💰 Sázka v Yangách (min 10)</div>
           </div>
         </div>
 
         <div class="taverna-card" onclick="openTavernaGame('wheelOfFortune')">
           <div class="taverna-card-art">🎡</div>
           <div class="taverna-card-body">
-            <div class="taverna-card-name">Kolo štěstí</div>
-            <div class="taverna-card-desc">Roztoč kolo a získej náhodnou odměnu. Včetně jackpotu — pokud máš štěstí.</div>
-            <div class="taverna-card-price">💰 Vstup 10 Yangů · 1× denně</div>
+            <div class="taverna-card-name" data-i18n="taverna.card.wheel.name">Kolo štěstí</div>
+            <div class="taverna-card-desc" data-i18n="taverna.card.wheel.desc">Roztoč kolo a získej náhodnou odměnu. Včetně jackpotu — pokud máš štěstí.</div>
+            <div class="taverna-card-price" data-i18n="taverna.card.wheel.price">💰 Vstup 10 Yangů · 1× denně</div>
           </div>
         </div>
 
@@ -662,81 +662,81 @@
     <!-- ── Pirátská mapa panel ─────────────────────── -->
     <div class="shop-panel" id="pirateMapPanel" style="text-align:center;">
       <div class="panel-header">
-        <h2>🗺️ Pirátská mapa</h2>
+        <h2 data-i18n="pirateMap.title">🗺️ Pirátská mapa</h2>
         <button class="game-btn panel-close-btn" onclick="togglePirateMapPanel(false)">×</button>
       </div>
-      <div class="shop-subtitle">Zaplať 1 Err kostku, vyber jedno políčko na mapě a doufej v poklad.</div>
+      <div class="shop-subtitle" data-i18n="pirateMap.subtitle">Zaplať 1 Err kostku, vyber jedno políčko na mapě a doufej v poklad.</div>
 
       <div class="shop-wallet">
-        <span>Yangy: <strong id="pirateMapYangs">0</strong></span>
-        <span>🎲 Err kostky: <strong id="pirateMapErrCubes">0</strong></span>
+        <span><span data-i18n="common.yang">Yangy</span>: <strong id="pirateMapYangs">0</strong></span>
+        <span>🎲 <span data-i18n="common.errCubes">Err kostky</span>: <strong id="pirateMapErrCubes">0</strong></span>
       </div>
 
       <div id="pirateMapGrid" class="pirate-map-grid"></div>
       <p id="pirateMapStatus" class="pirate-map-status"></p>
 
       <div class="game-buttons" style="margin-top:0.6rem; justify-content:center; flex-wrap:wrap;">
-        <button class="game-btn primary" id="pirateMapStartBtn" onclick="startPirateMapAttempt()">Začít pokus (1 Err kostka)</button>
-        <button class="game-btn" onclick="backToTaverna()">← Taverna</button>
-        <button class="game-btn" onclick="togglePirateMapPanel(false)">✕ Zavřít</button>
+        <button class="game-btn primary" id="pirateMapStartBtn" onclick="startPirateMapAttempt()" data-i18n="pirateMap.startBtn">Začít pokus (1 Err kostka)</button>
+        <button class="game-btn" onclick="backToTaverna()" data-i18n="taverna.back">← Taverna</button>
+        <button class="game-btn" onclick="togglePirateMapPanel(false)" data-i18n="taverna.close">✕ Zavřít</button>
       </div>
     </div>
 
     <!-- ── Dračí vejce panel ───────────────────────── -->
     <div class="shop-panel" id="dragonEggPanel" style="text-align:center;">
       <div class="panel-header">
-        <h2>🥚 Dračí vejce</h2>
+        <h2 data-i18n="dragonEgg.title">🥚 Dračí vejce</h2>
         <button class="game-btn panel-close-btn" onclick="toggleDragonEggPanel(false)">×</button>
       </div>
-      <div class="shop-subtitle">Kup vejce a zahřívej ho přes runy. Limit 3 použití denně.</div>
+      <div class="shop-subtitle" data-i18n="dragonEgg.subtitle">Kup vejce a zahřívej ho přes runy. Limit 3 použití denně.</div>
 
       <div class="shop-wallet">
-        <span>Yangy: <strong id="dragonEggYangs">0</strong></span>
-        <span>Peněženky: <strong id="dragonEggWallets">0</strong></span>
-        <span>Dračí mince: <strong id="dragonEggDragonCoins">0</strong></span>
+        <span><span data-i18n="common.yang">Yangy</span>: <strong id="dragonEggYangs">0</strong></span>
+        <span><span data-i18n="common.wallets">Peněženky</span>: <strong id="dragonEggWallets">0</strong></span>
+        <span><span data-i18n="common.dragonCoins">Dračí mince</span>: <strong id="dragonEggDragonCoins">0</strong></span>
       </div>
 
       <div class="dragon-egg-art">🥚</div>
-      <div class="dragon-egg-progress" id="dragonEggProgress">No egg active.</div>
-      <div class="dragon-egg-daily">Today: <strong id="dragonEggDailyUsesLabel">0 / 3</strong></div>
+      <div class="dragon-egg-progress" id="dragonEggProgress" data-i18n="dragonEgg.noEgg">Žádné vejce není aktivní.</div>
+      <div class="dragon-egg-daily"><span data-i18n="dragonEgg.todayLabel">Dnes</span>: <strong id="dragonEggDailyUsesLabel">0 / 3</strong></div>
 
       <p class="dragon-egg-hint">
-        Break now: small chance for 10 Yang.<br>
-        After 3 runs: chance for 20 Yang.<br>
-        After 7 runs: 30–50 Yang + chance for Wallet or Dragon Coin.
+        <span data-i18n="dragonEgg.hint1">Rozbít teď: malá šance na 10 Yangů.</span><br>
+        <span data-i18n="dragonEgg.hint2">Po 3 runech: šance na 20 Yangů.</span><br>
+        <span data-i18n="dragonEgg.hint3">Po 7 runech: 30–50 Yangů + šance na Peněženku nebo Dračí minci.</span>
       </p>
 
       <p id="dragonEggStatus" class="dragon-egg-status"></p>
 
       <div class="game-buttons" style="margin-top:0.6rem; justify-content:center; flex-wrap:wrap;">
-        <button class="game-btn primary" id="dragonEggBuyBtn" onclick="buyDragonEgg()">Buy Egg (25 Yang)</button>
-        <button class="game-btn" id="dragonEggBreakBtn" onclick="breakDragonEgg()">Break now</button>
-        <button class="game-btn" onclick="backToTaverna()">← Taverna</button>
-        <button class="game-btn" onclick="toggleDragonEggPanel(false)">✕ Zavřít</button>
+        <button class="game-btn primary" id="dragonEggBuyBtn" onclick="buyDragonEgg()">Koupit vejce (10 Yangů)</button>
+        <button class="game-btn" id="dragonEggBreakBtn" onclick="breakDragonEgg()" data-i18n="dragonEgg.breakBtn">Rozbít teď</button>
+        <button class="game-btn" onclick="backToTaverna()" data-i18n="taverna.back">← Taverna</button>
+        <button class="game-btn" onclick="toggleDragonEggPanel(false)" data-i18n="taverna.close">✕ Zavřít</button>
       </div>
     </div>
 
     <!-- ── Kovářova výzva panel ────────────────────── -->
     <div class="shop-panel" id="blacksmithPanel" style="text-align:center;">
       <div class="panel-header">
-        <h2>⚒️ Kovářova výzva</h2>
+        <h2 data-i18n="blacksmith.title">⚒️ Kovářova výzva</h2>
         <button class="game-btn panel-close-btn" onclick="toggleBlacksmithPanel(false)">×</button>
       </div>
-      <div class="shop-subtitle">Sázej Yangy, třikrát kuj ve správný moment. 0 tref = prohra, 1 = vrácení, 2 = 2×, 3 = 3× (+ šance na Dračí minci).</div>
+      <div class="shop-subtitle" data-i18n="blacksmith.subtitle">Sázej Yangy, třikrát kuj ve správný moment. 0 tref = prohra, 1 = vrácení, 2 = 2×, 3 = 3× (+ šance na Dračí minci).</div>
 
       <div class="shop-wallet">
-        <span>Yangy: <strong id="blacksmithYangs">0</strong></span>
+        <span><span data-i18n="common.yang">Yangy</span>: <strong id="blacksmithYangs">0</strong></span>
       </div>
 
       <div class="blacksmith-bet-row">
-        <label for="blacksmithBetInput" class="blacksmith-label">Sázka (Yangy)</label>
-        <input id="blacksmithBetInput" type="number" min="10" step="1" class="blacksmith-input" placeholder="Min 10">
-        <button class="game-btn primary" id="blacksmithStartBtn" onclick="startBlacksmithAttempt()">Začít</button>
+        <label for="blacksmithBetInput" class="blacksmith-label" data-i18n="blacksmith.betLabel">Sázka (Yangy)</label>
+        <input id="blacksmithBetInput" type="number" min="10" step="1" class="blacksmith-input" data-i18n-placeholder="blacksmith.betPlaceholder" placeholder="Min 10">
+        <button class="game-btn primary" id="blacksmithStartBtn" onclick="startBlacksmithAttempt()" data-i18n="blacksmith.startBtn">Začít</button>
       </div>
 
       <div class="blacksmith-hits">
-        <span>Hits: <strong id="blacksmithHitsLabel">0 / 3</strong></span>
-        <span><strong id="blacksmithStrikeLabel">Strike 1 / 3</strong></span>
+        <span><span data-i18n="blacksmith.hitsLabel">Trefy</span>: <strong id="blacksmithHitsLabel">0 / 3</strong></span>
+        <span><strong id="blacksmithStrikeLabel">Rána 1 / 3</strong></span>
       </div>
 
       <div class="blacksmith-range" id="blacksmithRange" onclick="blacksmithStrikeNow()" role="button">
@@ -748,74 +748,74 @@
       <p id="blacksmithStatus" class="blacksmith-status"></p>
 
       <div class="game-buttons" style="margin-top:0.6rem; justify-content:center; flex-wrap:wrap;">
-        <button class="game-btn primary blacksmith-strike-btn" id="blacksmithStrikeBtn" onclick="blacksmithStrikeNow()" disabled>⚒ Strike</button>
-        <button class="game-btn" onclick="backToTaverna()">← Taverna</button>
-        <button class="game-btn" onclick="toggleBlacksmithPanel(false)">✕ Zavřít</button>
+        <button class="game-btn primary blacksmith-strike-btn" id="blacksmithStrikeBtn" onclick="blacksmithStrikeNow()" disabled data-i18n="blacksmith.strikeBtn">⚒ Udeřit</button>
+        <button class="game-btn" onclick="backToTaverna()" data-i18n="taverna.back">← Taverna</button>
+        <button class="game-btn" onclick="toggleBlacksmithPanel(false)" data-i18n="taverna.close">✕ Zavřít</button>
       </div>
     </div>
 
     <!-- ── Kolo štěstí panel ───────────────────────── -->
     <div class="shop-panel" id="wheelOfFortunePanel" style="text-align:center;">
       <div class="panel-header">
-        <h2>🎡 Kolo štěstí</h2>
+        <h2 data-i18n="wheel.title">🎡 Kolo štěstí</h2>
         <button class="game-btn panel-close-btn" onclick="toggleWheelOfFortunePanel(false)">×</button>
       </div>
-      <div class="shop-subtitle">Vstup 10 Yangů. 1× denně. Velmi vzácně padne jackpot.</div>
+      <div class="shop-subtitle" data-i18n="wheel.subtitle">Vstup 10 Yangů. 1× denně. Velmi vzácně padne jackpot.</div>
 
       <div class="shop-wallet">
-        <span>Yangy: <strong id="wheelYangs">0</strong></span>
+        <span><span data-i18n="common.yang">Yangy</span>: <strong id="wheelYangs">0</strong></span>
       </div>
 
       <div class="wheel-display" id="wheelFace">🎡</div>
       <p id="wheelStatus" class="wheel-status"></p>
 
       <div class="game-buttons" style="margin-top:0.6rem; justify-content:center; flex-wrap:wrap;">
-        <button class="game-btn primary" id="wheelSpinBtn" onclick="startWheelSpin()">Spin (10 Yang)</button>
-        <button class="game-btn" onclick="backToTaverna()">← Taverna</button>
-        <button class="game-btn" onclick="toggleWheelOfFortunePanel(false)">✕ Zavřít</button>
+        <button class="game-btn primary" id="wheelSpinBtn" onclick="startWheelSpin()">Roztočit (10 Yangů)</button>
+        <button class="game-btn" onclick="backToTaverna()" data-i18n="taverna.back">← Taverna</button>
+        <button class="game-btn" onclick="toggleWheelOfFortunePanel(false)" data-i18n="taverna.close">✕ Zavřít</button>
       </div>
     </div>
 
     <!-- ── Tři truhly panel ────────────────────────── -->
     <div class="shop-panel" id="threeChestsPanel" style="text-align:center;">
       <div class="panel-header">
-        <h2>🏴‍☠️ Tři truhly</h2>
+        <h2 data-i18n="threeChests.title">🏴‍☠️ Tři truhly</h2>
         <button class="game-btn panel-close-btn" onclick="toggleThreeChestsPanel(false)">×</button>
       </div>
-      <div class="shop-subtitle">Pirát skryl poklady do pěti truhlí. Vyber jednu — ale vstup stojí 10 Yangů a hrát jde jen 1× denně.</div>
+      <div class="shop-subtitle" data-i18n="threeChests.subtitle">Pirát skryl poklady do pěti truhlí. Vyber jednu — ale vstup stojí 10 Yangů a hrát jde jen 1× denně.</div>
 
       <div class="shop-wallet">
-        <span>Yangy: <strong id="threeChestsYangs">0</strong></span>
-        <span>Dračí mince: <strong id="threeChestsDragonCoins">0</strong></span>
+        <span><span data-i18n="common.yang">Yangy</span>: <strong id="threeChestsYangs">0</strong></span>
+        <span><span data-i18n="common.dragonCoins">Dračí mince</span>: <strong id="threeChestsDragonCoins">0</strong></span>
       </div>
 
       <div id="threeChestsList" class="three-chests-list"></div>
       <p id="threeChestsStatus" class="three-chests-status"></p>
 
       <div class="game-buttons" style="margin-top:0.6rem; justify-content:center; flex-wrap:wrap;">
-        <button class="game-btn primary" id="threeChestsStartBtn" onclick="startThreeChests()">🔑 Otevřít truhly (10 Yangů)</button>
-        <button class="game-btn" onclick="backToTaverna()">← Taverna</button>
-        <button class="game-btn" onclick="toggleThreeChestsPanel(false)">✕ Zavřít</button>
+        <button class="game-btn primary" id="threeChestsStartBtn" onclick="startThreeChests()" data-i18n="threeChests.startBtn">🔑 Otevřít truhly (10 Yangů)</button>
+        <button class="game-btn" onclick="backToTaverna()" data-i18n="taverna.back">← Taverna</button>
+        <button class="game-btn" onclick="toggleThreeChestsPanel(false)" data-i18n="taverna.close">✕ Zavřít</button>
       </div>
     </div>
 
     <!-- ── Dračí kostka panel ──────────────────────── -->
     <div class="shop-panel" id="dragonDicePanel" style="text-align:center;">
       <div class="panel-header">
-        <h2>🐉 Dračí kostka</h2>
+        <h2 data-i18n="dragonDice.title">🐉 Dračí kostka</h2>
         <button class="game-btn panel-close-btn" onclick="toggleDragonDicePanel(false)">×</button>
       </div>
-      <div class="shop-subtitle">Drak přináší štěstí i zkázu. Sázej dračí mince na číslo (výhra 3×) nebo sudé/liché (výhra 2×).</div>
+      <div class="shop-subtitle" data-i18n="dragonDice.subtitle">Drak přináší štěstí i zkázu. Sázej dračí mince na číslo (výhra 3×) nebo sudé/liché (výhra 2×).</div>
 
       <div class="shop-wallet">
-        <span>Dračí mince: <strong id="dragonDiceDragonCoins">0</strong></span>
+        <span><span data-i18n="common.dragonCoins">Dračí mince</span>: <strong id="dragonDiceDragonCoins">0</strong></span>
       </div>
 
       <div class="dragon-dice-display" id="dragonDiceFace">🎲</div>
 
       <div class="dice-bet-types">
-        <button class="dice-bet-type-btn" data-type="number" onclick="selectDiceBetType('number')">Číslo (1–6)</button>
-        <button class="dice-bet-type-btn" data-type="parity" onclick="selectDiceBetType('parity')">Sudé / Liché</button>
+        <button class="dice-bet-type-btn" data-type="number" onclick="selectDiceBetType('number')" data-i18n="dragonDice.numberBet">Číslo (1–6)</button>
+        <button class="dice-bet-type-btn" data-type="parity" onclick="selectDiceBetType('parity')" data-i18n="dragonDice.parityBet">Sudé / Liché</button>
       </div>
 
       <div class="dice-number-selector" id="dragonDiceNumberSelector">
@@ -828,37 +828,37 @@
       </div>
 
       <div class="dice-parity-selector" id="dragonDiceParitySelector">
-        <button class="dice-parity-btn" data-parity="even" onclick="selectDiceParity('even')">Sudé</button>
-        <button class="dice-parity-btn" data-parity="odd" onclick="selectDiceParity('odd')">Liché</button>
+        <button class="dice-parity-btn" data-parity="even" onclick="selectDiceParity('even')" data-i18n="dragonDice.even">Sudé</button>
+        <button class="dice-parity-btn" data-parity="odd" onclick="selectDiceParity('odd')" data-i18n="dragonDice.odd">Liché</button>
       </div>
 
       <div class="dice-bet-row">
-        <label class="dice-label" for="dragonDiceBetInput">Sázka (DC):</label>
-        <input id="dragonDiceBetInput" type="number" min="1" step="1" class="dice-input" placeholder="Počet DC">
-        <button class="game-btn primary" id="dragonDiceRollBtn" onclick="rollDragonDice()">🎲 Hodit</button>
+        <label class="dice-label" for="dragonDiceBetInput" data-i18n="dragonDice.betLabel">Sázka (DC):</label>
+        <input id="dragonDiceBetInput" type="number" min="1" step="1" class="dice-input" data-i18n-placeholder="dragonDice.betPlaceholder" placeholder="Počet DC">
+        <button class="game-btn primary" id="dragonDiceRollBtn" onclick="rollDragonDice()" data-i18n="dragonDice.rollBtn">🎲 Hodit</button>
       </div>
 
       <p id="dragonDiceStatus" class="dragon-dice-status"></p>
 
       <div class="game-buttons" style="margin-top:0.6rem; justify-content:center; flex-wrap:wrap;">
-        <button class="game-btn" onclick="backToTaverna()">← Taverna</button>
-        <button class="game-btn" onclick="toggleDragonDicePanel(false)">✕ Zavřít</button>
+        <button class="game-btn" onclick="backToTaverna()" data-i18n="taverna.back">← Taverna</button>
+        <button class="game-btn" onclick="toggleDragonDicePanel(false)" data-i18n="taverna.close">✕ Zavřít</button>
       </div>
     </div>
 
     <!-- ── Opilý lukostřelec panel ───────────────────── -->
     <div class="shop-panel" id="drunkArcherPanel" style="text-align:center;">
       <div class="panel-header">
-        <h2>🏹 Opilý lukostřelec</h2>
+        <h2 data-i18n="drunkArcher.title">🏹 Opilý lukostřelec</h2>
         <button class="game-btn panel-close-btn" onclick="toggleDrunkArcherPanel(false)">×</button>
       </div>
-      <div class="shop-subtitle">Zaplať 1 Err kostku, sleduj šipku a vystřel, když marker protne terč. Přesnost rozhoduje o odměně.</div>
+      <div class="shop-subtitle" data-i18n="drunkArcher.subtitle">Zaplať 1 Err kostku, sleduj šipku a vystřel, když marker protne terč. Přesnost rozhoduje o odměně.</div>
 
       <div class="shop-wallet">
-        <span>Err kostky: <strong id="drunkArcherErrCubes">0</strong></span>
-        <span>Yangy: <strong id="drunkArcherYangs">0</strong></span>
-        <span>Peněženky: <strong id="drunkArcherWallets">0</strong></span>
-        <span>Dračí mince: <strong id="drunkArcherDragonCoins">0</strong></span>
+        <span><span data-i18n="common.errCubes">Err kostky</span>: <strong id="drunkArcherErrCubes">0</strong></span>
+        <span><span data-i18n="common.yang">Yangy</span>: <strong id="drunkArcherYangs">0</strong></span>
+        <span><span data-i18n="common.wallets">Peněženky</span>: <strong id="drunkArcherWallets">0</strong></span>
+        <span><span data-i18n="common.dragonCoins">Dračí mince</span>: <strong id="drunkArcherDragonCoins">0</strong></span>
       </div>
 
       <div class="drunk-archer-range" id="drunkArcherRange" onclick="shootDrunkArcher()" role="button" aria-label="Vystřelit na terč">
@@ -871,25 +871,25 @@
       <p id="drunkArcherStatus" class="drunk-archer-status"></p>
 
       <div class="game-buttons" style="margin-top:0.6rem; justify-content:center; flex-wrap:wrap;">
-        <button class="game-btn primary" id="drunkArcherStartBtn" onclick="startDrunkArcherAttempt()">Začít pokus (1 Err kostka)</button>
-        <button class="game-btn primary drunk-archer-shoot-btn" id="drunkArcherShootBtn" onclick="shootDrunkArcher()" disabled>Vystřelit</button>
-        <button class="game-btn" onclick="backToTaverna()">← Taverna</button>
-        <button class="game-btn" onclick="toggleDrunkArcherPanel(false)">✕ Zavřít</button>
+        <button class="game-btn primary" id="drunkArcherStartBtn" onclick="startDrunkArcherAttempt()" data-i18n="drunkArcher.startBtn">Začít pokus (1 Err kostka)</button>
+        <button class="game-btn primary drunk-archer-shoot-btn" id="drunkArcherShootBtn" onclick="shootDrunkArcher()" disabled data-i18n="drunkArcher.shootBtn">Vystřelit</button>
+        <button class="game-btn" onclick="backToTaverna()" data-i18n="taverna.back">← Taverna</button>
+        <button class="game-btn" onclick="toggleDrunkArcherPanel(false)" data-i18n="taverna.close">✕ Zavřít</button>
       </div>
     </div>
 
     <!-- ── Battlepass panel ──────────────────────── -->
     <div class="shop-panel" id="battlepassPanel" style="text-align:center;">
       <div class="panel-header">
-        <h2>🎟️ Battlepass</h2>
+        <h2 data-i18n="battlepass.title">🎟️ Battlepass</h2>
         <button class="game-btn panel-close-btn" onclick="toggleBattlepassPanel(false)">×</button>
       </div>
-      <div class="shop-subtitle">Battlepass je zatím ve vývoji.</div>
-      <p style="color: var(--text-muted, #a08060); font-size: 0.85rem; margin: 1rem 0; line-height: 1.6;">
+      <div class="shop-subtitle" data-i18n="battlepass.subtitle">Battlepass je zatím ve vývoji.</div>
+      <p data-i18n="battlepass.wip" style="color: var(--text-muted, #a08060); font-size: 0.85rem; margin: 1rem 0; line-height: 1.6;">
         Brzy zde najdeš sezónní odměny, úkoly a exkluzivní bonusy.
       </p>
       <div class="game-buttons" style="margin-top:1rem; justify-content:center;">
-        <button class="game-btn" onclick="toggleBattlepassPanel(false)">✕ Zavřít</button>
+        <button class="game-btn" onclick="toggleBattlepassPanel(false)" data-i18n="battlepass.close">✕ Zavřít</button>
       </div>
     </div>
 
@@ -928,11 +928,11 @@
     </div>
     <div class="locked-feature">
       <button class="game-btn" onclick="toggleUpgradesPanel()" title="Upgrady" data-i18n="menu.upgrades">⚡ Upgrady</button>
-      <div class="shop-wip">Permanentní vylepšení</div>
+      <div class="shop-wip" data-i18n="bottom.upgradesHint">Permanentní vylepšení</div>
     </div>
     <div class="locked-feature">
-      <button class="game-btn" onclick="toggleBattlepassPanel()" title="Battlepass">🎟️ Battlepass</button>
-      <div class="shop-wip">Sezónní odměny</div>
+      <button class="game-btn" onclick="toggleBattlepassPanel()" title="Battlepass" data-i18n="menu.battlepass">🎟️ Battlepass</button>
+      <div class="shop-wip" data-i18n="bottom.battlepassHint">Sezónní odměny</div>
     </div>
     <button class="game-btn" onclick="closeGame()" data-i18n="bottom.close">✕ Zavřít hru</button>
   </div>

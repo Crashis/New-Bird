@@ -64,18 +64,18 @@ function buildShareText(opts) {
   const dc = Math.max(0, Math.floor(Number(o.dragonCoins) || 0));
 
   const head = isNewRecord
-    ? `Nový rekord! Právě jsem v ${SHARE_GAME_TITLE} nahrál skóre ${finalScore}! 🏆`
-    : `Právě jsem v ${SHARE_GAME_TITLE} nahrál skóre ${finalScore}! 🏆`;
+    ? t('share.head.record', { title: SHARE_GAME_TITLE, score: finalScore })
+    : t('share.head.normal', { title: SHARE_GAME_TITLE, score: finalScore });
 
   const currencyParts = [];
-  if (y > 0) currencyParts.push(`Yangy: ${y}`);
-  if (w > 0) currencyParts.push(`Peněženky: ${w}`);
-  if (dc > 0) currencyParts.push(`Dračí mince: ${dc}`);
+  if (y > 0) currencyParts.push(`${t('common.yang')}: ${y}`);
+  if (w > 0) currencyParts.push(`${t('common.wallets')}: ${w}`);
+  if (dc > 0) currencyParts.push(`${t('common.dragonCoins')}: ${dc}`);
 
   const lines = [head];
   if (currencyParts.length) lines.push(currencyParts.join(' • '));
-  if (!isNewRecord && best > 0) lines.push(`Můj rekord: ${best}`);
-  lines.push('Dokážeš mě překonat?');
+  if (!isNewRecord && best > 0) lines.push(t('share.bestLine', { best: best }));
+  lines.push(t('share.callout'));
   return lines.join('\n');
 }
 
@@ -130,7 +130,7 @@ async function shareResult() {
         text,
         url
       });
-      showShareStatus('Sdíleno.');
+      showShareStatus(t('share.shared'));
       return;
     } catch (err) {
       if (err && err.name === 'AbortError') return;
@@ -138,13 +138,13 @@ async function shareResult() {
     }
   }
   const ok = await copyTextToClipboard(text);
-  showShareStatus(ok ? 'Výsledek zkopírován do schránky.' : 'Výsledek se nepodařilo zkopírovat.');
+  showShareStatus(ok ? t('share.copied') : t('share.copyFailed'));
 }
 
 async function copyShareResult() {
   const text = buildCurrentShareText();
   const ok = await copyTextToClipboard(text);
-  showShareStatus(ok ? 'Výsledek zkopírován do schránky.' : 'Výsledek se nepodařilo zkopírovat.');
+  showShareStatus(ok ? t('share.copied') : t('share.copyFailed'));
 }
 
 async function shareResultFacebook() {
@@ -155,9 +155,9 @@ async function shareResultFacebook() {
   const shareUrl = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url || 'https://www.facebook.com/');
   try {
     window.open(shareUrl, '_blank', 'noopener,noreferrer,width=640,height=560');
-    showShareStatus('Text zkopírován — vlož ho do Facebooku.');
+    showShareStatus(t('share.fbCopied'));
   } catch (e) {
-    showShareStatus('Facebook se nepodařilo otevřít.');
+    showShareStatus(t('share.fbFailed'));
   }
 }
 
@@ -172,7 +172,7 @@ async function shareResultMessenger() {
     }
   }
   const ok = await copyTextToClipboard(text);
-  showShareStatus(ok ? 'Výsledek zkopírován — pošli ho v Messengeru.' : 'Výsledek se nepodařilo zkopírovat.');
+  showShareStatus(ok ? t('share.msgCopied') : t('share.copyFailed'));
 }
 
 // Expose globally (classic <script> loading pattern used by this project).

@@ -65,19 +65,19 @@ function rollDragonDice() {
   const betInput = document.getElementById('dragonDiceBetInput');
   const raw = betInput ? betInput.value : '';
   if (!/^[1-9][0-9]*$/.test(String(raw).trim())) {
-    setDragonDiceStatus('Enter a valid bet (positive integer).', 'error');
+    setDragonDiceStatus(t('dragonDice.invalidBet'), 'error');
     return;
   }
   const bet = parseInt(raw, 10);
   if (bet > dragonCoins) {
-    setDragonDiceStatus('Not enough Dragon Coins.', 'error');
+    setDragonDiceStatus(t('dragonDice.notEnough'), 'error');
     return;
   }
 
   // Validace typu sázky
   const betTypeBtn = document.querySelector('.dice-bet-type-btn.selected');
   if (!betTypeBtn) {
-    setDragonDiceStatus('Choose a bet type (number or even/odd).', 'error');
+    setDragonDiceStatus(t('dragonDice.chooseType'), 'error');
     return;
   }
   const betType = betTypeBtn.dataset.type;
@@ -86,14 +86,14 @@ function rollDragonDice() {
   if (betType === 'number') {
     const numBtn = document.querySelector('.dice-num-btn.selected');
     if (!numBtn) {
-      setDragonDiceStatus('Choose a number (1–6).', 'error');
+      setDragonDiceStatus(t('dragonDice.chooseNumber'), 'error');
       return;
     }
     betValue = parseInt(numBtn.dataset.num, 10);
   } else {
     const parBtn = document.querySelector('.dice-parity-btn.selected');
     if (!parBtn) {
-      setDragonDiceStatus('Choose even or odd.', 'error');
+      setDragonDiceStatus(t('dragonDice.chooseParity'), 'error');
       return;
     }
     betValue = parBtn.dataset.parity;
@@ -101,14 +101,14 @@ function rollDragonDice() {
 
   // Odečti sázku
   if (!spendDragonCoins(bet)) {
-    setDragonDiceStatus('Not enough Dragon Coins.', 'error');
+    setDragonDiceStatus(t('dragonDice.notEnough'), 'error');
     return;
   }
 
   dragonDiceRolling = true;
   if (typeof unlockAchievement === 'function') unlockAchievement('dragon_gambler');
   setDragonDiceUiDisabled(true);
-  setDragonDiceStatus('Rolling the dice...', 'rolling');
+  setDragonDiceStatus(t('dragonDice.rolling'), 'rolling');
 
   const diceEl = document.getElementById('dragonDiceFace');
   if (diceEl) diceEl.classList.add('rolling');
@@ -142,21 +142,18 @@ function rollDragonDice() {
         }
       }
 
+      const typeName = betType === 'number'
+        ? t('dragonDice.typeNumber', { n: betValue })
+        : (betValue === 'even' ? t('dragonDice.typeEven') : t('dragonDice.typeOdd'));
       if (won) {
         addDragonCoins(payout);
-        const typeName = betType === 'number'
-          ? `number ${betValue}`
-          : (betValue === 'even' ? 'even' : 'odd');
         setDragonDiceStatus(
-          `Rolled a ${finalNum}! You hit ${typeName} and win ${payout} Dragon Coins.`,
+          t('dragonDice.win', { finalNum: finalNum, typeName: typeName, payout: payout }),
           'win'
         );
       } else {
-        const typeName = betType === 'number'
-          ? `number ${betValue}`
-          : (betValue === 'even' ? 'even' : 'odd');
         setDragonDiceStatus(
-          `Rolled a ${finalNum}. You missed ${typeName}. Bet lost.`,
+          t('dragonDice.lose', { finalNum: finalNum, typeName: typeName }),
           'lose'
         );
       }
@@ -174,7 +171,7 @@ function initDragonDice() {
   }
   dragonDiceRolling = false;
   updateDragonDiceFace('🎲');
-  setDragonDiceStatus('Choose a bet type, enter the number of Dragon Coins, and roll the dice.', 'info');
+  setDragonDiceStatus(t('dragonDice.statusInit'), 'info');
   document.querySelectorAll('.dice-bet-type-btn, .dice-num-btn, .dice-parity-btn').forEach(b => b.classList.remove('selected'));
   const numSel = document.getElementById('dragonDiceNumberSelector');
   const parSel = document.getElementById('dragonDiceParitySelector');
