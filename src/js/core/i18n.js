@@ -184,12 +184,18 @@ window.NWI18n = window.NWI18n || {};
       'ach.immortal_mamrd.desc': 'Použij nesmrtelnost 10×.',
       'ach.not_bug_feature.title': 'Tohle nebyl bug, to byl feature',
       'ach.not_bug_feature.desc': 'Přežij náraz díky štítu.',
-      'ach.typicooo.title': 'Typičooo',
+      'ach.typicooo.title': 'Muší muž',
       'ach.typicooo.desc': 'Odemkni skin Moucha.',
       'ach.hero_of_new_world.title': 'Hrdina New Worldu',
       'ach.hero_of_new_world.desc': 'Dosáhni 100 bodů a poraz bosse Bezose.',
       'ach.unlock_all_regular_skins.title': 'Šatník Aeterna',
       'ach.unlock_all_regular_skins.desc': 'Odemkni všechny běžné skiny.',
+      'ach.chest_hunter.title': 'Lovec truhel',
+      'ach.chest_hunter.desc': 'Zahraj si poprvé Tři truhly v Taverně.',
+      'ach.dragon_gambler.title': 'Dračí hazardér',
+      'ach.dragon_gambler.desc': 'Hoď si poprvé Dračí kostkou.',
+      'ach.big_better.title': 'Velký hráč',
+      'ach.big_better.desc': 'Vsaď u Skořápkáře 100 nebo více yangů najednou.',
 
       // Cheat codes panel
       'cheats.title': '⌨ Cheat Codes',
@@ -547,12 +553,18 @@ window.NWI18n = window.NWI18n || {};
       'ach.immortal_mamrd.desc': 'Use immortality 10 times.',
       'ach.not_bug_feature.title': "That Wasn't a Bug, It Was a Feature",
       'ach.not_bug_feature.desc': 'Survive a crash thanks to a shield.',
-      'ach.typicooo.title': 'Typičooo',
+      'ach.typicooo.title': 'Fly Man',
       'ach.typicooo.desc': 'Unlock the Moucha skin.',
       'ach.hero_of_new_world.title': 'Hero of New World',
       'ach.hero_of_new_world.desc': 'Reach a score of 100 and defeat boss Bezos.',
       'ach.unlock_all_regular_skins.title': 'Aeternum Wardrobe',
       'ach.unlock_all_regular_skins.desc': 'Unlock all regular skins.',
+      'ach.chest_hunter.title': 'Chest Hunter',
+      'ach.chest_hunter.desc': 'Play Three Chests in the Tavern for the first time.',
+      'ach.dragon_gambler.title': 'Dragon Gambler',
+      'ach.dragon_gambler.desc': 'Roll the Dragon Dice for the first time.',
+      'ach.big_better.title': 'High Roller',
+      'ach.big_better.desc': 'Bet 100 or more yangs in a single Shell Game wager.',
 
       // Cheat codes panel
       'cheats.title': '⌨ Cheat Codes',
@@ -789,7 +801,8 @@ window.NWI18n = window.NWI18n || {};
     "Amazon Games congratulates you. This almost looked like gameplay.",
     "Server maintenance starts at never. Ends at even later.",
     "Aeternum is watching you. And is slightly ashamed.",
-    "Your friend would say this is a skill issue."
+    "Your friend would say this is a skill issue.",
+    "Can't you do any better?!"
   ];
 
   const EVENT_VOICE_LINES_EN = [

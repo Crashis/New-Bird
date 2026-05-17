@@ -99,9 +99,19 @@ function applySelectedSkinEndGameEffects() {
 }
 
 function applySelectedSkinStartEffects() {
-  if (!isSelectedSkin(MARTIN_SLUNECNY_SKIN_ID)) return;
-  doubleYangUntil = performance.now() + MARTIN_SLUNECNY_BUFF_MS;
-  showUnlockToast(t('toast.solarStart'), t('toast.solarSub'), 'wallet');
+  if (isSelectedSkin(MARTIN_SLUNECNY_SKIN_ID)) {
+    doubleYangUntil = performance.now() + MARTIN_SLUNECNY_BUFF_MS;
+    showUnlockToast(t('toast.solarStart'), t('toast.solarSub'), 'wallet');
+  }
+  if (typeof DOMI_DISKO_SKIN_ID !== 'undefined' && isSelectedSkin(DOMI_DISKO_SKIN_ID)) {
+    if (typeof startDomiDiskoEffect === 'function') startDomiDiskoEffect();
+  } else {
+    if (typeof stopDomiDiskoEffect === 'function') stopDomiDiskoEffect();
+  }
+}
+
+function applySelectedSkinRunStopEffects() {
+  if (typeof stopDomiDiskoEffect === 'function') stopDomiDiskoEffect();
 }
 
 function renderSkinsPanel() {

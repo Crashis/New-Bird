@@ -87,7 +87,8 @@ const VOICE_LINES = [
   "Amazon Games gratuluje. Tohle skoro vypadalo jako gameplay.",
   "Server maintenance začíná za nikdy. Končí za ještě později.",
   "Aeternum tě sleduje. A trochu se stydí.",
-  "Tvůj kamarád by řekl, že tohle je skill issue."
+  "Tvůj kamarád by řekl, že tohle je skill issue.",
+  "Nic lepšího neumíš?!"
 ];
 
 const EVENT_VOICE_LINES = [

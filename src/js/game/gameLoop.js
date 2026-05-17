@@ -73,6 +73,7 @@ function endGame() {
   if (typeof tryPotionRevive === 'function' && tryPotionRevive()) return;
   gameState = 'over';
   stopGameMusic();
+  if (typeof applySelectedSkinRunStopEffects === 'function') applySelectedSkinRunStopEffects();
   applySelectedSkinEndGameEffects();
   const isNewRecord = score > bestScore;
   if (isNewRecord) {

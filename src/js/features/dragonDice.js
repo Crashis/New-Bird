@@ -106,6 +106,7 @@ function rollDragonDice() {
   }
 
   dragonDiceRolling = true;
+  if (typeof unlockAchievement === 'function') unlockAchievement('dragon_gambler');
   setDragonDiceUiDisabled(true);
   setDragonDiceStatus('Kostka se kutálí...', 'rolling');
 

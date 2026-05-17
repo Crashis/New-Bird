@@ -91,6 +91,8 @@ function openChest(chestIndex) {
   msg += '!';
   setThreeChestsStatus(msg, 'win');
 
+  if (typeof unlockAchievement === 'function') unlockAchievement('chest_hunter');
+
   renderThreeChestsGrid();
 }
 

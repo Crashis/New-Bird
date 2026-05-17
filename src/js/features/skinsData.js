@@ -12,6 +12,8 @@ const CRASHIS_SMAZENY_SKIN_ID = 'crashis-smazeny';
 const MARTIN_SLUNECNY_SKIN_ID = 'martin-slunecny';
 const MOUCHA_SKIN_ID = 'moucha';
 const MARTIN_SLUNECNY_BUFF_MS = 10000;
+const DOMI_DISKO_SKIN_ID = 'domi-disko';
+const PULPRDELAC_SKIN_ID = 'pulprdelac';
 const ADMIN_SKIN_ID = 'admin';
 const ADMIN_SKIN_PLACEHOLDER_SVG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><radialGradient id='g' cx='50%25' cy='50%25' r='60%25'><stop offset='0%25' stop-color='%232a1f12'/><stop offset='100%25' stop-color='%23120a05'/></radialGradient></defs><rect width='100' height='100' fill='url(%23g)'/><circle cx='50' cy='50' r='44' fill='none' stroke='%23c9a84c' stroke-width='2'/><text x='50' y='68' text-anchor='middle' font-family='Cinzel Decorative,Georgia,serif' font-size='60' fill='%23f0d080' font-weight='bold'>A</text></svg>";
 
@@ -133,6 +135,23 @@ const SKINS = [
     debuffText: 'Nemá webkameru.'
   },
   {
+    id: DOMI_DISKO_SKIN_ID,
+    name: 'Domi Disko',
+    desc: 'Disko nikdy nekončí. Hudba si s tebou bude dělat, co chce.',
+    src: 'assets/skins/Domi-Disko.png',
+    priceWallets: 5,
+    unlockedByDefault: false,
+    effectDescription: 'Během runu se hudbě každých ~10 s náhodně mění hlasitost.'
+  },
+  {
+    id: PULPRDELAC_SKIN_ID,
+    name: 'Půlprdeláč',
+    desc: 'Legenda sjezdovek. Kdo mu zkříží stopu, odjíždí s natrženýma půlkama.',
+    src: 'assets/skins/Pulprdelac.png',
+    priceWallets: 10,
+    unlockedByDefault: false
+  },
+  {
     id: ADMIN_SKIN_ID,
     name: 'Admin',
     desc: 'Testovací skin pro bohy debugování.',
@@ -219,6 +238,24 @@ const ACHIEVEMENTS = [
     id: 'unlock_all_regular_skins',
     title: 'Šatník Aeterna',
     description: 'Odemkni všechny běžné skiny.',
+    rewardYang: ACHIEVEMENT_REWARD_YANG
+  },
+  {
+    id: 'chest_hunter',
+    title: 'Lovec truhel',
+    description: 'Zahraj si poprvé Tři truhly v Taverně.',
+    rewardYang: ACHIEVEMENT_REWARD_YANG
+  },
+  {
+    id: 'dragon_gambler',
+    title: 'Dračí hazardér',
+    description: 'Hoď si poprvé Dračí kostkou.',
+    rewardYang: ACHIEVEMENT_REWARD_YANG
+  },
+  {
+    id: 'big_better',
+    title: 'Velký hráč',
+    description: 'Vsaď u Skořápkáře 100 nebo více yangů najednou.',
     rewardYang: ACHIEVEMENT_REWARD_YANG
   }
 ];

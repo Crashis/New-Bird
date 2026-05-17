@@ -205,6 +205,37 @@ function unlockAudioAfterFirstInteraction() {
   }
 })();
 
+// ===== DOMI DISKO: random music volume swings during a run =====
+let domiDiskoVolumeInterval = null;
+
+function applyDomiDiskoRandomVolume() {
+  if (!settings || !settings.music) return;
+  const key = currentMusicKey;
+  if (!key) return;
+  const player = musicPlayers[key];
+  if (!player) return;
+  // Base = the volume normally derived from user's music setting and current track.
+  const base = getTrackVolume(key);
+  // Random factor 0.3..1.0 of base volume.
+  const factor = 0.3 + Math.random() * 0.7;
+  const v = Math.max(0, Math.min(1, base * factor));
+  try { player.volume = v; } catch (e) {}
+}
+
+function startDomiDiskoEffect() {
+  stopDomiDiskoEffect();
+  domiDiskoVolumeInterval = setInterval(applyDomiDiskoRandomVolume, 10000);
+}
+
+function stopDomiDiskoEffect() {
+  if (domiDiskoVolumeInterval) {
+    clearInterval(domiDiskoVolumeInterval);
+    domiDiskoVolumeInterval = null;
+  }
+  // Restore base volume for whatever music is currently playing.
+  applyMusicVolume();
+}
+
 function playHmm() {
   if (!settings.sfx) return;
   const ctx = getAudioCtx();

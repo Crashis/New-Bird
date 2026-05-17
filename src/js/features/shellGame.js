@@ -60,6 +60,7 @@ function startShellGameBet() {
   }
   yang -= amount;
   saveEconomy();
+  if (amount >= 100 && typeof unlockAchievement === 'function') unlockAchievement('big_better');
   shellGameActiveBet = amount;
   shellGameLastResult = null;
   shellGameLastPlayerChoice = null;
