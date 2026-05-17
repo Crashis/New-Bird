@@ -1,7 +1,8 @@
 const ALL_PANEL_IDS = [
   'shopPanel', 'skinsPanel', 'achievementsPanel', 'cheatCodesPanel',
   'settingsPanel', 'shellGamePanel', 'heirloomPanel',
-  'tavernaPanel', 'threeChestsPanel', 'dragonDicePanel'
+  'tavernaPanel', 'threeChestsPanel', 'dragonDicePanel',
+  'battlepassPanel'
 ];
 
 function closeOtherPanels(keepId) {
@@ -144,6 +145,21 @@ function toggleThreeChestsPanel(forceOpen) {
   closeOtherPanels('threeChestsPanel');
   panel.classList.toggle('active', open);
   if (open && typeof initThreeChests === 'function') initThreeChests();
+}
+
+// ── Battlepass ───────────────────────────────────────────
+
+function toggleBattlepassPanel(forceOpen) {
+  const panel = document.getElementById('battlepassPanel');
+  if (!panel) return;
+  const open = typeof forceOpen === 'boolean' ? forceOpen : !panel.classList.contains('active');
+  if (open && gameState === 'playing') {
+    activeVoiceLine = t('panel.shopBlocked');
+    activeVoiceLineUntil = performance.now() + 2800;
+    return;
+  }
+  closeOtherPanels('battlepassPanel');
+  panel.classList.toggle('active', open);
 }
 
 // ── Dračí kostka ─────────────────────────────────────────

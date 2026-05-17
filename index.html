@@ -130,6 +130,7 @@
         <button class="game-btn menu-btn" id="menuSettingsBtn" onclick="toggleSettingsPanel()" data-i18n="menu.settings">⚙ Settings</button>
         <button class="game-btn menu-btn" id="menuCheatBtn" onclick="toggleCheatCodesPanel()" data-i18n="menu.cheats">⌨ Cheat Codes</button>
         <button class="game-btn menu-btn" id="heirloomBtn" onclick="toggleHeirloomPanel()" data-i18n="menu.heirloom">🚀 Heirloom</button>
+        <button class="game-btn menu-btn" id="menuBattlepassBtn" onclick="toggleBattlepassPanel()">🎟️ Battlepass</button>
         <button class="game-btn menu-btn menu-quit-btn" id="menuQuitBtn" onclick="quitGameFromMainMenu()" data-i18n="menu.quit">✕ Zavřít hru</button>
       </div>
 
@@ -563,6 +564,21 @@
       </div>
     </div>
 
+    <!-- ── Battlepass panel ──────────────────────── -->
+    <div class="shop-panel" id="battlepassPanel" style="text-align:center;">
+      <div class="panel-header">
+        <h2>🎟️ Battlepass</h2>
+        <button class="game-btn panel-close-btn" onclick="toggleBattlepassPanel(false)">×</button>
+      </div>
+      <div class="shop-subtitle">Battlepass je zatím ve vývoji.</div>
+      <p style="color: var(--text-muted, #a08060); font-size: 0.85rem; margin: 1rem 0; line-height: 1.6;">
+        Brzy zde najdeš sezónní odměny, úkoly a exkluzivní bonusy.
+      </p>
+      <div class="game-buttons" style="margin-top:1rem; justify-content:center;">
+        <button class="game-btn" onclick="toggleBattlepassPanel(false)">✕ Zavřít</button>
+      </div>
+    </div>
+
   </div>
 
   <div class="game-controls" data-i18n="hud.controls">Mezerník · Klik · Tap pro skok</div>
@@ -595,6 +611,10 @@
     <div class="locked-feature">
       <button class="game-btn" onclick="toggleHeirloomPanel()" title="Heirloom" data-i18n="menu.heirloom">🚀 Heirloom</button>
       <div class="shop-wip" data-i18n="bottom.heirloomHint">Univerzální zbraň</div>
+    </div>
+    <div class="locked-feature">
+      <button class="game-btn" onclick="toggleBattlepassPanel()" title="Battlepass">🎟️ Battlepass</button>
+      <div class="shop-wip">Sezónní odměny</div>
     </div>
     <button class="game-btn" onclick="closeGame()" data-i18n="bottom.close">✕ Zavřít hru</button>
   </div>
