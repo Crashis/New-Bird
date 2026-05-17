@@ -4,6 +4,47 @@ const BLACKSMITH_MIN_BET = 10;
 const BLACKSMITH_HIT_RADIUS = 5;        // ± 5 % od cíle = trefa
 const BLACKSMITH_SPEED_BASE = 0.13;     // % za ms (1. strike)
 const BLACKSMITH_SPEED_STEP = 0.06;     // přírůstek pro každý další strike
+const BLACKSMITH_MAX_PLAYS_PER_DAY = 5;
+const BLACKSMITH_LS_DATE = 'blacksmithChallengePlayDate';
+const BLACKSMITH_LS_PLAYS = 'blacksmithChallengePlaysToday';
+
+function blacksmithTodayKey() {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
+function getBlacksmithPlaysToday() {
+  try {
+    const storedDate = localStorage.getItem(BLACKSMITH_LS_DATE);
+    const today = blacksmithTodayKey();
+    if (storedDate !== today) {
+      localStorage.setItem(BLACKSMITH_LS_DATE, today);
+      localStorage.setItem(BLACKSMITH_LS_PLAYS, '0');
+      return 0;
+    }
+    const n = parseInt(localStorage.getItem(BLACKSMITH_LS_PLAYS), 10);
+    return Number.isFinite(n) && n >= 0 ? n : 0;
+  } catch (e) {
+    return 0;
+  }
+}
+
+function incrementBlacksmithPlaysToday() {
+  const current = getBlacksmithPlaysToday();
+  const next = current + 1;
+  try {
+    localStorage.setItem(BLACKSMITH_LS_DATE, blacksmithTodayKey());
+    localStorage.setItem(BLACKSMITH_LS_PLAYS, String(next));
+  } catch (e) {}
+  return next;
+}
+
+function blacksmithLimitReached() {
+  return getBlacksmithPlaysToday() >= BLACKSMITH_MAX_PLAYS_PER_DAY;
+}
 
 let blacksmithState = 'idle';           // 'idle' | 'aiming' | 'resolved'
 let blacksmithBet = 0;
@@ -47,8 +88,16 @@ function renderBlacksmithPanel() {
   const strikeBtn = document.getElementById('blacksmithStrikeBtn');
   const betInput = document.getElementById('blacksmithBetInput');
 
+  const playsUsed = getBlacksmithPlaysToday();
+  const limitReached = playsUsed >= BLACKSMITH_MAX_PLAYS_PER_DAY;
+
+  const playsEl = document.getElementById('blacksmithPlaysLabel');
+  if (playsEl) {
+    playsEl.textContent = t('blacksmith.playsToday', { used: Math.min(playsUsed, BLACKSMITH_MAX_PLAYS_PER_DAY), max: BLACKSMITH_MAX_PLAYS_PER_DAY });
+  }
+
   if (startBtn) {
-    startBtn.disabled = blacksmithState === 'aiming';
+    startBtn.disabled = blacksmithState === 'aiming' || limitReached;
     startBtn.classList.toggle('disabled', startBtn.disabled);
   }
   if (strikeBtn) {
@@ -86,6 +135,15 @@ function animateBlacksmith() {
 
 function startBlacksmithAttempt() {
   if (blacksmithState === 'aiming') return;
+
+  if (blacksmithLimitReached()) {
+    const msg = t('blacksmith.limitReached', { max: BLACKSMITH_MAX_PLAYS_PER_DAY });
+    setBlacksmithStatus(msg, 'error');
+    renderBlacksmithPanel();
+    try { alert(msg); } catch (e) {}
+    return;
+  }
+
   const betInput = document.getElementById('blacksmithBetInput');
   const bet = parseInt(betInput && betInput.value, 10);
 
@@ -97,6 +155,8 @@ function startBlacksmithAttempt() {
     setBlacksmithStatus(t('blacksmith.notEnough'), 'error');
     return;
   }
+
+  incrementBlacksmithPlaysToday();
 
   yang -= bet;
   saveEconomy();
@@ -187,6 +247,10 @@ function initBlacksmith() {
   blacksmithMarkerPos = 0;
   blacksmithStrikeBusy = false;
   setBlacksmithNewTarget();
-  setBlacksmithStatus(t('blacksmith.statusInit'), 'info');
+  if (blacksmithLimitReached()) {
+    setBlacksmithStatus(t('blacksmith.limitReached', { max: BLACKSMITH_MAX_PLAYS_PER_DAY }), 'error');
+  } else {
+    setBlacksmithStatus(t('blacksmith.statusInit'), 'info');
+  }
   renderBlacksmithPanel();
 }

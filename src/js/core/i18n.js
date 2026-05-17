@@ -547,6 +547,8 @@ window.NWI18n = window.NWI18n || {};
       'blacksmith.threeHits': '3 trefy! Vyhrál jsi {payout} Yangů{bonus}',
       'blacksmith.threeHitsBonus': ' + 1 Dračí mince!',
       'blacksmith.statusInit': 'Vsaď Yangy a třikrát zasáhni cíl. Každé kolo zrychluje.',
+      'blacksmith.playsToday': 'Dnešní pokusy: {used}/{max}',
+      'blacksmith.limitReached': 'Dnes už jsi Kovářovu výzvu zkusil {max}×. Přijď zase po půlnoci.',
 
       // Wheel of Fortune
       'wheel.title': '🎡 Kolo štěstí',
@@ -1195,6 +1197,8 @@ window.NWI18n = window.NWI18n || {};
       'blacksmith.threeHits': '3 hits! You won {payout} Yang{bonus}',
       'blacksmith.threeHitsBonus': ' + 1 Dragon Coin!',
       'blacksmith.statusInit': 'Place a bet and hit the moving target 3 times. Each strike gets faster.',
+      'blacksmith.playsToday': "Today's attempts: {used}/{max}",
+      'blacksmith.limitReached': "You've already tried the Blacksmith's Challenge {max}× today. Come back after midnight.",
 
       // Wheel of Fortune
       'wheel.title': '🎡 Wheel of Fortune',
