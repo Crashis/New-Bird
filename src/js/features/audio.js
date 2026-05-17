@@ -26,15 +26,20 @@ const MUSIC_TRACKS = {
   menu:   './assets/audio/game-menu.mp3',
   phase1: './assets/audio/phase1.mp3',
   phase2: './assets/audio/phase2.mp3',
-  phase3: './assets/audio/phase3.mp3'
+  phase3: './assets/audio/phase3.mp3',
+  boss:   './assets/audio/spartani.mp3'
 };
 const MUSIC_VOLUMES = {
   intro:  0.28,
   menu:   0.32,
   phase1: 0.35,
   phase2: 0.38,
-  phase3: 0.40
+  phase3: 0.40,
+  boss:   0.40
 };
+// Boss fight má 2 fáze; ve 2. fázi se boostuje hlasitost o 30 %.
+let bossMusicPhase = 1;
+const BOSS_PHASE2_VOLUME_BOOST = 1.3;
 // Kept for compatibility with existing references.
 const MUSIC_VOLUME = MUSIC_VOLUMES.phase1;
 
@@ -52,8 +57,15 @@ function getTrackVolume(key) {
   const base = MUSIC_VOLUMES[key] || 0.3;
   // Master slider scales the per-track base so phase3 stays a bit louder than phase1.
   // Slider default 0.35 = unchanged base volumes.
-  const scaled = base * (getMusicMaster() / 0.35);
+  let scaled = base * (getMusicMaster() / 0.35);
+  if (key === 'boss' && bossMusicPhase === 2) {
+    scaled *= BOSS_PHASE2_VOLUME_BOOST;
+  }
   return Math.max(0, Math.min(1, scaled));
+}
+
+function getBossFightMusicVolume() {
+  return getTrackVolume('boss');
 }
 
 function applyMusicVolume() {
@@ -96,6 +108,8 @@ function deriveCurrentMusicKey() {
   const inOverlay = overlay && overlay.classList.contains('active');
   if (!inOverlay) return 'intro';
   if (typeof gameState === 'undefined' || gameState !== 'playing') return 'menu';
+  // Boss fight používá vlastní hudbu „spartani“ a vlastní phase boost.
+  if (typeof currentGameMode !== 'undefined' && currentGameMode === 'bezosBoss') return 'boss';
   if (typeof currentGamePhase !== 'undefined' && currentGamePhase === GAME_PHASES.VOID) return 'phase3';
   if ((typeof eventPhaseActive !== 'undefined' && eventPhaseActive) ||
       (typeof currentGamePhase !== 'undefined' && currentGamePhase === GAME_PHASES.FROST)) {
@@ -148,6 +162,37 @@ function playIntroMusic() { playMusic('intro'); }
 function playMenuMusic()  { playMusic('menu'); }
 function playPhase2Music() { playMusic('phase2'); }
 function playPhase3Music() { playMusic('phase3'); }
+
+// ===== Boss fight hudba („spartani“) =====
+function playBossFightMusic() {
+  // Reset phase + zastav předchozí instanci, ať se nevrství při restartu boss fightu.
+  bossMusicPhase = 1;
+  const bp = musicPlayers['boss'];
+  if (bp) {
+    try { bp.pause(); bp.currentTime = 0; } catch (e) {}
+  }
+  playMusic('boss');
+}
+
+function stopBossFightMusic() {
+  bossMusicPhase = 1;
+  const bp = musicPlayers['boss'];
+  if (bp) {
+    try { bp.pause(); bp.currentTime = 0; } catch (e) {}
+  }
+  if (currentMusicKey === 'boss') currentMusicKey = null;
+}
+
+function setBossFightMusicPhase(phase) {
+  const p = (phase === 2) ? 2 : 1;
+  if (bossMusicPhase === p) return;
+  bossMusicPhase = p;
+  // Aktualizuj hlasitost běžící boss hudby (nepouštěj novou instanci).
+  const bp = musicPlayers['boss'];
+  if (bp) {
+    try { bp.volume = getTrackVolume('boss'); } catch (e) {}
+  }
+}
 
 // Compatibility wrappers — existing callsites in gameLoop/eventPhase keep working.
 function startGameMusic() {

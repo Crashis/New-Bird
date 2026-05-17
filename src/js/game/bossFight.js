@@ -89,13 +89,14 @@ function startBezosBossFight() {
 
   resetBossFightState();
   gameState = 'playing';
-  if (typeof startGameMusic === 'function') startGameMusic();
+  if (typeof playBossFightMusic === 'function') playBossFightMusic();
   if (animationId) cancelAnimationFrame(animationId);
   loop();
 }
 
 function exitBossFightToMenu() {
   // Tvrdá izolace — nikdy nepřepsat normální stav.
+  if (typeof stopBossFightMusic === 'function') stopBossFightMusic();
   currentGameMode = 'normal';
   bossProjectiles = [];
   bossPlayerRockets = [];
@@ -154,7 +155,7 @@ function startBossVictoryAnimation() {
 
 function endBossFightVictory() {
   if (bossState && bossState.hp > 0) bossState.hp = 0;
-  if (typeof stopGameMusic === 'function') stopGameMusic();
+  if (typeof stopBossFightMusic === 'function') stopBossFightMusic();
   claimBossVictoryReward();
   startBossVictoryAnimation();
   // Hra ještě běží kvůli animaci; loop si přepne na panel přes updateBossVictoryAnim.
@@ -229,7 +230,7 @@ function drawBossVictoryAnim() {
 
 function endBossFightDefeat() {
   gameState = 'over';
-  if (typeof stopGameMusic === 'function') stopGameMusic();
+  if (typeof stopBossFightMusic === 'function') stopBossFightMusic();
   const panel = document.getElementById('bossLossPanel');
   if (panel) panel.classList.add('active');
   document.body.classList.add('modal-open');
@@ -370,6 +371,8 @@ function updateBossFight() {
         bossPhase = 2;
         // Vizuální tematika fáze 2 — používáme existující VOID overlay.
         if (typeof activateVoidPhase === 'function') activateVoidPhase();
+        // Audio: +30 % hlasitost boss hudby ve 2. fázi (respektuje master/mute).
+        if (typeof setBossFightMusicPhase === 'function') setBossFightMusicPhase(2);
       }
       if (bossState.hp <= 0) {
         bossState.hp = 0;
