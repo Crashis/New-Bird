@@ -122,8 +122,10 @@ window.NWI18n = window.NWI18n || {};
       'shop.shield.title': '🛡 Shield Start',
       'shop.shield.desc': 'Každý nový run začne s jedním štítem. Jde kombinovat s upgadem Druhý štít.',
       'shop.maxShields2.title': '🛡🛡 Druhý štít',
-      'shop.maxShields2.desc': 'Maximální počet štítů se zvýší na 2. Jednorázový upgrade za 500 Yangů.',
+      'shop.maxShields2.desc': 'Maximální počet štítů se zvýší na 2. Jednorázový upgrade za 666 Yangů, 6 Peněženek a 6 Dračích mincí.',
+      'shop.maxShields2Buy': 'Koupit — 666 Yangů · 6 Peněženek · 6 Dračích mincí',
       'shop.maxShields2Bought': 'Druhý štít koupen. Teď pojme dva zásahy.',
+      'shop.maxShields2NotEnough': 'Nedostatek měn. Potřebuješ 666 Yangů, 6 Peněženek a 6 Dračích mincí.',
       'shop.inv.title': '⚜ Delší nesmrtelnost',
       'shop.inv.desc': 'Každý level prodlouží power-up nesmrtelnosti o 0,5 sekundy. Maximum jsou 3 levely.',
       'shop.dy.title': '⚡ Delší Double Yang',
@@ -493,8 +495,10 @@ window.NWI18n = window.NWI18n || {};
       'shop.shield.title': '🛡 Shield Start',
       'shop.shield.desc': 'Every new run starts with one shield. Combinable with the Second Shield upgrade.',
       'shop.maxShields2.title': '🛡🛡 Second Shield',
-      'shop.maxShields2.desc': 'Increases maximum shields to 2. One-time upgrade for 500 Yangs.',
+      'shop.maxShields2.desc': 'Increases maximum shields to 2. One-time upgrade for 666 Yangs, 6 Wallets and 6 Dragon Coins.',
+      'shop.maxShields2Buy': 'Buy — 666 Yangs · 6 Wallets · 6 Dragon Coins',
       'shop.maxShields2Bought': 'Second Shield purchased. Now holds two hits.',
+      'shop.maxShields2NotEnough': 'Not enough currency. Need 666 Yangs, 6 Wallets and 6 Dragon Coins.',
       'shop.inv.title': '⚜ Longer Immortality',
       'shop.inv.desc': 'Each level extends the immortality power-up by 0.5 seconds. Maximum 3 levels.',
       'shop.dy.title': '⚡ Longer Double Yang',
@@ -694,8 +698,10 @@ window.NWI18n = window.NWI18n || {};
 
       // Shop
       'shop.maxShields2.title': '🛡🛡 Second Shield',
-      'shop.maxShields2.desc': 'Increases maximum shields to 2. One-time upgrade for 500 Yangs.',
+      'shop.maxShields2.desc': 'Increases maximum shields to 2. One-time upgrade for 666 Yangs, 6 Wallets and 6 Dragon Coins.',
+      'shop.maxShields2Buy': 'Buy — 666 Yangs · 6 Wallets · 6 Dragon Coins',
       'shop.maxShields2Bought': 'Second Shield purchased. Now holds two hits.',
+      'shop.maxShields2NotEnough': 'Not enough currency. Need 666 Yangs, 6 Wallets and 6 Dragon Coins.',
 
       // Toast titles
       'toast.upgradeUnlocked': 'UPGRADE UNLOCKED',

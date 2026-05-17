@@ -2,7 +2,7 @@ const ALL_PANEL_IDS = [
   'shopPanel', 'skinsPanel', 'achievementsPanel', 'cheatCodesPanel',
   'settingsPanel', 'shellGamePanel', 'heirloomPanel',
   'tavernaPanel', 'threeChestsPanel', 'dragonDicePanel',
-  'battlepassPanel', 'upgradesPanel'
+  'drunkArcherPanel', 'battlepassPanel', 'upgradesPanel'
 ];
 
 function toggleUpgradesPanel(forceOpen) {
@@ -26,7 +26,12 @@ function closeOtherPanels(keepId) {
   for (const id of ALL_PANEL_IDS) {
     if (id === keepId) continue;
     const el = document.getElementById(id);
-    if (el) el.classList.remove('active');
+    if (el) {
+      el.classList.remove('active');
+      if (id === 'drunkArcherPanel' && typeof stopDrunkArcherAnimation === 'function') {
+        stopDrunkArcherAnimation();
+      }
+    }
   }
 }
 function closeAllPanels() { closeOtherPanels(null); }
@@ -140,6 +145,8 @@ function openTavernaGame(game) {
     toggleThreeChestsPanel(true);
   } else if (game === 'dragonDice') {
     toggleDragonDicePanel(true);
+  } else if (game === 'drunkArcher') {
+    toggleDrunkArcherPanel(true);
   }
 }
 
@@ -193,4 +200,21 @@ function toggleDragonDicePanel(forceOpen) {
   closeOtherPanels('dragonDicePanel');
   panel.classList.toggle('active', open);
   if (open && typeof initDragonDice === 'function') initDragonDice();
+}
+
+// ── Opilý lukostřelec ─────────────────────────────────────
+
+function toggleDrunkArcherPanel(forceOpen) {
+  const panel = document.getElementById('drunkArcherPanel');
+  if (!panel) return;
+  const open = typeof forceOpen === 'boolean' ? forceOpen : !panel.classList.contains('active');
+  if (open && gameState === 'playing') {
+    activeVoiceLine = t('panel.tavernaBlocked');
+    activeVoiceLineUntil = performance.now() + 2800;
+    return;
+  }
+  closeOtherPanels('drunkArcherPanel');
+  panel.classList.toggle('active', open);
+  if (!open && typeof stopDrunkArcherAnimation === 'function') stopDrunkArcherAnimation();
+  if (open && typeof initDrunkArcher === 'function') initDrunkArcher();
 }

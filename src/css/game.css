@@ -205,6 +205,9 @@
   /* Game over screen overlay (inside canvas area) */
   .game-over-panel {
     position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
     background: rgba(10,8,6,0.95);
     border: 1px solid var(--gold-dark);
     padding: 1.5rem 2rem;
@@ -303,9 +306,11 @@
     font-style: italic;
     color: var(--text-light);
     font-size: 0.85rem;
-    margin: 0.8rem 0;
+    margin: 0.8rem auto;
     max-width: 320px;
     line-height: 1.5;
+    text-align: center;
+    text-wrap: balance;
   }
 
   .game-over-panel .new-record {

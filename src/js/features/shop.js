@@ -92,15 +92,32 @@ function getMaxShields() {
   return maxShields2Owned ? 2 : 1;
 }
 
+const MAX_SHIELDS_2_COST = {
+  yang: 666,
+  wallets: 6,
+  dragonCoins: 6
+};
+
+function getMaxShields2PriceText() {
+  const label = t('shop.maxShields2Buy');
+  return label === 'shop.maxShields2Buy'
+    ? 'Koupit — 666 Yangů · 6 Peněženek · 6 Dračích mincí'
+    : label;
+}
+
 function buyMaxShields2() {
   if (maxShields2Owned) return;
-  const cost = 500;
-  if (!spendYang(cost)) {
-    showShopMessage(t('shop.noYangFor', { cost }));
+  const cost = MAX_SHIELDS_2_COST;
+  if (yang < cost.yang || wallets < cost.wallets || dragonCoins < cost.dragonCoins) {
+    showShopMessage(t('shop.maxShields2NotEnough'));
     return;
   }
+  yang -= cost.yang;
+  wallets -= cost.wallets;
+  dragonCoins -= cost.dragonCoins;
   maxShields2Owned = true;
   saveEconomy();
+  saveDragonCoins();
   updateEconomyUi();
   showShopMessage(t('shop.maxShields2Bought'));
   showUnlockToast(t('toast.upgradeUnlocked'), t('toast.upgradeSubtitle'), 'upgrade');

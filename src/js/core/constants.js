@@ -28,7 +28,7 @@ const AMAZON_NERF_SPEED_CHANCE = 0.425; // doubleScore = 1 - slow - speed = 0.15
 const POWERUP_MIN_PIPES = 4;
 const POWERUP_FORCE_PIPES = 14;
 const POWERUP_CHANCE = 0.18;
-const ERR_CUBE_CHANCE = 0.05;
+const ERR_CUBE_CHANCE = 0.03;
 const ERR_CUBE_VOICE_LINE = 'Rock and Stones, brothers!';
 // Distribution of power-up types when a power-up slot fires.
 // Weights must sum to 1.0.

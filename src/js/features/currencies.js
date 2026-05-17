@@ -5,6 +5,7 @@ function updateEconomyUi() {
   const gameErrCubes = document.getElementById('gameErrCubes');
   const shopYang = document.getElementById('shopYang');
   const shopWallets = document.getElementById('shopWallets');
+  const shopDragonCoins = document.getElementById('shopDragonCoins');
   const shopErrCubes = document.getElementById('shopErrCubes');
   if (gameYang) gameYang.textContent = yang;
   if (gameWallets) gameWallets.textContent = wallets;
@@ -12,6 +13,7 @@ function updateEconomyUi() {
   if (gameErrCubes) gameErrCubes.textContent = String((typeof errCubes === 'number') ? errCubes : 0);
   if (shopYang) shopYang.textContent = yang;
   if (shopWallets) shopWallets.textContent = wallets;
+  if (shopDragonCoins) shopDragonCoins.textContent = (typeof dragonCoins === 'number') ? dragonCoins : 0;
   if (shopErrCubes) shopErrCubes.textContent = String((typeof errCubes === 'number') ? errCubes : 0);
   if (typeof renderShellGamePanel === 'function') renderShellGamePanel();
   if (typeof renderHeirloomPanel === 'function') renderHeirloomPanel();
@@ -20,10 +22,18 @@ function updateEconomyUi() {
   const tcYangs = document.getElementById('threeChestsYangs');
   const tcDC    = document.getElementById('threeChestsDragonCoins');
   const ddDC    = document.getElementById('dragonDiceDragonCoins');
+  const daErr   = document.getElementById('drunkArcherErrCubes');
+  const daYangs = document.getElementById('drunkArcherYangs');
+  const daWallets = document.getElementById('drunkArcherWallets');
+  const daDC    = document.getElementById('drunkArcherDragonCoins');
   const heirloomErr = document.getElementById('heirloomErrCubes');
   if (tcYangs) tcYangs.textContent = yang;
   if (tcDC)    tcDC.textContent    = typeof dragonCoins === 'number' ? dragonCoins : 0;
   if (ddDC)    ddDC.textContent    = typeof dragonCoins === 'number' ? dragonCoins : 0;
+  if (daErr)   daErr.textContent   = String((typeof errCubes === 'number') ? errCubes : 0);
+  if (daYangs) daYangs.textContent = yang;
+  if (daWallets) daWallets.textContent = wallets;
+  if (daDC)    daDC.textContent    = typeof dragonCoins === 'number' ? dragonCoins : 0;
   if (heirloomErr) heirloomErr.textContent = String((typeof errCubes === 'number') ? errCubes : 0);
 
   const shieldLevel = document.getElementById('shieldStartLevel');
@@ -81,8 +91,18 @@ function updateEconomyUi() {
   const ms2Btn = document.getElementById('buyMaxShields2Btn');
   if (ms2Level) ms2Level.textContent = maxShields2Owned ? t('economy.owned') : t('economy.notOwned');
   if (ms2Btn) {
-    ms2Btn.textContent = maxShields2Owned ? t('economy.bought') : t('economy.buyFor', { cost: 500 });
-    ms2Btn.disabled = maxShields2Owned || yang < 500;
+    const cost = typeof MAX_SHIELDS_2_COST !== 'undefined'
+      ? MAX_SHIELDS_2_COST
+      : { yang: 666, wallets: 6, dragonCoins: 6 };
+    ms2Btn.textContent = maxShields2Owned
+      ? t('economy.bought')
+      : (typeof getMaxShields2PriceText === 'function'
+        ? getMaxShields2PriceText()
+        : 'Koupit — 666 Yangů · 6 Peněženek · 6 Dračích mincí');
+    ms2Btn.disabled = maxShields2Owned ||
+      yang < cost.yang ||
+      wallets < cost.wallets ||
+      dragonCoins < cost.dragonCoins;
     ms2Btn.classList.toggle('disabled', ms2Btn.disabled);
   }
 }

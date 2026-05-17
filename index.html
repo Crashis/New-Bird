@@ -208,6 +208,7 @@
       <div class="shop-wallet">
         <span><span data-i18n="shop.yang">Yangy:</span> <strong id="shopYang">0</strong></span>
         <span><span data-i18n="shop.wallets">Peněženky:</span> <strong id="shopWallets">0</strong></span>
+        <span><span data-i18n="hud.dragonCoins">Dračí mince:</span> <strong id="shopDragonCoins">0</strong></span>
         <span class="err-cubes-stat">🎲 <span data-i18n="hud.errCubes">Err kostky:</span> <strong id="shopErrCubes">0</strong></span>
       </div>
 
@@ -249,10 +250,10 @@
 
       <div class="shop-item">
         <div class="shop-item-title" data-i18n="shop.maxShields2.title">🛡🛡 Druhý štít</div>
-        <div class="shop-item-desc" data-i18n="shop.maxShields2.desc">Maximální počet štítů se zvýší na 2. Jednorázový upgrade za 500 Yangů.</div>
+        <div class="shop-item-desc" data-i18n="shop.maxShields2.desc">Maximální počet štítů se zvýší na 2. Jednorázový upgrade za 666 Yangů, 6 Peněženek a 6 Dračích mincí.</div>
         <div class="shop-item-bottom">
           <span class="shop-level" id="maxShields2Level">Nevlastníš</span>
-          <button class="game-btn shop-buy-btn" id="buyMaxShields2Btn" onclick="buyMaxShields2()">Koupit — 500 Yangů</button>
+          <button class="game-btn shop-buy-btn" id="buyMaxShields2Btn" onclick="buyMaxShields2()">Koupit — 666 Yangů · 6 Peněženek · 6 Dračích mincí</button>
         </div>
       </div>
 
@@ -586,6 +587,15 @@
           </div>
         </div>
 
+        <div class="taverna-card" onclick="openTavernaGame('drunkArcher')">
+          <div class="taverna-card-art">🏹</div>
+          <div class="taverna-card-body">
+            <div class="taverna-card-name">Opilý lukostřelec</div>
+            <div class="taverna-card-desc">Rozkývaný střelec míří na terč. Zaplať Err kostku a vystřel přesně ve chvíli, kdy marker trefí střed.</div>
+            <div class="taverna-card-price">🎲 Vstup 1 Err kostka</div>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -656,6 +666,38 @@
       <div class="game-buttons" style="margin-top:0.6rem; justify-content:center; flex-wrap:wrap;">
         <button class="game-btn" onclick="backToTaverna()">← Taverna</button>
         <button class="game-btn" onclick="toggleDragonDicePanel(false)">✕ Zavřít</button>
+      </div>
+    </div>
+
+    <!-- ── Opilý lukostřelec panel ───────────────────── -->
+    <div class="shop-panel" id="drunkArcherPanel" style="text-align:center;">
+      <div class="panel-header">
+        <h2>🏹 Opilý lukostřelec</h2>
+        <button class="game-btn panel-close-btn" onclick="toggleDrunkArcherPanel(false)">×</button>
+      </div>
+      <div class="shop-subtitle">Zaplať 1 Err kostku, sleduj šipku a vystřel, když marker protne terč. Přesnost rozhoduje o odměně.</div>
+
+      <div class="shop-wallet">
+        <span>Err kostky: <strong id="drunkArcherErrCubes">0</strong></span>
+        <span>Yangy: <strong id="drunkArcherYangs">0</strong></span>
+        <span>Peněženky: <strong id="drunkArcherWallets">0</strong></span>
+        <span>Dračí mince: <strong id="drunkArcherDragonCoins">0</strong></span>
+      </div>
+
+      <div class="drunk-archer-range" id="drunkArcherRange" onclick="shootDrunkArcher()" role="button" aria-label="Vystřelit na terč">
+        <div class="drunk-archer-good-zone" id="drunkArcherGoodZone"></div>
+        <div class="drunk-archer-perfect-zone" id="drunkArcherPerfectZone"></div>
+        <div class="drunk-archer-target" id="drunkArcherTarget"></div>
+        <div class="drunk-archer-marker" id="drunkArcherMarker"></div>
+      </div>
+
+      <p id="drunkArcherStatus" class="drunk-archer-status"></p>
+
+      <div class="game-buttons" style="margin-top:0.6rem; justify-content:center; flex-wrap:wrap;">
+        <button class="game-btn primary" id="drunkArcherStartBtn" onclick="startDrunkArcherAttempt()">Začít pokus (1 Err kostka)</button>
+        <button class="game-btn primary drunk-archer-shoot-btn" id="drunkArcherShootBtn" onclick="shootDrunkArcher()" disabled>Vystřelit</button>
+        <button class="game-btn" onclick="backToTaverna()">← Taverna</button>
+        <button class="game-btn" onclick="toggleDrunkArcherPanel(false)">✕ Zavřít</button>
       </div>
     </div>
 

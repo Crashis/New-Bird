@@ -391,6 +391,110 @@
 .dragon-dice-status.info    { color: var(--gold-light); }
 
 /* ═══════════════════════════════════════════════════════
+   OPILÝ LUKOSTŘELEC
+   ═══════════════════════════════════════════════════════ */
+
+.drunk-archer-range {
+  position: relative;
+  width: min(420px, 100%);
+  height: 44px;
+  margin: 1rem auto 0.65rem;
+  border: 1px solid var(--gold-dark);
+  border-radius: 6px;
+  background:
+    linear-gradient(90deg, rgba(80, 38, 18, 0.95), rgba(18, 12, 5, 0.96)),
+    repeating-linear-gradient(90deg, transparent 0 9%, rgba(240,208,128,0.08) 9% 10%);
+  box-shadow: inset 0 0 18px rgba(0,0,0,0.55), 0 0 18px rgba(201,168,76,0.16);
+  overflow: hidden;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.drunk-archer-target,
+.drunk-archer-good-zone,
+.drunk-archer-perfect-zone,
+.drunk-archer-marker {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  pointer-events: none;
+}
+
+.drunk-archer-good-zone {
+  background: rgba(240, 208, 128, 0.2);
+  border-left: 1px solid rgba(240, 208, 128, 0.45);
+  border-right: 1px solid rgba(240, 208, 128, 0.45);
+}
+
+.drunk-archer-perfect-zone {
+  background: rgba(120, 255, 160, 0.42);
+  box-shadow: 0 0 16px rgba(120, 255, 160, 0.5);
+}
+
+.drunk-archer-target {
+  width: 2px;
+  background: rgba(255, 245, 200, 0.7);
+}
+
+.drunk-archer-marker {
+  width: 4px;
+  transform: translateX(-50%);
+  background: #ff4c4c;
+  box-shadow: 0 0 12px rgba(255, 80, 80, 0.75);
+}
+
+.drunk-archer-marker::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -1px;
+  transform: translateX(-50%);
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 10px solid #ffdf8a;
+}
+
+.drunk-archer-range.perfect {
+  animation: archerPerfectFlash 0.45s ease;
+}
+
+.drunk-archer-range.miss {
+  animation: archerMissShake 0.35s ease;
+}
+
+@keyframes archerPerfectFlash {
+  0%, 100% { box-shadow: inset 0 0 18px rgba(0,0,0,0.55), 0 0 18px rgba(201,168,76,0.16); }
+  50% { box-shadow: inset 0 0 18px rgba(0,0,0,0.55), 0 0 34px rgba(120,255,160,0.75); }
+}
+
+@keyframes archerMissShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+.drunk-archer-status {
+  min-height: 2.4rem;
+  font-family: 'Lato', sans-serif;
+  font-size: 0.72rem;
+  text-align: center;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin: 0.35rem 0 0.1rem;
+  line-height: 1.45;
+  padding: 0 0.5rem;
+}
+
+.drunk-archer-status.win { color: #86f786; }
+.drunk-archer-status.lose { color: #ff8a8a; }
+.drunk-archer-status.error { color: #ffaa7a; }
+.drunk-archer-status.info { color: var(--gold-light); }
+
+.drunk-archer-shoot-btn {
+  min-width: 160px;
+}
+
+/* ═══════════════════════════════════════════════════════
    MOBILNÍ LAYOUT
    ═══════════════════════════════════════════════════════ */
 
@@ -444,5 +548,14 @@
 
   .dragon-dice-display {
     font-size: 3.5rem;
+  }
+
+  .drunk-archer-range {
+    height: 52px;
+  }
+
+  .drunk-archer-shoot-btn {
+    width: 100%;
+    min-height: 48px;
   }
 }
