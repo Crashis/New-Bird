@@ -7,7 +7,7 @@ const headImg = new Image();
 headImg.src = HEAD_B64;
 
 const UNLOCKED_SKINS_KEY = 'nw_flappy_unlocked_skins';
-const SKIN_PRICE_WALLETS = 3;
+const SKIN_PRICE_WALLETS = 10;
 const CRASHIS_SMAZENY_SKIN_ID = 'crashis-smazeny';
 const MARTIN_SLUNECNY_SKIN_ID = 'martin-slunecny';
 const MOUCHA_SKIN_ID = 'moucha';
@@ -89,7 +89,7 @@ const SKINS = [
     name: 'Moucha',
     desc: 'Aeternum ji nikdo nezval. Stejně tu pořád lítá.',
     src: 'assets/skins/Moucha.png',
-    priceWallets: 15,
+    priceWallets: 25,
     unlockedByDefault: false
   },
   {
@@ -139,7 +139,7 @@ const SKINS = [
     name: 'Domi Disko',
     desc: 'Disko nikdy nekončí. Hudba si s tebou bude dělat, co chce.',
     src: 'assets/skins/Domi-Disko.png',
-    priceWallets: 5,
+    priceWallets: 10,
     unlockedByDefault: false,
     effectDescription: 'Během runu se hudbě každých ~10 s náhodně mění hlasitost.'
   },

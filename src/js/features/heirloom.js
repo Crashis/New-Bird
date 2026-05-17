@@ -470,10 +470,19 @@ function tryPotionRevive() {
     const oldChancePct = Math.round(potionReviveChance * 100);
     potionReviveChance = Math.max(0.10, potionReviveChance - 0.10);
     const nextPct = Math.round(potionReviveChance * 100);
-    // Reposition player to center with brief invincibility
+    // Reposition player to a safe spot and clear nearby obstacles so the
+    // revive nevrátí hráče přímo do sloupu, do kterého právě zemřel.
     if (typeof canvas !== 'undefined') player.y = canvas.height / 2;
+    player.x = 160;
     player.vy = 0;
-    invincibleUntil = performance.now() + 2000;
+    if (typeof applyMilestoneSafeGap === 'function') {
+      applyMilestoneSafeGap();
+    } else {
+      pipes = [];
+      framesUntilNextPipe = 95;
+    }
+    // 2.5 s invulnerability — chrání hráče, než stihne první nový sloup dorazit.
+    invincibleUntil = performance.now() + 2500;
     activeVoiceLine = `🧪 The Aeternum Potion revived you! Next chance: ${nextPct}%`;
     activeVoiceLineUntil = performance.now() + 3500;
     if (typeof showUnlockToast === 'function') {
