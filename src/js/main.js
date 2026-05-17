@@ -33,6 +33,7 @@ const scriptChunks = [
   "./src/js/game/collision.js",
   "./src/js/game/player.js",
   "./src/js/game/gameLoop.js",
+  "./src/js/game/bossFight.js",
   "./src/js/game/input.js",
   "./src/js/ui/fullscreen.js"
 ];

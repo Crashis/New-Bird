@@ -133,6 +133,7 @@
         <button class="game-btn menu-btn" id="heirloomBtn" onclick="toggleHeirloomPanel()" data-i18n="menu.heirloom">🚀 Heirloom</button>
         <button class="game-btn menu-btn" id="menuUpgradesBtn" onclick="toggleUpgradesPanel()" data-i18n="menu.upgrades">⚡ Upgrady</button>
         <button class="game-btn menu-btn" id="menuBattlepassBtn" onclick="toggleBattlepassPanel()" data-i18n="menu.battlepass">🎟️ Battlepass</button>
+        <button class="game-btn menu-btn" id="menuDungeonsBtn" onclick="toggleDungeonsPanel()" data-i18n="menu.dungeons">🏰 Dungeons</button>
         <button class="game-btn menu-btn menu-quit-btn" id="menuQuitBtn" onclick="quitGameFromMainMenu()" data-i18n="menu.quit">✕ Zavřít hru</button>
       </div>
 
@@ -180,10 +181,10 @@
 
     <!-- Bezos boss milestone (score 100) -->
     <div class="win-panel milestone-panel milestone-bezos" id="bezosPanel">
-      <h2 data-milestone-title data-i18n="milestone.bezos.title">BEZOS PORAŽEN</h2>
-      <div class="win-subtitle" data-milestone-subtitle data-i18n="milestone.bezos.subtitle">Jeff právě rozbil další raketu. Pokračuj, než ti zdaní i skok.</div>
+      <h2 data-milestone-title data-i18n="milestone.bezos.title">POZVÁNKA NA MEETING</h2>
+      <div class="win-subtitle" data-milestone-subtitle data-i18n="milestone.bezos.subtitle">Dosáhl jsi skóre 100. Právě sis vysloužil pozvánku na meeting s nejvyšším bossem… Bezosem.</div>
       <div class="final-score" data-milestone-score>100</div>
-      <p class="win-quote" data-milestone-quote data-i18n="milestone.bezos.quote">Aeternum se rozpadá. Ty zatím ne.</p>
+      <p class="win-quote" data-milestone-quote data-i18n="milestone.bezos.quote">Vstupenka na boss fight uložena. Najdi ji v menu „Dungeons“.</p>
       <div class="game-buttons">
         <button class="game-btn primary" onclick="continueFromBezos()" data-i18n="milestone.continue">▶ Pokračovat</button>
       </div>
@@ -198,6 +199,49 @@
       <div class="game-buttons">
         <button class="game-btn primary" onclick="continueFromFinal()" data-i18n="milestone.keepPlaying">▶ Hrát dál</button>
         <button class="game-btn" onclick="returnToMainMenu()" data-i18n="milestone.end">✕ Konec</button>
+      </div>
+    </div>
+
+    <!-- Dungeons panel -->
+    <div class="shop-panel" id="dungeonsPanel">
+      <div class="panel-header">
+        <h2 data-i18n="dungeons.title">🏰 Dungeons</h2>
+        <button class="game-btn panel-close-btn" onclick="toggleDungeonsPanel(false)">×</button>
+      </div>
+      <div class="shop-subtitle" data-i18n="dungeons.subtitle">Speciální levely odemčené za milníky v hlavní hře.</div>
+
+      <div class="shop-item" id="dungeonBezosCard">
+        <div class="shop-item-title" data-i18n="dungeons.bezos.name">👔 Boss fight: Bezos</div>
+        <div class="shop-item-desc" data-i18n="dungeons.bezos.desc">Meeting s nejvyšším bossem. Hráč má 25 HP a raketomet s 5 náboji. Bezos má 100 HP a střílí projektily.</div>
+        <div class="shop-item-desc" id="dungeonBezosHint" data-i18n="dungeons.bezos.lockedHint">🔒 Zamčeno — dosáhni skóre 100 a získej pozvánku na meeting s Bezosem.</div>
+        <div class="shop-item-bottom">
+          <span class="shop-level" id="dungeonBezosStatus">🔒</span>
+          <button class="game-btn shop-buy-btn" id="dungeonBezosStartBtn" onclick="startBezosBossFight()" disabled data-i18n="dungeons.bezos.start">▶ Start</button>
+        </div>
+      </div>
+
+      <div class="game-buttons" style="margin-top:0.6rem;">
+        <button class="game-btn" onclick="toggleDungeonsPanel(false)" data-i18n="dungeons.close">✕ Zavřít</button>
+      </div>
+    </div>
+
+    <!-- Boss fight: win panel -->
+    <div class="win-panel" id="bossWinPanel">
+      <h2 data-i18n="bossFight.winTitle">MEETING PŘEŽIT</h2>
+      <div class="win-subtitle" data-i18n="bossFight.winSubtitle">Bezos zavřel laptop. Ty jsi přežil. Někde plačou KPI.</div>
+      <div class="game-buttons">
+        <button class="game-btn primary" onclick="startBezosBossFight()" data-i18n="bossFight.retry">↻ Zkusit znovu</button>
+        <button class="game-btn" onclick="exitBossFightToMenu()" data-i18n="bossFight.toMenu">✕ Zpět do menu</button>
+      </div>
+    </div>
+
+    <!-- Boss fight: loss panel -->
+    <div class="game-over-panel" id="bossLossPanel">
+      <h2 data-i18n="bossFight.lossTitle">MEETING SKONČIL</h2>
+      <p class="death-quote" data-i18n="bossFight.lossSubtitle">Bezos tě odeslal zpátky do fronty. Zkus to znovu.</p>
+      <div class="game-buttons">
+        <button class="game-btn primary" onclick="startBezosBossFight()" data-i18n="bossFight.retry">↻ Zkusit znovu</button>
+        <button class="game-btn" onclick="exitBossFightToMenu()" data-i18n="bossFight.toMenu">✕ Zpět do menu</button>
       </div>
     </div>
 

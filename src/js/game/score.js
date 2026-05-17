@@ -57,6 +57,7 @@ function addScore(amount) {
   }
   if (score >= BEZOS_MILESTONE_SCORE) {
     unlockAchievement('hero_of_new_world');
+    if (typeof unlockBezosBossTicket === 'function') unlockBezosBossTicket();
   }
 
   // Score 500: final milestone — pauza + modal.

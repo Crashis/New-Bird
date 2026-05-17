@@ -3,7 +3,8 @@ const ALL_PANEL_IDS = [
   'settingsPanel', 'shellGamePanel', 'heirloomPanel',
   'tavernaPanel', 'threeChestsPanel', 'dragonDicePanel',
   'drunkArcherPanel', 'battlepassPanel', 'upgradesPanel',
-  'pirateMapPanel', 'dragonEggPanel', 'blacksmithPanel', 'wheelOfFortunePanel'
+  'pirateMapPanel', 'dragonEggPanel', 'blacksmithPanel', 'wheelOfFortunePanel',
+  'dungeonsPanel'
 ];
 
 function toggleUpgradesPanel(forceOpen) {
@@ -284,6 +285,34 @@ function toggleBlacksmithPanel(forceOpen) {
 }
 
 // ── Kolo štěstí ──────────────────────────────────────────
+
+// ── Dungeons ─────────────────────────────────────────────
+
+function renderDungeonsPanel() {
+  const unlocked = (typeof isBezosBossTicketUnlocked === 'function') && isBezosBossTicketUnlocked();
+  const startBtn = document.getElementById('dungeonBezosStartBtn');
+  const statusEl = document.getElementById('dungeonBezosStatus');
+  const hintEl = document.getElementById('dungeonBezosHint');
+  if (startBtn) startBtn.disabled = !unlocked;
+  if (statusEl) statusEl.textContent = unlocked ? '🎫' : '🔒';
+  if (hintEl) {
+    hintEl.textContent = t(unlocked ? 'dungeons.bezos.unlockedHint' : 'dungeons.bezos.lockedHint');
+  }
+}
+
+function toggleDungeonsPanel(forceOpen) {
+  const panel = document.getElementById('dungeonsPanel');
+  if (!panel) return;
+  const open = typeof forceOpen === 'boolean' ? forceOpen : !panel.classList.contains('active');
+  if (open && gameState === 'playing') {
+    activeVoiceLine = t('panel.settingsBlocked');
+    activeVoiceLineUntil = performance.now() + 2800;
+    return;
+  }
+  closeOtherPanels('dungeonsPanel');
+  panel.classList.toggle('active', open);
+  if (open) renderDungeonsPanel();
+}
 
 function toggleWheelOfFortunePanel(forceOpen) {
   const panel = document.getElementById('wheelOfFortunePanel');

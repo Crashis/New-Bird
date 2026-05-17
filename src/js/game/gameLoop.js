@@ -190,14 +190,11 @@ function winGame() {
   applyModalButtonCooldown(winPanel, 320);
 }
 
-function continueGame() {
-  // Resume in endless mode: bigger gaps, slower ramp-up
-  gameState = 'playing';
-  endlessMode = true;
-  document.body.classList.remove('modal-open');
-  // Reset difficulty so we have a "rest" — gaps will be big again
-  difficultyLevel = 0;
-  // Clear pipes so the next one spawns fresh after a break
+// Společná logika pro bezpečnou mezeru po dialogu — čistí sloupy, resetuje
+// frame countdown a chvilkové efekty, takže hráč má prostor zorientovat se,
+// než přijde další sloup. Používá se po skóre 20 (continueGame) i po skóre
+// 100 (continueFromBezos) — stejný UX po obou milníkech.
+function applyMilestoneSafeGap() {
   pipes = [];
   frameCount = 0;
   framesUntilNextPipe = 95;
@@ -209,9 +206,18 @@ function continueGame() {
   amazonNerfSpeedMult = 1.0;
   activeVoiceLine = null;
   activeVoiceLineUntil = 0;
+  if (player) player.vy = 0;
+}
+
+function continueGame() {
+  // Resume in endless mode: bigger gaps, slower ramp-up
+  gameState = 'playing';
+  endlessMode = true;
+  document.body.classList.remove('modal-open');
+  // Reset difficulty so we have a "rest" — gaps will be big again
+  difficultyLevel = 0;
+  applyMilestoneSafeGap();
   setNextVoiceLineScore();
-  // Re-center player & zero velocity for a clean restart
-  player.vy = 0;
   document.getElementById('winPanel').classList.remove('active');
   // Event fáze: hráč právě překročil 20 a pokračuje → aktivovat.
   activateEventPhase();
@@ -428,6 +434,16 @@ function draw() {
 }
 
 function loop() {
+  if (typeof isBossFightActive === 'function' && isBossFightActive()) {
+    if (gameState === 'playing' && typeof updateBossFight === 'function') {
+      updateBossFight();
+    }
+    if (typeof drawBossFight === 'function') drawBossFight();
+    if (gameState === 'playing') {
+      animationId = requestAnimationFrame(loop);
+    }
+    return;
+  }
   if (gameState === 'playing') {
     update();
   }
@@ -439,6 +455,13 @@ function loop() {
 
 function openGame() {
   clearStartCountdownTimeout();
+  // Po jakémkoli návratu do menu (např. z boss fightu) vždy předpokládáme
+  // normální režim — boss fight se nikdy nesmí přelít do normální hry.
+  currentGameMode = 'normal';
+  ['bossWinPanel', 'bossLossPanel'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('active');
+  });
   isStartingCountdown = false;
   const startBtn = document.getElementById('startBtn');
   if (startBtn) startBtn.disabled = false;
@@ -526,16 +549,22 @@ function applyModalButtonCooldown(panel, ms) {
   setTimeout(() => { btns.forEach(b => { b.disabled = false; }); }, ms);
 }
 
-function resumeFromMilestone(panelId, onResume) {
+function resumeFromMilestone(panelId, onResume, opts) {
   const panel = document.getElementById(panelId);
   if (panel) panel.classList.remove('active');
   document.body.classList.remove('modal-open');
   if (typeof onResume === 'function') onResume();
   gameState = 'playing';
-  // Drobné očištění frame countdownu, ať další sloup nepřijde okamžitě po pauze.
-  framesUntilNextPipe = Math.max(framesUntilNextPipe, 60);
-  activeVoiceLine = null;
-  activeVoiceLineUntil = 0;
+  if (opts && opts.safeGap) {
+    // Stejná bezpečná mezera jako po skóre 20, aby hráč po dialogu nenarazil
+    // do sloupu, který byl při pauze už blízko hráče.
+    applyMilestoneSafeGap();
+  } else {
+    // Drobné očištění frame countdownu, ať další sloup nepřijde okamžitě po pauze.
+    framesUntilNextPipe = Math.max(framesUntilNextPipe, 60);
+    activeVoiceLine = null;
+    activeVoiceLineUntil = 0;
+  }
   startGameMusic();
   if (animationId) cancelAnimationFrame(animationId);
   loop();
@@ -550,7 +579,7 @@ function triggerBezosMilestone() {
 function continueFromBezos() {
   resumeFromMilestone('bezosPanel', () => {
     activateVoidPhase();
-  });
+  }, { safeGap: true });
 }
 
 function triggerFinalMilestone() {
@@ -567,7 +596,7 @@ function continueFromFinal() {
 // při kterém nesmí hra reagovat na klik/tap/space pro skok.
 function isBlockingModalOpen() {
   if (document.body.classList.contains('modal-open')) return true;
-  const ids = ['gameOverPanel', 'winPanel', 'bezosPanel', 'finalPanel'];
+  const ids = ['gameOverPanel', 'winPanel', 'bezosPanel', 'finalPanel', 'bossWinPanel', 'bossLossPanel'];
   for (const id of ids) {
     const el = document.getElementById(id);
     if (el && el.classList.contains('active')) return true;
@@ -577,6 +606,11 @@ function isBlockingModalOpen() {
 
 function closeGame() {
   clearStartCountdownTimeout();
+  currentGameMode = 'normal';
+  ['bossWinPanel', 'bossLossPanel'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('active');
+  });
   stopGameMusic();
   if ('speechSynthesis' in window) {
     try { window.speechSynthesis.cancel(); } catch (e) {}

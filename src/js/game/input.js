@@ -39,6 +39,11 @@ function handleRocketFire(e) {
   e.stopPropagation();
   if (gameState !== 'playing') return;
   if (typeof isBlockingModalOpen === 'function' && isBlockingModalOpen()) return;
+  // Boss fight: vlastní raketomet, oddělený od normálního heirloomu.
+  if (typeof isBossFightActive === 'function' && isBossFightActive()) {
+    if (typeof fireBossRocket === 'function') fireBossRocket();
+    return;
+  }
   if (typeof isRocketLauncherEquipped === 'function' && !isRocketLauncherEquipped()) return;
   if (typeof fireRocket === 'function') fireRocket();
 }

@@ -1,5 +1,6 @@
 // Game state
 let gameState = 'idle'; // 'idle', 'playing', 'over'
+let currentGameMode = 'normal'; // 'normal' | 'bezosBoss'
 let player = { x: 160, y: 390, vy: 0, r: 38, rotation: 0 };
 let pipes = [];
 let particles = [];
@@ -79,6 +80,20 @@ const MUSIC_VOLUME_KEY = 'nw_flappy_settings_music_volume';
 const DRAGON_COINS_KEY = 'nw_flappy_dragon_coins';
 const ERR_CUBES_KEY = 'nw_flappy_err_cubes';
 const HEIRLOOM_ROCKET_PURCHASED_KEY = 'heirloomRocketPurchased';
+const BEZOS_BOSS_TICKET_KEY = 'bezosBossTicketUnlocked';
+
+let bezosBossTicketUnlocked = false;
+try {
+  bezosBossTicketUnlocked = localStorage.getItem(BEZOS_BOSS_TICKET_KEY) === '1';
+} catch (e) {}
+
+function isBezosBossTicketUnlocked() { return bezosBossTicketUnlocked === true; }
+
+function unlockBezosBossTicket() {
+  if (bezosBossTicketUnlocked) return;
+  bezosBossTicketUnlocked = true;
+  try { localStorage.setItem(BEZOS_BOSS_TICKET_KEY, '1'); } catch (e) {}
+}
 
 // Load best score from localStorage
 try {
