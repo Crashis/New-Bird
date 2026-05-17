@@ -110,7 +110,11 @@ function showVoiceLine() {
   const enPool = eventPhaseActive
     ? (window.NWI18n && window.NWI18n.getEventVoiceLines())
     : (window.NWI18n && window.NWI18n.getVoiceLines());
-  const pool = enPool || csPool;
+  let pool = enPool || csPool;
+  if (typeof isConcertTicketPurchased === 'function' && isConcertTicketPurchased() && !eventPhaseActive) {
+    const concertLine = (typeof getConcertVoiceLine === 'function') ? getConcertVoiceLine() : 'Koncert Petra Spálenýho';
+    pool = pool.concat([concertLine]);
+  }
   const line = pool[Math.floor(Math.random() * pool.length)];
   activeVoiceLine = line;
   activeVoiceLineUntil = performance.now() + 4200;

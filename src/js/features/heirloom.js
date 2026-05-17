@@ -20,6 +20,13 @@ const HEIRLOOM_GODIAS_COST_YANGS = 10000;
 const HEIRLOOM_GODIAS_COST_WALLETS = 100;
 const HEIRLOOM_GODIAS_COST_DRAGON_COINS = 100;
 
+const HEIRLOOM_CONCERT_PURCHASED_KEY = 'heirloomConcertPurchased';
+const HEIRLOOM_CONCERT_COST_YANGS = 666;
+
+const HEIRLOOM_PAYSAFE_PURCHASED_KEY = 'heirloomPaysafePurchased';
+const HEIRLOOM_PAYSAFE_COST_YANGS = 1111;
+const HEIRLOOM_PAYSAFE_BONUS_YANGS = 1333;
+
 const MAX_EQUIPPED_HEIRLOOMS = 2;
 
 let heirloomRocketPurchased = false;
@@ -31,6 +38,9 @@ let potionReviveChance = 0.50;
 
 let heirloomGodiasPurchased = false;
 let heirloomGodiasEquipped = false;
+
+let heirloomConcertPurchased = false;
+let heirloomPaysafePurchased = false;
 
 function loadBool(key, fallback) {
   try {
@@ -63,6 +73,74 @@ function loadHeirloomState() {
     heirloomGodiasEquipped = false;
     try { localStorage.setItem(HEIRLOOM_GODIAS_EQUIPPED_KEY, '0'); } catch (e) {}
   }
+
+  heirloomConcertPurchased = loadBool(HEIRLOOM_CONCERT_PURCHASED_KEY, false);
+  heirloomPaysafePurchased = loadBool(HEIRLOOM_PAYSAFE_PURCHASED_KEY, false);
+}
+
+// ===== Concert Ticket (Petr Spálený) — passive: unlocks voice line =====
+function isConcertTicketPurchased() { return heirloomConcertPurchased === true; }
+
+function getConcertVoiceLine() {
+  return (typeof t === 'function') ? t('heirloom.concert.line') : 'Koncert Petra Spálenýho';
+}
+
+function canAffordHeirloomConcert() {
+  return getCurrentYangs() >= HEIRLOOM_CONCERT_COST_YANGS;
+}
+
+function showHeirloomConcertMessage(message) {
+  const el = document.getElementById('heirloomConcertMessage');
+  if (el) el.textContent = message || '';
+}
+
+function purchaseHeirloomConcert() {
+  if (heirloomConcertPurchased) return;
+  if (!canAffordHeirloomConcert()) {
+    showHeirloomConcertMessage(t('heirloom.concert.notEnough'));
+    return;
+  }
+  yang -= HEIRLOOM_CONCERT_COST_YANGS;
+  if (typeof saveEconomy === 'function') saveEconomy();
+  heirloomConcertPurchased = true;
+  try { localStorage.setItem(HEIRLOOM_CONCERT_PURCHASED_KEY, '1'); } catch (e) {}
+  if (typeof showUnlockToast === 'function') {
+    showUnlockToast(t('heirloom.concert.unlocked'), t('heirloom.concert.description'), 'upgrade');
+  }
+  showHeirloomConcertMessage(t('heirloom.concert.unlocked'));
+  renderHeirloomPanel();
+  if (typeof updateEconomyUi === 'function') updateEconomyUi();
+}
+
+// ===== Mareš's Paysafe Card — one-time yang bonus on purchase =====
+function isPaysafePurchased() { return heirloomPaysafePurchased === true; }
+
+function canAffordHeirloomPaysafe() {
+  return getCurrentYangs() >= HEIRLOOM_PAYSAFE_COST_YANGS;
+}
+
+function showHeirloomPaysafeMessage(message) {
+  const el = document.getElementById('heirloomPaysafeMessage');
+  if (el) el.textContent = message || '';
+}
+
+function purchaseHeirloomPaysafe() {
+  if (heirloomPaysafePurchased) return;
+  if (!canAffordHeirloomPaysafe()) {
+    showHeirloomPaysafeMessage(t('heirloom.paysafe.notEnough'));
+    return;
+  }
+  yang -= HEIRLOOM_PAYSAFE_COST_YANGS;
+  yang += HEIRLOOM_PAYSAFE_BONUS_YANGS;
+  heirloomPaysafePurchased = true;
+  try { localStorage.setItem(HEIRLOOM_PAYSAFE_PURCHASED_KEY, '1'); } catch (e) {}
+  if (typeof saveEconomy === 'function') saveEconomy();
+  if (typeof showUnlockToast === 'function') {
+    showUnlockToast(t('heirloom.paysafe.unlocked'), t('heirloom.paysafe.description'), 'upgrade');
+  }
+  showHeirloomPaysafeMessage(t('heirloom.paysafe.unlocked'));
+  renderHeirloomPanel();
+  if (typeof updateEconomyUi === 'function') updateEconomyUi();
 }
 
 // ===== Rocket Launcher =====
@@ -573,6 +651,48 @@ function renderHeirloomPanel() {
       potionBtnEl.onclick = toggleHeirloomPotionEquipped;
       potionBtnEl.disabled = false;
       potionBtnEl.classList.remove('disabled');
+    }
+  }
+
+  // ── Vstupenka na koncert ──
+  const concertStatusEl = document.getElementById('heirloomConcertStatus');
+  const concertBtnEl = document.getElementById('toggleHeirloomConcertBtn');
+  if (!isConcertTicketPurchased()) {
+    if (concertStatusEl) concertStatusEl.textContent = t('heirloom.concert.locked');
+    if (concertBtnEl) {
+      concertBtnEl.textContent = t('heirloom.concert.unlock');
+      concertBtnEl.onclick = purchaseHeirloomConcert;
+      concertBtnEl.disabled = false;
+      concertBtnEl.classList.toggle('disabled', !canAffordHeirloomConcert());
+    }
+  } else {
+    if (concertStatusEl) concertStatusEl.textContent = t('heirloom.concert.purchased');
+    if (concertBtnEl) {
+      concertBtnEl.textContent = t('heirloom.concert.purchased');
+      concertBtnEl.onclick = null;
+      concertBtnEl.disabled = true;
+      concertBtnEl.classList.add('disabled');
+    }
+  }
+
+  // ── Mareše Paysafekarta ──
+  const paysafeStatusEl = document.getElementById('heirloomPaysafeStatus');
+  const paysafeBtnEl = document.getElementById('toggleHeirloomPaysafeBtn');
+  if (!isPaysafePurchased()) {
+    if (paysafeStatusEl) paysafeStatusEl.textContent = t('heirloom.paysafe.locked');
+    if (paysafeBtnEl) {
+      paysafeBtnEl.textContent = t('heirloom.paysafe.unlock');
+      paysafeBtnEl.onclick = purchaseHeirloomPaysafe;
+      paysafeBtnEl.disabled = false;
+      paysafeBtnEl.classList.toggle('disabled', !canAffordHeirloomPaysafe());
+    }
+  } else {
+    if (paysafeStatusEl) paysafeStatusEl.textContent = t('heirloom.paysafe.purchased');
+    if (paysafeBtnEl) {
+      paysafeBtnEl.textContent = t('heirloom.paysafe.purchased');
+      paysafeBtnEl.onclick = null;
+      paysafeBtnEl.disabled = true;
+      paysafeBtnEl.classList.add('disabled');
     }
   }
 
