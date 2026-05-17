@@ -148,6 +148,19 @@
         <button class="game-btn primary" onclick="startGame()" data-i18n="gameover.again">⚔️ Znovu</button>
         <button class="game-btn" onclick="returnToMainMenu()" data-i18n="gameover.end">✕ Konec</button>
       </div>
+
+      <!-- Share section -->
+      <div class="share-section" id="shareSection">
+        <div class="share-title">Sdílej svůj výsledek</div>
+        <div class="share-subtitle">Pochlub se skóre kamarádům.</div>
+        <div class="share-buttons">
+          <button class="game-btn share-btn" id="shareNativeBtn" onclick="shareResult()">📤 Sdílet výsledek</button>
+          <button class="game-btn share-btn" id="shareCopyBtn" onclick="copyShareResult()">📋 Kopírovat výsledek</button>
+          <button class="game-btn share-btn" id="shareFbBtn" onclick="shareResultFacebook()">📘 Facebook</button>
+          <button class="game-btn share-btn" id="shareMsgBtn" onclick="shareResultMessenger()">💬 Messenger</button>
+        </div>
+        <div class="share-status" id="shareStatus" aria-live="polite"></div>
+      </div>
     </div>
 
     <!-- Win panel -->

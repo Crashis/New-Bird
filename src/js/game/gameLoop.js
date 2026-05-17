@@ -53,6 +53,7 @@ function startGame() {
   if (overlayEl) overlayEl.classList.remove('menu-open');
   document.getElementById('startPanel').classList.add('hidden');
   document.getElementById('gameOverPanel').classList.remove('active');
+  if (typeof hideShareSection === 'function') hideShareSection();
   document.getElementById('winPanel').classList.remove('active');
   const bezosPanel = document.getElementById('bezosPanel');
   if (bezosPanel) bezosPanel.classList.remove('active');
@@ -90,6 +91,7 @@ function endGame() {
   gameOverPanel.classList.add('active');
   document.body.classList.add('modal-open');
   applyModalButtonCooldown(gameOverPanel, 320);
+  if (typeof showShareSection === 'function') showShareSection();
 }
 
 function winGame() {
@@ -379,6 +381,7 @@ function openGame() {
   closeAllPanels();
   document.getElementById('startPanel').classList.remove('hidden');
   document.getElementById('gameOverPanel').classList.remove('active');
+  if (typeof hideShareSection === 'function') hideShareSection();
   document.getElementById('winPanel').classList.remove('active');
   const bezosPanel = document.getElementById('bezosPanel');
   if (bezosPanel) bezosPanel.classList.remove('active');

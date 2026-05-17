@@ -21,6 +21,7 @@ const scriptChunks = [
   "./src/js/features/shellGame.js",
   "./src/js/features/threeChests.js",
   "./src/js/features/dragonDice.js",
+  "./src/js/features/share.js",
   "./src/js/game/eventPhase.js",
   "./src/js/game/score.js",
   "./src/js/game/obstacles.js",

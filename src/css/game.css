@@ -309,6 +309,71 @@
 
   .game-over-panel .new-record.show { display: block; }
 
+  /* Share section on game over panel */
+  .share-section {
+    margin-top: 1rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid rgba(201,168,76,0.25);
+    display: none;
+  }
+
+  .share-section.show { display: block; }
+
+  .share-section .share-title {
+    font-family: 'Cinzel Decorative', serif;
+    color: var(--gold);
+    font-size: 0.95rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 0.25rem;
+    text-shadow: 0 0 12px rgba(201,168,76,0.4);
+  }
+
+  .share-section .share-subtitle {
+    font-family: 'Cinzel', serif;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    margin-bottom: 0.6rem;
+  }
+
+  .share-section .share-buttons {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .share-section .share-btn {
+    padding: 0.55rem 1rem;
+    font-size: 0.7rem;
+  }
+
+  .share-section .share-status {
+    min-height: 1.1em;
+    margin-top: 0.55rem;
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    color: var(--gold-light);
+    letter-spacing: 0.08em;
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+
+  .share-section .share-status.show { opacity: 1; }
+
+  @media (max-width: 520px) {
+    .share-section .share-buttons {
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .share-section .share-btn {
+      width: 100%;
+      max-width: 280px;
+      margin: 0 auto;
+    }
+  }
+
   .game-canvas-wrap {
     position: relative;
     display: flex;
