@@ -134,6 +134,7 @@
         <button class="game-btn menu-btn" id="menuUpgradesBtn" onclick="toggleUpgradesPanel()" data-i18n="menu.upgrades">⚡ Upgrady</button>
         <button class="game-btn menu-btn" id="menuBattlepassBtn" onclick="toggleBattlepassPanel()" data-i18n="menu.battlepass">🎟️ Battlepass</button>
         <button class="game-btn menu-btn" id="menuDungeonsBtn" onclick="toggleDungeonsPanel()" data-i18n="menu.dungeons">🏰 Dungeons</button>
+        <button class="game-btn menu-btn" id="menuCreditsBtn" onclick="toggleCreditsPanel()" data-i18n="menu.credits">📜 Credits</button>
         <button class="game-btn menu-btn menu-quit-btn" id="menuQuitBtn" onclick="quitGameFromMainMenu()" data-i18n="menu.quit">✕ Zavřít hru</button>
       </div>
 
@@ -225,10 +226,35 @@
       </div>
     </div>
 
+    <!-- Credits panel -->
+    <div class="shop-panel" id="creditsPanel" style="text-align:center;">
+      <div class="panel-header">
+        <h2 data-i18n="credits.title">📜 Credits</h2>
+        <button class="game-btn panel-close-btn" onclick="toggleCreditsPanel(false)">×</button>
+      </div>
+      <div class="shop-subtitle" data-i18n="credits.subtitle">Tato hra by neexistovala bez jednoho jediného člověka. Hádej kterého.</div>
+      <div class="shop-item">
+        <div class="shop-item-desc" data-i18n="credits.creator">🎬 Tvůrce: Crashis</div>
+        <div class="shop-item-desc" data-i18n="credits.director">🎥 Direktor: Crashis</div>
+        <div class="shop-item-desc" data-i18n="credits.music">🎵 Hudba: Crashis (hummed it himself)</div>
+        <div class="shop-item-desc" data-i18n="credits.balance">⚖ Balanc hry: Crashis (sorry)</div>
+        <div class="shop-item-desc" data-i18n="credits.design">🎨 Game design: Crashis</div>
+        <div class="shop-item-desc" data-i18n="credits.bugs">🐛 Bugy: samozřejmě taky Crashis</div>
+        <div class="shop-item-desc" data-i18n="credits.qa">🔍 QA: Crashis (testoval to jednou)</div>
+        <div class="shop-item-desc" data-i18n="credits.support">📞 Morální podpora: nikdo</div>
+        <div class="shop-item-desc" data-i18n="credits.special">⭐ Special thanks: Crashisovi</div>
+      </div>
+      <div class="game-buttons" style="margin-top:0.6rem; justify-content:center; flex-wrap:wrap;">
+        <button class="game-btn primary" onclick="showCreditsSupport()" data-i18n="credits.support.btn">💸 Support</button>
+        <button class="game-btn" onclick="toggleCreditsPanel(false)" data-i18n="credits.close">✕ Zavřít</button>
+      </div>
+    </div>
+
     <!-- Boss fight: win panel -->
     <div class="win-panel" id="bossWinPanel">
       <h2 data-i18n="bossFight.winTitle">MEETING PŘEŽIT</h2>
       <div class="win-subtitle" data-i18n="bossFight.winSubtitle">Bezos zavřel laptop. Ty jsi přežil. Někde plačou KPI.</div>
+      <p class="win-quote" id="bossWinRewardText"></p>
       <div class="game-buttons">
         <button class="game-btn primary" onclick="startBezosBossFight()" data-i18n="bossFight.retry">↻ Zkusit znovu</button>
         <button class="game-btn" onclick="exitBossFightToMenu()" data-i18n="bossFight.toMenu">✕ Zpět do menu</button>

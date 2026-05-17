@@ -134,12 +134,12 @@ function applyDrunkArcherReward(kind) {
   let msg = '';
 
   if (kind === 'perfect') {
-    yangReward = randomIntInclusive(40, 50);
+    yangReward = Math.floor(randomIntInclusive(40, 50) * 0.6);
     walletBonus = Math.random() < 0.20;
     dragonCoinBonus = Math.random() < 0.10;
     msg = buildDrunkArcherRewardText(t('drunkArcher.perfect'), yangReward, walletBonus, dragonCoinBonus);
   } else if (kind === 'good') {
-    yangReward = randomIntInclusive(20, 35);
+    yangReward = Math.floor(randomIntInclusive(20, 35) * 0.6);
     walletBonus = Math.random() < 0.08;
     dragonCoinBonus = Math.random() < 0.02;
     msg = buildDrunkArcherRewardText(t('drunkArcher.nice'), yangReward, walletBonus, dragonCoinBonus);

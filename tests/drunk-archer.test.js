@@ -140,7 +140,7 @@ test('perfect shot pays yang and optional wallet and dragon coin once', () => {
   env.context.shootDrunkArcher();
   env.context.shootDrunkArcher();
 
-  assert.strictEqual(readGlobal(env.context, 'yang'), 40);
+  assert.strictEqual(readGlobal(env.context, 'yang'), 24);
   assert.strictEqual(readGlobal(env.context, 'wallets'), 1);
   assert.strictEqual(readGlobal(env.context, 'dragonCoins'), 1);
   assert.strictEqual(readGlobal(env.context, 'drunkArcherState'), 'result');

@@ -4,8 +4,30 @@ const ALL_PANEL_IDS = [
   'tavernaPanel', 'threeChestsPanel', 'dragonDicePanel',
   'drunkArcherPanel', 'battlepassPanel', 'upgradesPanel',
   'pirateMapPanel', 'dragonEggPanel', 'blacksmithPanel', 'wheelOfFortunePanel',
-  'dungeonsPanel'
+  'dungeonsPanel', 'creditsPanel'
 ];
+
+function toggleCreditsPanel(forceOpen) {
+  const panel = document.getElementById('creditsPanel');
+  if (!panel) return;
+  const open = typeof forceOpen === 'boolean' ? forceOpen : !panel.classList.contains('active');
+  if (open && gameState === 'playing') {
+    activeVoiceLine = t('panel.settingsBlocked');
+    activeVoiceLineUntil = performance.now() + 2800;
+    return;
+  }
+  closeOtherPanels('creditsPanel');
+  panel.classList.toggle('active', open);
+}
+
+function showCreditsSupport() {
+  const msg = (typeof t === 'function') ? t('credits.support.msg') : 'Haaa, tady tě nikdo nepodpoří!!!';
+  if (typeof showUnlockToast === 'function') {
+    showUnlockToast('💸 Support', msg, 'achievement');
+  } else {
+    alert(msg);
+  }
+}
 
 function toggleUpgradesPanel(forceOpen) {
   const panel = document.getElementById('upgradesPanel');

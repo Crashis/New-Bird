@@ -22,6 +22,17 @@ let bossShieldUntil = 0;
 let bossInvincibleUntil = 0;
 let bossHitFlashUntil = 0;
 let bossFrameCount = 0;
+let bossRewardClaimed = false;
+let bossVictoryAnim = null;
+
+const BOSS_SPRITE = new Image();
+let bossSpriteReady = false;
+let bossSpriteFailed = false;
+BOSS_SPRITE.onload = () => { bossSpriteReady = true; };
+BOSS_SPRITE.onerror = () => { bossSpriteFailed = true; };
+BOSS_SPRITE.src = 'assets/skins/bezos.png';
+
+const BOSS_FIGHT_HEART_INTERVAL = 2700; // ≈ 45 s — vzácný spawn životů
 
 function isBossFightActive() {
   return currentGameMode === 'bezosBoss';
@@ -41,6 +52,8 @@ function resetBossFightState() {
   bossInvincibleUntil = 0;
   bossHitFlashUntil = 0;
   bossFrameCount = 0;
+  bossRewardClaimed = false;
+  bossVictoryAnim = null;
   bossState = {
     x: canvas.width - 160,
     y: canvas.height / 2,
@@ -83,6 +96,7 @@ function exitBossFightToMenu() {
   bossPlayerRockets = [];
   bossPickups = [];
   bossState = null;
+  bossVictoryAnim = null;
   ['bossWinPanel', 'bossLossPanel'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.classList.remove('active');
@@ -91,13 +105,116 @@ function exitBossFightToMenu() {
   if (typeof openGame === 'function') openGame();
 }
 
+const BOSS_REWARD = { yang: 100, wallets: 6, dragonCoins: 5, errCubes: 2 };
+
+function claimBossVictoryReward() {
+  if (bossRewardClaimed) return;
+  bossRewardClaimed = true;
+  yang += BOSS_REWARD.yang;
+  wallets += BOSS_REWARD.wallets;
+  dragonCoins += BOSS_REWARD.dragonCoins;
+  errCubes += BOSS_REWARD.errCubes;
+  if (typeof saveEconomy === 'function') saveEconomy();
+  if (typeof saveDragonCoins === 'function') saveDragonCoins();
+  if (typeof saveErrCubes === 'function') saveErrCubes();
+  if (typeof updateEconomyUi === 'function') updateEconomyUi();
+}
+
+function startBossVictoryAnimation() {
+  const confetti = [];
+  const colors = ['#ffd700', '#ff5040', '#80d8ff', '#c890ff', '#fff2a8', '#a0ff80'];
+  for (let i = 0; i < 120; i++) {
+    confetti.push({
+      x: Math.random() * canvas.width,
+      y: -20 - Math.random() * canvas.height * 0.6,
+      vx: (Math.random() - 0.5) * 3,
+      vy: 2 + Math.random() * 4,
+      r: 4 + Math.random() * 5,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      rot: Math.random() * Math.PI * 2,
+      vr: (Math.random() - 0.5) * 0.2
+    });
+  }
+  bossVictoryAnim = {
+    startedAt: performance.now(),
+    confetti: confetti,
+    showPanelAt: performance.now() + 1800
+  };
+}
+
 function endBossFightVictory() {
-  gameState = 'over';
+  if (bossState && bossState.hp > 0) bossState.hp = 0;
   if (typeof stopGameMusic === 'function') stopGameMusic();
+  claimBossVictoryReward();
+  startBossVictoryAnimation();
+  // Hra ještě běží kvůli animaci; loop si přepne na panel přes updateBossVictoryAnim.
+}
+
+function showBossWinPanel() {
+  gameState = 'over';
   const panel = document.getElementById('bossWinPanel');
-  if (panel) panel.classList.add('active');
+  if (panel) {
+    const rewardEl = document.getElementById('bossWinRewardText');
+    if (rewardEl) {
+      rewardEl.textContent = t('bossFight.rewardText', {
+        yang: BOSS_REWARD.yang,
+        wallets: BOSS_REWARD.wallets,
+        dragonCoins: BOSS_REWARD.dragonCoins,
+        errCubes: BOSS_REWARD.errCubes
+      });
+    }
+    panel.classList.add('active');
+  }
   document.body.classList.add('modal-open');
   if (typeof applyModalButtonCooldown === 'function') applyModalButtonCooldown(panel, 320);
+}
+
+function updateBossVictoryAnim() {
+  if (!bossVictoryAnim) return;
+  const now = performance.now();
+  for (const c of bossVictoryAnim.confetti) {
+    c.x += c.vx;
+    c.y += c.vy;
+    c.vy += 0.08;
+    c.rot += c.vr;
+  }
+  if (now >= bossVictoryAnim.showPanelAt && gameState !== 'over') {
+    showBossWinPanel();
+  }
+}
+
+function drawBossVictoryAnim() {
+  if (!bossVictoryAnim) return;
+  const now = performance.now();
+  const elapsed = now - bossVictoryAnim.startedAt;
+  ctx.save();
+  // Screen shake na první 400 ms
+  if (elapsed < 400) {
+    const s = (1 - elapsed / 400) * 14;
+    ctx.translate((Math.random() - 0.5) * s, (Math.random() - 0.5) * s);
+  }
+  // Konfety
+  for (const c of bossVictoryAnim.confetti) {
+    if (c.y > canvas.height + 20) continue;
+    ctx.save();
+    ctx.translate(c.x, c.y);
+    ctx.rotate(c.rot);
+    ctx.fillStyle = c.color;
+    ctx.fillRect(-c.r / 2, -c.r / 2, c.r, c.r * 1.4);
+    ctx.restore();
+  }
+  // Blikající VICTORY text
+  const blink = Math.floor(elapsed / 220) % 2 === 0;
+  ctx.fillStyle = blink ? '#ffd700' : '#fff2a8';
+  ctx.strokeStyle = '#3a2418';
+  ctx.lineWidth = 6;
+  ctx.font = 'bold 110px "Cinzel Decorative", serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  const txt = (typeof t === 'function') ? t('bossFight.victoryFlash') : 'VICTORY!';
+  ctx.strokeText(txt, canvas.width / 2, canvas.height / 2);
+  ctx.fillText(txt, canvas.width / 2, canvas.height / 2);
+  ctx.restore();
 }
 
 function endBossFightDefeat() {
@@ -157,6 +274,10 @@ function spawnBossPickup(type) {
 
 function updateBossFight() {
   if (!bossState) return;
+  if (bossVictoryAnim) {
+    updateBossVictoryAnim();
+    return;
+  }
   bossFrameCount++;
 
   // ─── Hráč: fyzika stejná jako v normální hře ───
@@ -258,6 +379,10 @@ function updateBossFight() {
   if (bossFrameCount > 0 && bossFrameCount % BOSS_FIGHT_POWERUP_INTERVAL === 0) {
     spawnBossPickup(Math.random() < 0.6 ? 'shield' : 'invincibility');
   }
+  // Vzácný spawn životů — cca každých 45 s a ještě s 50% šancí.
+  if (bossFrameCount > 0 && bossFrameCount % BOSS_FIGHT_HEART_INTERVAL === 0) {
+    if (Math.random() < 0.5) spawnBossPickup('heart');
+  }
 
   for (const d of bossPickups) d.x -= 3;
   for (const d of bossPickups) {
@@ -268,6 +393,9 @@ function updateBossFight() {
       if (d.type === 'ammo') bossPlayerAmmo++;
       else if (d.type === 'shield') bossShieldUntil = now + 8000;
       else if (d.type === 'invincibility') bossInvincibleUntil = now + 4000;
+      else if (d.type === 'heart') {
+        if (bossPlayerHp < BOSS_FIGHT_PLAYER_MAX_HP) bossPlayerHp++;
+      }
     }
   }
   bossPickups = bossPickups.filter(d => !d.collected);
@@ -323,6 +451,7 @@ function drawBossFight() {
   }
 
   drawBossFightHud();
+  drawBossVictoryAnim();
 }
 
 function drawBoss() {
@@ -342,20 +471,28 @@ function drawBoss() {
     ctx.fill();
   }
 
-  // Tělo bosse — placeholder ve formě velkého „B“ v kruhu.
-  ctx.fillStyle = flash ? '#ffffff' : (bossPhase === 2 ? '#3a0d4a' : '#2a1f10');
-  ctx.beginPath();
-  ctx.arc(0, 0, bossState.r, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.strokeStyle = bossPhase === 2 ? '#c890ff' : '#c9a84c';
-  ctx.lineWidth = 3;
-  ctx.stroke();
-
-  ctx.fillStyle = bossPhase === 2 ? '#fff2a8' : '#f0d080';
-  ctx.font = 'bold 96px "Cinzel Decorative", serif';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText('B', 0, 4);
+  if (bossSpriteReady && !bossSpriteFailed) {
+    const size = bossState.r * 2;
+    if (flash) {
+      ctx.shadowColor = '#ffffff';
+      ctx.shadowBlur = 30;
+    }
+    ctx.drawImage(BOSS_SPRITE, -bossState.r, -bossState.r, size, size);
+  } else {
+    // Fallback — kdyby se obrázek nepodařilo načíst.
+    ctx.fillStyle = flash ? '#ffffff' : (bossPhase === 2 ? '#3a0d4a' : '#2a1f10');
+    ctx.beginPath();
+    ctx.arc(0, 0, bossState.r, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = bossPhase === 2 ? '#c890ff' : '#c9a84c';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    ctx.fillStyle = bossPhase === 2 ? '#fff2a8' : '#f0d080';
+    ctx.font = 'bold 96px "Cinzel Decorative", serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('B', 0, 4);
+  }
   ctx.restore();
 }
 
@@ -406,6 +543,7 @@ function drawBossPickups() {
     let inner = '#fff2a8', outer = '#8a6a1f', label = '🚀';
     if (d.type === 'shield') { inner = '#d0f0ff'; outer = '#205a90'; label = '🛡'; }
     else if (d.type === 'invincibility') { inner = '#fff2a8'; outer = '#8a6a1f'; label = '⚜'; }
+    else if (d.type === 'heart') { inner = '#ffd0d8'; outer = '#a01030'; label = '❤'; }
     const grad = ctx.createRadialGradient(d.x - d.r * 0.3, d.y - d.r * 0.4, 2, d.x, d.y, d.r);
     grad.addColorStop(0, inner);
     grad.addColorStop(1, outer);
