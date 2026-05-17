@@ -157,6 +157,11 @@ function endBossFightVictory() {
   if (bossState && bossState.hp > 0) bossState.hp = 0;
   if (typeof stopBossFightMusic === 'function') stopBossFightMusic();
   claimBossVictoryReward();
+  // Achievement za poražení Bezose — pouze při výhře. unlockAchievement
+  // interně kontroluje duplicitu a persistuje přes saveAchievements().
+  if (typeof unlockAchievement === 'function') {
+    unlockAchievement('meeting_survived');
+  }
   startBossVictoryAnimation();
   // Hra ještě běží kvůli animaci; loop si přepne na panel přes updateBossVictoryAnim.
 }
@@ -369,8 +374,16 @@ function updateBossFight() {
       bossHitFlashUntil = now + 220;
       if (bossPhase === 1 && bossState.hp <= BOSS_FIGHT_PHASE2_HP) {
         bossPhase = 2;
-        // Vizuální tematika fáze 2 — používáme existující VOID overlay.
-        if (typeof activateVoidPhase === 'function') activateVoidPhase();
+        // Vizuální tematika fáze 2 — fialový VOID overlay, ale s vlastním toastem
+        // pro boss fight (jinak by se ukazovalo "FÁZE 4 — VOID PROTOCOL" z normální hry).
+        const overlay = document.getElementById('gameOverlay');
+        if (overlay) {
+          overlay.classList.remove('event-phase', 'phase-corrupted', 'phase-frost');
+          overlay.classList.add('phase-void');
+        }
+        if (typeof showPhaseToast === 'function') {
+          showPhaseToast(t('bossFight.phase2Toast'));
+        }
         // Audio: +30 % hlasitost boss hudby ve 2. fázi (respektuje master/mute).
         if (typeof setBossFightMusicPhase === 'function') setBossFightMusicPhase(2);
       }

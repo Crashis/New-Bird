@@ -257,6 +257,12 @@ const ACHIEVEMENTS = [
     title: 'Velký hráč',
     description: 'Vsaď u Skořápkáře 100 nebo více yangů najednou.',
     rewardYang: ACHIEVEMENT_REWARD_YANG
+  },
+  {
+    id: 'meeting_survived',
+    title: 'Meeting přežit',
+    description: 'Přežij meeting s nejvyšším bossem v Dungeons.',
+    rewardYang: ACHIEVEMENT_REWARD_YANG
   }
 ];
 

@@ -35,6 +35,9 @@ let doubleYangUntil = 0;
 let amazonNerfUntil = 0;
 let amazonNerfSpeedMult = 1.0;
 let pipesSincePowerup = 0;
+// Počítadlo spawnů error kostek před skóre 100 v aktuálním normálním runu.
+// Resetuje se v startGameNow(). Limit (2) se neuplatňuje od score >= 100.
+let errCubesSpawnedBefore100 = 0;
 let selectedSkinId = 'godias-zubaty';
 let currentSkinIndex = 0;
 let eventPhaseActive = false;

@@ -81,6 +81,7 @@ function startGameNow() {
   endlessMode = false;
   pipesSincePowerup = 0;
   pipesSinceYang = 0;
+  errCubesSpawnedBefore100 = 0;
   invincibleUntil = 0;
   doubleYangUntil = 0;
   amazonNerfUntil = 0;
@@ -497,6 +498,7 @@ function openGame() {
   endlessMode = false;
   pipesSincePowerup = 0;
   pipesSinceYang = 0;
+  errCubesSpawnedBefore100 = 0;
   invincibleUntil = 0;
   doubleYangUntil = 0;
   amazonNerfUntil = 0;

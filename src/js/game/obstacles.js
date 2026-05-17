@@ -70,13 +70,19 @@ function spawnPipe() {
   }
 
   if (!pipe.yang && !pipe.coin && Math.random() < ERR_CUBE_CHANCE) {
-    pipe.coin = {
-      type: 'errCube',
-      x: canvas.width + PIPE_WIDTH / 2,
-      y: gapTop + gap / 2,
-      r: COIN_RADIUS,
-      collected: false
-    };
+    // Před skóre 100 povolíme max 2 spawny error kostek za run, aby nebyl
+    // early-game zaplaven. Od score >= 100 platí původní spawn logika.
+    const beforeMilestone = score < 100;
+    if (!beforeMilestone || errCubesSpawnedBefore100 < 2) {
+      pipe.coin = {
+        type: 'errCube',
+        x: canvas.width + PIPE_WIDTH / 2,
+        y: gapTop + gap / 2,
+        r: COIN_RADIUS,
+        collected: false
+      };
+      if (beforeMilestone) errCubesSpawnedBefore100++;
+    }
   }
 
   pipes.push(pipe);
@@ -84,13 +90,14 @@ function spawnPipe() {
 
 function playErrCubeVoiceLine() {
   if (!settings.voiceLines) return;
-  activeVoiceLine = ERR_CUBE_VOICE_LINE;
+  const line = (typeof t === 'function') ? t('voice.errCube') : ERR_CUBE_VOICE_LINE;
+  activeVoiceLine = line;
   activeVoiceLineUntil = performance.now() + 4200;
 
   if ('speechSynthesis' in window) {
     try {
       window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(ERR_CUBE_VOICE_LINE);
+      const utterance = new SpeechSynthesisUtterance(line);
       utterance.lang = window.NWI18n && window.NWI18n.getCurrentLanguage() === 'en' ? 'en-US' : 'cs-CZ';
       utterance.rate = 0.92;
       utterance.pitch = 0.75;

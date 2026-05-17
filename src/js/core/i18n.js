@@ -86,6 +86,8 @@ window.NWI18n = window.NWI18n || {};
       'bossFight.lossSubtitle': 'Bezos tě odeslal zpátky do fronty. Zkus to znovu.',
       'bossFight.retry': '↻ Zkusit znovu',
       'bossFight.toMenu': '✕ Zpět do menu',
+      'bossFight.phase2Toast': 'BOSS FÁZE 2',
+      'voice.errCube': 'Za šutry a kameny, bratře!',
       'heirloom.title': '🚀 Heirloom',
       'heirloom.subtitle': 'Univerzální vybavení pro všechny skiny. Stav se ukládá lokálně.',
       'heirloom.close': '✕ Zavřít',
@@ -258,6 +260,8 @@ window.NWI18n = window.NWI18n || {};
       'ach.dragon_gambler.desc': 'Hoď si poprvé Dračí kostkou.',
       'ach.big_better.title': 'Velký hráč',
       'ach.big_better.desc': 'Vsaď u Skořápkáře 100 nebo více yangů najednou.',
+      'ach.meeting_survived.title': 'Meeting přežit',
+      'ach.meeting_survived.desc': 'Přežij meeting s nejvyšším bossem v Dungeons.',
 
       // Cheat codes panel
       'cheats.title': '⌨ Cheat Codes',
@@ -721,6 +725,8 @@ window.NWI18n = window.NWI18n || {};
       'bossFight.lossSubtitle': 'Bezos sent you back to the queue. Try again.',
       'bossFight.retry': '↻ Retry',
       'bossFight.toMenu': '✕ Back to menu',
+      'bossFight.phase2Toast': 'BOSS PHASE 2',
+      'voice.errCube': 'Rock and Stones, brothers!',
       'heirloom.title': '🚀 Heirloom',
       'heirloom.subtitle': 'Universal gear for every skin. State is stored locally.',
       'heirloom.close': '✕ Close',
@@ -893,6 +899,8 @@ window.NWI18n = window.NWI18n || {};
       'ach.dragon_gambler.desc': 'Roll the Dragon Dice for the first time.',
       'ach.big_better.title': 'High Roller',
       'ach.big_better.desc': 'Bet 100 or more yangs in a single Shell Game wager.',
+      'ach.meeting_survived.title': 'Meeting Survived',
+      'ach.meeting_survived.desc': 'Survive the meeting with the top boss in Dungeons.',
 
       // Cheat codes panel
       'cheats.title': '⌨ Cheat Codes',
