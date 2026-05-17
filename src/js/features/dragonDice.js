@@ -65,19 +65,19 @@ function rollDragonDice() {
   const betInput = document.getElementById('dragonDiceBetInput');
   const raw = betInput ? betInput.value : '';
   if (!/^[1-9][0-9]*$/.test(String(raw).trim())) {
-    setDragonDiceStatus('Zadej platnou sázku (kladné celé číslo).', 'error');
+    setDragonDiceStatus('Enter a valid bet (positive integer).', 'error');
     return;
   }
   const bet = parseInt(raw, 10);
   if (bet > dragonCoins) {
-    setDragonDiceStatus('Nemáš dost dračích mincí.', 'error');
+    setDragonDiceStatus('Not enough Dragon Coins.', 'error');
     return;
   }
 
   // Validace typu sázky
   const betTypeBtn = document.querySelector('.dice-bet-type-btn.selected');
   if (!betTypeBtn) {
-    setDragonDiceStatus('Vyber typ sázky (číslo nebo sudé/liché).', 'error');
+    setDragonDiceStatus('Choose a bet type (number or even/odd).', 'error');
     return;
   }
   const betType = betTypeBtn.dataset.type;
@@ -86,14 +86,14 @@ function rollDragonDice() {
   if (betType === 'number') {
     const numBtn = document.querySelector('.dice-num-btn.selected');
     if (!numBtn) {
-      setDragonDiceStatus('Vyber číslo (1–6).', 'error');
+      setDragonDiceStatus('Choose a number (1–6).', 'error');
       return;
     }
     betValue = parseInt(numBtn.dataset.num, 10);
   } else {
     const parBtn = document.querySelector('.dice-parity-btn.selected');
     if (!parBtn) {
-      setDragonDiceStatus('Vyber sudé nebo liché.', 'error');
+      setDragonDiceStatus('Choose even or odd.', 'error');
       return;
     }
     betValue = parBtn.dataset.parity;
@@ -101,14 +101,14 @@ function rollDragonDice() {
 
   // Odečti sázku
   if (!spendDragonCoins(bet)) {
-    setDragonDiceStatus('Nemáš dost dračích mincí.', 'error');
+    setDragonDiceStatus('Not enough Dragon Coins.', 'error');
     return;
   }
 
   dragonDiceRolling = true;
   if (typeof unlockAchievement === 'function') unlockAchievement('dragon_gambler');
   setDragonDiceUiDisabled(true);
-  setDragonDiceStatus('Kostka se kutálí...', 'rolling');
+  setDragonDiceStatus('Rolling the dice...', 'rolling');
 
   const diceEl = document.getElementById('dragonDiceFace');
   if (diceEl) diceEl.classList.add('rolling');
@@ -145,18 +145,18 @@ function rollDragonDice() {
       if (won) {
         addDragonCoins(payout);
         const typeName = betType === 'number'
-          ? `číslo ${betValue}`
-          : (betValue === 'even' ? 'sudé' : 'liché');
+          ? `number ${betValue}`
+          : (betValue === 'even' ? 'even' : 'odd');
         setDragonDiceStatus(
-          `Padla ${finalNum}! Trefil jsi ${typeName} a vyhráváš ${payout} dračích mincí.`,
+          `Rolled a ${finalNum}! You hit ${typeName} and win ${payout} Dragon Coins.`,
           'win'
         );
       } else {
         const typeName = betType === 'number'
-          ? `číslo ${betValue}`
-          : (betValue === 'even' ? 'sudé' : 'liché');
+          ? `number ${betValue}`
+          : (betValue === 'even' ? 'even' : 'odd');
         setDragonDiceStatus(
-          `Padla ${finalNum}. Netrefil jsi ${typeName}. Sázka nevyšla.`,
+          `Rolled a ${finalNum}. You missed ${typeName}. Bet lost.`,
           'lose'
         );
       }
@@ -174,7 +174,7 @@ function initDragonDice() {
   }
   dragonDiceRolling = false;
   updateDragonDiceFace('🎲');
-  setDragonDiceStatus('Vyber typ sázky, zadej počet dračích mincí a hoď kostkou.', 'info');
+  setDragonDiceStatus('Choose a bet type, enter the number of Dragon Coins, and roll the dice.', 'info');
   document.querySelectorAll('.dice-bet-type-btn, .dice-num-btn, .dice-parity-btn').forEach(b => b.classList.remove('selected'));
   const numSel = document.getElementById('dragonDiceNumberSelector');
   const parSel = document.getElementById('dragonDiceParitySelector');

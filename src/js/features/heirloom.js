@@ -396,16 +396,16 @@ function tryPotionRevive() {
     if (typeof canvas !== 'undefined') player.y = canvas.height / 2;
     player.vy = 0;
     invincibleUntil = performance.now() + 2000;
-    activeVoiceLine = `🧪 Lektvar Aeternum tě oživil! Další šance: ${nextPct}%`;
+    activeVoiceLine = `🧪 The Aeternum Potion revived you! Next chance: ${nextPct}%`;
     activeVoiceLineUntil = performance.now() + 3500;
     if (typeof showUnlockToast === 'function') {
-      showUnlockToast('🧪 LEKTVAR AETERNUM', `Oživil tě! Další šance: ${nextPct}%`, 'upgrade');
+      showUnlockToast('🧪 AETERNUM POTION', `Revived you! Next chance: ${nextPct}%`, 'upgrade');
     }
     return true;
   }
   // Revive failed — show brief message before game over proceeds
   if (typeof showUnlockToast === 'function') {
-    showUnlockToast('🧪 Lektvar Aeternum', 'Selhal.', 'upgrade');
+    showUnlockToast('🧪 Aeternum Potion', 'Failed.', 'upgrade');
   }
   return false;
 }

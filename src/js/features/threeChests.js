@@ -42,11 +42,11 @@ function setThreeChestsStatus(msg, type) {
 
 function startThreeChests() {
   if (threeChestsPlayedToday()) {
-    setThreeChestsStatus('Tři truhly už jsi dnes hrál. Vrať se po půlnoci.', 'error');
+    setThreeChestsStatus('You already played Five Chests today. Come back after midnight.', 'error');
     return;
   }
   if (yang < CHEST_ENTRY_COST) {
-    setThreeChestsStatus(`Nemáš dost yangů na vstup. Potřebuješ ${CHEST_ENTRY_COST} Yangů.`, 'error');
+    setThreeChestsStatus(`Not enough Yangs to enter. You need ${CHEST_ENTRY_COST} Yangs.`, 'error');
     return;
   }
 
@@ -63,7 +63,7 @@ function startThreeChests() {
   threeChestsRewardMap = indices;
   threeChestsOpenedIndex = -1;
   threeChestsState = 'active';
-  setThreeChestsStatus('Vyber jednu truhlu!', 'info');
+  setThreeChestsStatus('Pick one chest!', 'info');
   renderThreeChestsGrid();
 }
 
@@ -85,9 +85,9 @@ function openChest(chestIndex) {
   updateEconomyUi();
   saveThreeChestsPlayed();
 
-  let msg = `Otevřel jsi truhlu a získal: ${reward.yang} Yangů`;
-  if (reward.wallets > 0)     msg += `, ${reward.wallets} peněženek`;
-  if (reward.dragonCoins > 0) msg += `, ${reward.dragonCoins} dračích mincí`;
+  let msg = `You opened a chest and got: ${reward.yang} Yangs`;
+  if (reward.wallets > 0)     msg += `, ${reward.wallets} Wallets`;
+  if (reward.dragonCoins > 0) msg += `, ${reward.dragonCoins} Dragon Coins`;
   msg += '!';
   setThreeChestsStatus(msg, 'win');
 
@@ -139,9 +139,9 @@ function initThreeChests() {
   threeChestsRewardMap = [];
 
   if (threeChestsPlayedToday()) {
-    setThreeChestsStatus('Tři truhly už jsi dnes hrál. Vrať se po půlnoci.', 'error');
+    setThreeChestsStatus('You already played Five Chests today. Come back after midnight.', 'error');
   } else {
-    setThreeChestsStatus(`Vstup stojí ${CHEST_ENTRY_COST} Yangů. Vyber jednu z pěti truhel.`, 'info');
+    setThreeChestsStatus(`Entry costs ${CHEST_ENTRY_COST} Yangs. Pick one of five chests.`, 'info');
   }
   renderThreeChestsGrid();
 }

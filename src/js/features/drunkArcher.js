@@ -99,7 +99,7 @@ function stopDrunkArcherAnimation() {
 function startDrunkArcherAttempt() {
   if (drunkArcherState === 'aiming') return;
   if (errCubes < DRUNK_ARCHER_ENTRY_COST) {
-    setDrunkArcherStatus('Nemáš žádnou Err kostku.', 'error');
+    setDrunkArcherStatus('You don\'t have any Err Cubes.', 'error');
     renderDrunkArcherPanel();
     return;
   }
@@ -114,16 +114,16 @@ function startDrunkArcherAttempt() {
   drunkArcherStartedAt = performance.now();
   drunkArcherShotResolved = false;
   drunkArcherState = 'aiming';
-  setDrunkArcherStatus('Míříš... klikni na Vystřelit ve správný moment.', 'info');
+  setDrunkArcherStatus('Aiming... click Shoot at the right moment.', 'info');
   renderDrunkArcherPanel();
   stopDrunkArcherAnimation();
   drunkArcherAnimId = requestAnimationFrame(animateDrunkArcher);
 }
 
 function buildDrunkArcherRewardText(prefix, yangReward, walletBonus, dragonCoinBonus) {
-  let msg = `${prefix} Získáváš ${yangReward} yangů.`;
-  if (walletBonus) msg += ' Navíc získáváš 1 peněženku.';
-  if (dragonCoinBonus) msg += ' Navíc získáváš 1 dračí minci.';
+  let msg = `${prefix} You gained ${yangReward} yangs.`;
+  if (walletBonus) msg += ' You also get 1 wallet.';
+  if (dragonCoinBonus) msg += ' You also get 1 dragon coin.';
   return msg;
 }
 
@@ -137,14 +137,14 @@ function applyDrunkArcherReward(kind) {
     yangReward = randomIntInclusive(40, 50);
     walletBonus = Math.random() < 0.20;
     dragonCoinBonus = Math.random() < 0.10;
-    msg = buildDrunkArcherRewardText('Perfektní trefa!', yangReward, walletBonus, dragonCoinBonus);
+    msg = buildDrunkArcherRewardText('Perfect shot!', yangReward, walletBonus, dragonCoinBonus);
   } else if (kind === 'good') {
     yangReward = randomIntInclusive(20, 35);
     walletBonus = Math.random() < 0.08;
     dragonCoinBonus = Math.random() < 0.02;
-    msg = buildDrunkArcherRewardText('Dobrá trefa!', yangReward, walletBonus, dragonCoinBonus);
+    msg = buildDrunkArcherRewardText('Nice shot!', yangReward, walletBonus, dragonCoinBonus);
   } else {
-    msg = 'Netrefil ses. Err kostka je fuč.';
+    msg = 'You missed. The Err Cube is gone.';
   }
 
   if (yangReward > 0) yang += yangReward;
@@ -187,6 +187,6 @@ function initDrunkArcher() {
   drunkArcherShotResolved = false;
   setNewDrunkArcherTarget();
   resetDrunkArcherEffects();
-  setDrunkArcherStatus('Každý pokus stojí 1 Err kostku. Tref střed terče v pohybu.', 'info');
+  setDrunkArcherStatus('Each attempt costs 1 Err Cube. Hit the center of the moving target.', 'info');
   renderDrunkArcherPanel();
 }
