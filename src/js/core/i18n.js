@@ -324,6 +324,49 @@ window.NWI18n = window.NWI18n || {};
       // Quit game
       'quit.tabClose': 'ZAVŘENÍ ZÁLOŽKY',
       'quit.tabCloseMsg': 'Prohlížeč mi to zatrhl. Zavři záložku ručně.',
+
+      // Upgrady
+      'menu.upgrades': '⚡ Upgrady',
+      'upgrades.title': '⚡ Upgrady',
+      'upgrades.subtitle': 'Permanentní vylepšení. Stav se ukládá lokálně.',
+      'upgrades.close': '✕ Zavřít',
+      'upgrades.upgrade': 'Vylepšit',
+      'upgrades.locked': 'Zamčeno',
+      'upgrades.max': 'MAX',
+      'upgrades.levelOf': 'Level {cur} / {max}',
+      'upgrades.nextLabel': 'Další:',
+      'upgrades.costLabel': 'Cena:',
+      'upgrades.requiresRocket': 'Nejdřív si kup Raketomet.',
+      'upgrades.notEnough': 'Nedostatek měn.',
+      'upgrades.requiresTag': 'Vyžaduje Raketomet',
+      'upgrades.unit.yang': 'Yangů',
+      'upgrades.unit.wallets': 'Peněženek',
+      'upgrades.unit.dc': 'Dračích mincí',
+
+      'upgrades.luck.name': '🍀 Štěstí dobrodruha',
+      'upgrades.luck.desc': 'Permanentně zvyšuje výskyt měn během hry.',
+      'upgrades.luck.effect.none': 'Žádný bonus.',
+      'upgrades.luck.effect.l1': '+5 % šance na Yang',
+      'upgrades.luck.effect.l2': '+10 % šance na Yang',
+      'upgrades.luck.effect.l3': '+10 % Yang · +5 % šance na peněženku',
+      'upgrades.luck.effect.l4': '+10 % Yang · +10 % šance na peněženku',
+      'upgrades.luck.effect.l5': '+10 % Yang · +10 % peněženka · malá šance na dračí minci',
+      'upgrades.luck.effect.l6': '+10 % Yang · +10 % peněženka · střední šance na dračí minci',
+      'upgrades.luck.effect.l7': '+10 % Yang · +10 % peněženka · velká šance na dračí minci',
+
+      'upgrades.ammo.name': '🚀 Zásobník raket',
+      'upgrades.ammo.desc': 'Každý level přidá +1 náboj raketometu na začátku runu.',
+      'upgrades.ammo.effect': 'Náboje na startu: {val}',
+
+      'upgrades.reload.name': '⚡ Rychlé přebití',
+      'upgrades.reload.desc': 'Snižuje počet bodů potřebných k obnovení rakety.',
+      'upgrades.reload.effect': 'Náboj po {val} bodech',
+
+      'upgrades.power.name': '💥 Silnější raketa',
+      'upgrades.power.desc': 'Raketa zničí první překážku a ještě jednu další za ní.',
+      'upgrades.power.effect.off': 'Ničí 1 překážku.',
+      'upgrades.power.effect.on': 'Ničí 2 překážky.',
+      'panel.upgradesBlocked': 'Upgrady jsou zamčené během hraní.',
     },
 
     en: {
@@ -651,6 +694,49 @@ window.NWI18n = window.NWI18n || {};
       // Quit game
       'quit.tabClose': 'TAB CLOSE',
       'quit.tabCloseMsg': 'Browser blocked it. Close the tab manually.',
+
+      // Upgrades
+      'menu.upgrades': '⚡ Upgrades',
+      'upgrades.title': '⚡ Upgrades',
+      'upgrades.subtitle': 'Permanent upgrades. Stored locally.',
+      'upgrades.close': '✕ Close',
+      'upgrades.upgrade': 'Upgrade',
+      'upgrades.locked': 'Locked',
+      'upgrades.max': 'MAX',
+      'upgrades.levelOf': 'Level {cur} / {max}',
+      'upgrades.nextLabel': 'Next:',
+      'upgrades.costLabel': 'Cost:',
+      'upgrades.requiresRocket': 'Buy the Rocket Launcher first.',
+      'upgrades.notEnough': 'Not enough currency.',
+      'upgrades.requiresTag': 'Requires Rocket Launcher',
+      'upgrades.unit.yang': 'Yangs',
+      'upgrades.unit.wallets': 'Wallets',
+      'upgrades.unit.dc': 'Dragon Coins',
+
+      'upgrades.luck.name': '🍀 Adventurer\'s Luck',
+      'upgrades.luck.desc': 'Permanently boosts in-run currency spawns.',
+      'upgrades.luck.effect.none': 'No bonus.',
+      'upgrades.luck.effect.l1': '+5% Yang chance',
+      'upgrades.luck.effect.l2': '+10% Yang chance',
+      'upgrades.luck.effect.l3': '+10% Yang · +5% wallet chance',
+      'upgrades.luck.effect.l4': '+10% Yang · +10% wallet chance',
+      'upgrades.luck.effect.l5': '+10% Yang · +10% wallet · small dragon coin chance',
+      'upgrades.luck.effect.l6': '+10% Yang · +10% wallet · medium dragon coin chance',
+      'upgrades.luck.effect.l7': '+10% Yang · +10% wallet · large dragon coin chance',
+
+      'upgrades.ammo.name': '🚀 Ammo Stash',
+      'upgrades.ammo.desc': 'Each level adds +1 rocket ammo at run start.',
+      'upgrades.ammo.effect': 'Starting ammo: {val}',
+
+      'upgrades.reload.name': '⚡ Fast Reload',
+      'upgrades.reload.desc': 'Reduces score required to refresh rocket ammo.',
+      'upgrades.reload.effect': 'Ammo refresh at {val} points',
+
+      'upgrades.power.name': '💥 Stronger Rocket',
+      'upgrades.power.desc': 'Rocket destroys the first obstacle and one more behind it.',
+      'upgrades.power.effect.off': 'Destroys 1 obstacle.',
+      'upgrades.power.effect.on': 'Destroys 2 obstacles.',
+      'panel.upgradesBlocked': 'Upgrades are locked during gameplay.',
     }
   };
 
@@ -927,6 +1013,7 @@ window.NWI18n = window.NWI18n || {};
     if (typeof renderAchievementsPanel === 'function') renderAchievementsPanel();
     if (typeof renderSkinsPanel === 'function')        renderSkinsPanel();
     if (typeof renderSettingsPanel === 'function')     renderSettingsPanel();
+    if (typeof renderUpgradesPanel === 'function')     renderUpgradesPanel();
   }
 
   function toggleLanguage() {

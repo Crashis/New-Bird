@@ -18,8 +18,9 @@ function spawnPipe() {
   pipesSinceYang++;
   pipesSincePowerup++;
 
+  const _luckBonus = (typeof getCurrencySpawnBonus === 'function') ? getCurrencySpawnBonus() : { yang: 0, wallet: 0, dragonCoin: 0 };
   const yangAllowed = pipesSinceYang >= YANG_MIN_PIPES &&
-    (Math.random() < YANG_CHANCE || pipesSinceYang >= YANG_FORCE_PIPES);
+    (Math.random() < (YANG_CHANCE + (_luckBonus.yang || 0)) || pipesSinceYang >= YANG_FORCE_PIPES);
 
   if (yangAllowed) {
     pipe.yang = {
@@ -43,6 +44,28 @@ function spawnPipe() {
         collected: false
       };
       pipesSincePowerup = 0;
+    }
+  }
+
+  // Currency Luck — rare extra wallet / dragon coin drop, only if pipe is empty.
+  if (!pipe.yang && !pipe.coin && (_luckBonus.wallet > 0 || _luckBonus.dragonCoin > 0)) {
+    const roll = Math.random();
+    const dcChance = _luckBonus.dragonCoin || 0;
+    const wChance = _luckBonus.wallet || 0;
+    let dropType = null;
+    if (dcChance > 0 && roll < dcChance) {
+      dropType = 'dragonCoin';
+    } else if (wChance > 0 && roll < dcChance + wChance) {
+      dropType = 'wallet';
+    }
+    if (dropType) {
+      pipe.coin = {
+        type: dropType,
+        x: canvas.width + PIPE_WIDTH / 2,
+        y: gapTop + gap / 2,
+        r: COIN_RADIUS,
+        collected: false
+      };
     }
   }
 
@@ -79,6 +102,26 @@ function applyPowerup(coin) {
       spawnPickupParticles(coin, '#fff2a8', '#f0d080', 26);
       // Goes through addScore → win / wallet / shield trigger handled uniformly.
       addScore(bonus);
+      break;
+    }
+    case 'wallet': {
+      const _godiaMult = (typeof getGodiasWalletMultiplier === 'function') ? getGodiasWalletMultiplier() : 1;
+      const earned = 1 * _godiaMult;
+      wallets += earned;
+      if (typeof saveEconomy === 'function') saveEconomy();
+      if (typeof updateEconomyUi === 'function') updateEconomyUi();
+      activeVoiceLine = `+${earned} Peněženka!`;
+      activeVoiceLineUntil = performance.now() + 2000;
+      spawnPickupParticles(coin, '#c8a0ff', '#5a3a90', 24);
+      break;
+    }
+    case 'dragonCoin': {
+      const _godiaMult = (typeof getGodiasWalletMultiplier === 'function') ? getGodiasWalletMultiplier() : 1;
+      const earned = 1 * _godiaMult;
+      if (typeof addDragonCoins === 'function') addDragonCoins(earned);
+      activeVoiceLine = `+${earned} Dračí mince!`;
+      activeVoiceLineUntil = performance.now() + 2400;
+      spawnPickupParticles(coin, '#ff8030', '#5a1f0a', 28);
       break;
     }
     case 'amazonNerf': {
@@ -149,6 +192,18 @@ const COIN_STYLES = {
     glow: 'rgba(255,140,60,0.55)', ring: '#ffd0a0',
     label: '📦', font: 'bold 17px serif', textColor: '#3a2e1a',
     pulseSpeed: 0.24, spinSpeed: 0
+  },
+  wallet: {
+    inner: '#f0d8ff', mid: '#a070d8', outer: '#3a1f5a',
+    glow: 'rgba(200,140,255,0.55)', ring: '#f0d8ff',
+    label: '👛', font: 'bold 17px serif', textColor: '#3a2e1a',
+    pulseSpeed: 0.18, spinSpeed: 0
+  },
+  dragonCoin: {
+    inner: '#ffe0a0', mid: '#ff8030', outer: '#5a1f0a',
+    glow: 'rgba(255,160,80,0.6)', ring: '#fff2c8',
+    label: '🐲', font: 'bold 17px serif', textColor: '#3a2e1a',
+    pulseSpeed: 0.22, spinSpeed: 0.02
   }
 };
 

@@ -11,6 +11,7 @@ function updateEconomyUi() {
   if (shopWallets) shopWallets.textContent = wallets;
   if (typeof renderShellGamePanel === 'function') renderShellGamePanel();
   if (typeof renderHeirloomPanel === 'function') renderHeirloomPanel();
+  if (typeof renderUpgradesPanel === 'function') renderUpgradesPanel();
 
   const tcYangs = document.getElementById('threeChestsYangs');
   const tcDC    = document.getElementById('threeChestsDragonCoins');

@@ -115,7 +115,8 @@ function showHeirloomMaxMessage() {
 
 // ===== Run-state reset =====
 function resetRocketRunState() {
-  rocketAmmo = isRocketLauncherEquipped() ? 1 : 0;
+  const startAmmo = (typeof getRocketStartingAmmo === 'function') ? getRocketStartingAmmo() : 1;
+  rocketAmmo = isRocketLauncherEquipped() ? startAmmo : 0;
   rocketAmmoRestoredAt100 = false;
   rockets = [];
   rocketExplosions = [];
@@ -125,7 +126,8 @@ function resetRocketRunState() {
 function maybeRefreshRocketAmmoAtScore() {
   if (!isRocketLauncherEquipped()) return;
   if (rocketAmmoRestoredAt100) return;
-  if (typeof score !== 'number' || score < 100) return;
+  const threshold = (typeof getRocketReloadScoreRequirement === 'function') ? getRocketReloadScoreRequirement() : 100;
+  if (typeof score !== 'number' || score < threshold) return;
   rocketAmmoRestoredAt100 = true;
   if (rocketAmmo < 1) rocketAmmo = 1;
   if (typeof showUnlockToast === 'function') {
@@ -200,7 +202,18 @@ function updateRockets() {
       }
     }
     if (r.target && r.x >= r.target.x) {
-      destroyPipeFromRocket(r.target);
+      const toDestroy = [r.target];
+      if (typeof hasStrongerRocket === 'function' && hasStrongerRocket()) {
+        let next = null;
+        for (const p of pipes) {
+          if (p === r.target || p.destroyed) continue;
+          if (p.x > r.target.x) {
+            if (!next || p.x < next.x) next = p;
+          }
+        }
+        if (next) toDestroy.push(next);
+      }
+      for (const p of toDestroy) destroyPipeFromRocket(p);
       r.active = false;
       continue;
     }
@@ -499,7 +512,7 @@ function toggleHeirloomRocketEquipped() {
     rockets = [];
     rocketAmmo = 0;
   } else if (gameState === 'playing' && rocketAmmo < 1 && !rocketAmmoRestoredAt100) {
-    rocketAmmo = 1;
+    rocketAmmo = (typeof getRocketStartingAmmo === 'function') ? getRocketStartingAmmo() : 1;
   }
   renderHeirloomPanel();
 }

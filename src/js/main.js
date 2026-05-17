@@ -17,6 +17,7 @@ const scriptChunks = [
   "./src/js/features/cheatCodes.js",
   "./src/js/features/shop.js",
   "./src/js/features/heirloom.js",
+  "./src/js/features/upgrades.js",
   "./src/js/features/shellGame.js",
   "./src/js/features/threeChests.js",
   "./src/js/features/dragonDice.js",

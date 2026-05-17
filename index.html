@@ -130,6 +130,7 @@
         <button class="game-btn menu-btn" id="menuSettingsBtn" onclick="toggleSettingsPanel()" data-i18n="menu.settings">⚙ Settings</button>
         <button class="game-btn menu-btn" id="menuCheatBtn" onclick="toggleCheatCodesPanel()" data-i18n="menu.cheats">⌨ Cheat Codes</button>
         <button class="game-btn menu-btn" id="heirloomBtn" onclick="toggleHeirloomPanel()" data-i18n="menu.heirloom">🚀 Heirloom</button>
+        <button class="game-btn menu-btn" id="menuUpgradesBtn" onclick="toggleUpgradesPanel()" data-i18n="menu.upgrades">⚡ Upgrady</button>
         <button class="game-btn menu-btn" id="menuBattlepassBtn" onclick="toggleBattlepassPanel()">🎟️ Battlepass</button>
         <button class="game-btn menu-btn menu-quit-btn" id="menuQuitBtn" onclick="quitGameFromMainMenu()" data-i18n="menu.quit">✕ Zavřít hru</button>
       </div>
@@ -416,6 +417,83 @@
       </div>
     </div>
 
+    <!-- Upgrades panel -->
+    <div class="shop-panel upgrades-panel" id="upgradesPanel">
+      <div class="panel-header">
+        <h2 data-i18n="upgrades.title">⚡ Upgrady</h2>
+        <button class="game-btn panel-close-btn" id="closeUpgradesBtn" onclick="toggleUpgradesPanel(false)">×</button>
+      </div>
+      <div class="shop-subtitle" data-i18n="upgrades.subtitle">Permanentní vylepšení. Stav se ukládá lokálně.</div>
+
+      <div class="shop-item-desc" style="margin-bottom:0.4rem;">
+        <span data-i18n="shop.yang">Yangy:</span> <strong id="upgradesYangs">0</strong>
+        &nbsp;·&nbsp;
+        <span data-i18n="hud.wallets">Peněženky:</span> <strong id="upgradesWallets">0</strong>
+        &nbsp;·&nbsp;
+        <span data-i18n="currency.dragonCoins">Dračí mince</span>: <strong id="upgradesDragonCoins">0</strong>
+      </div>
+
+      <!-- Štěstí dobrodruha -->
+      <div class="shop-item upgrade-card" id="upgradeLuckCard">
+        <div class="shop-item-title" data-i18n="upgrades.luck.name">🍀 Štěstí dobrodruha</div>
+        <div class="shop-item-desc" data-i18n="upgrades.luck.desc">Permanentně zvyšuje výskyt měn během hry.</div>
+        <div class="shop-item-desc upgrade-effect" id="upgradeLuckEffect">—</div>
+        <div class="shop-item-desc upgrade-next" id="upgradeLuckNext">—</div>
+        <div class="shop-item-desc upgrade-cost" id="upgradeLuckCost">—</div>
+        <div class="shop-item-bottom">
+          <span class="shop-level" id="upgradeLuckLevel">Level 0 / 7</span>
+          <button class="game-btn shop-buy-btn" id="upgradeLuckBtn">Vylepšit</button>
+        </div>
+      </div>
+
+      <!-- Zásobník raket -->
+      <div class="shop-item upgrade-card" id="upgradeAmmoCard">
+        <div class="shop-item-title" data-i18n="upgrades.ammo.name">🚀 Zásobník raket</div>
+        <div class="shop-item-desc" data-i18n="upgrades.ammo.desc">Každý level přidá +1 náboj raketometu na začátku runu.</div>
+        <div class="shop-item-desc upgrade-tag" data-i18n="upgrades.requiresTag">Vyžaduje Raketomet</div>
+        <div class="shop-item-desc upgrade-effect" id="upgradeAmmoEffect">—</div>
+        <div class="shop-item-desc upgrade-next" id="upgradeAmmoNext">—</div>
+        <div class="shop-item-desc upgrade-cost" id="upgradeAmmoCost">—</div>
+        <div class="shop-item-bottom">
+          <span class="shop-level" id="upgradeAmmoLevel">Level 0 / 3</span>
+          <button class="game-btn shop-buy-btn" id="upgradeAmmoBtn">Vylepšit</button>
+        </div>
+      </div>
+
+      <!-- Rychlé přebití -->
+      <div class="shop-item upgrade-card" id="upgradeReloadCard">
+        <div class="shop-item-title" data-i18n="upgrades.reload.name">⚡ Rychlé přebití</div>
+        <div class="shop-item-desc" data-i18n="upgrades.reload.desc">Snižuje počet bodů potřebných k obnovení rakety.</div>
+        <div class="shop-item-desc upgrade-tag" data-i18n="upgrades.requiresTag">Vyžaduje Raketomet</div>
+        <div class="shop-item-desc upgrade-effect" id="upgradeReloadEffect">—</div>
+        <div class="shop-item-desc upgrade-next" id="upgradeReloadNext">—</div>
+        <div class="shop-item-desc upgrade-cost" id="upgradeReloadCost">—</div>
+        <div class="shop-item-bottom">
+          <span class="shop-level" id="upgradeReloadLevel">Level 0 / 3</span>
+          <button class="game-btn shop-buy-btn" id="upgradeReloadBtn">Vylepšit</button>
+        </div>
+      </div>
+
+      <!-- Silnější raketa -->
+      <div class="shop-item upgrade-card" id="upgradePowerCard">
+        <div class="shop-item-title" data-i18n="upgrades.power.name">💥 Silnější raketa</div>
+        <div class="shop-item-desc" data-i18n="upgrades.power.desc">Raketa zničí první překážku a ještě jednu další za ní.</div>
+        <div class="shop-item-desc upgrade-tag" data-i18n="upgrades.requiresTag">Vyžaduje Raketomet</div>
+        <div class="shop-item-desc upgrade-effect" id="upgradePowerEffect">—</div>
+        <div class="shop-item-desc upgrade-next" id="upgradePowerNext">—</div>
+        <div class="shop-item-desc upgrade-cost" id="upgradePowerCost">—</div>
+        <div class="shop-item-bottom">
+          <span class="shop-level" id="upgradePowerLevel">Level 0 / 1</span>
+          <button class="game-btn shop-buy-btn" id="upgradePowerBtn">Vylepšit</button>
+        </div>
+      </div>
+
+      <div class="shop-message" id="upgradesMessage"></div>
+      <div class="game-buttons" style="margin-top:0.6rem;">
+        <button class="game-btn" onclick="toggleUpgradesPanel(false)" data-i18n="upgrades.close">✕ Zavřít</button>
+      </div>
+    </div>
+
     <!-- Shell Game panel -->
     <div class="shop-panel shell-game-panel" id="shellGamePanel" style="text-align:center;">
       <div class="panel-header">
@@ -611,6 +689,10 @@
     <div class="locked-feature">
       <button class="game-btn" onclick="toggleHeirloomPanel()" title="Heirloom" data-i18n="menu.heirloom">🚀 Heirloom</button>
       <div class="shop-wip" data-i18n="bottom.heirloomHint">Univerzální zbraň</div>
+    </div>
+    <div class="locked-feature">
+      <button class="game-btn" onclick="toggleUpgradesPanel()" title="Upgrady" data-i18n="menu.upgrades">⚡ Upgrady</button>
+      <div class="shop-wip">Permanentní vylepšení</div>
     </div>
     <div class="locked-feature">
       <button class="game-btn" onclick="toggleBattlepassPanel()" title="Battlepass">🎟️ Battlepass</button>

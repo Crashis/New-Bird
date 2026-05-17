@@ -98,3 +98,34 @@
     letter-spacing: 0.08em;
     margin: 0.35rem 0 0.7rem;
   }
+
+  .upgrade-card .upgrade-effect {
+    color: var(--gold-light);
+    font-weight: 600;
+  }
+  .upgrade-card .upgrade-next {
+    color: var(--text-muted);
+    font-style: italic;
+  }
+  .upgrade-card .upgrade-cost {
+    color: var(--gold);
+  }
+  .upgrade-card .upgrade-tag {
+    display: inline-block;
+    padding: 0.1rem 0.4rem;
+    margin: 0.15rem 0;
+    background: rgba(201,168,76,0.12);
+    border: 1px solid var(--gold-dark);
+    border-radius: 2px;
+    color: var(--gold-light);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .upgrade-card.upgrade-locked {
+    opacity: 0.55;
+    filter: grayscale(0.45);
+  }
+  .upgrade-card.upgrade-locked .shop-buy-btn {
+    cursor: not-allowed;
+  }

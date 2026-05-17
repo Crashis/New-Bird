@@ -2,8 +2,25 @@ const ALL_PANEL_IDS = [
   'shopPanel', 'skinsPanel', 'achievementsPanel', 'cheatCodesPanel',
   'settingsPanel', 'shellGamePanel', 'heirloomPanel',
   'tavernaPanel', 'threeChestsPanel', 'dragonDicePanel',
-  'battlepassPanel'
+  'battlepassPanel', 'upgradesPanel'
 ];
+
+function toggleUpgradesPanel(forceOpen) {
+  const panel = document.getElementById('upgradesPanel');
+  if (!panel) return;
+  const open = typeof forceOpen === 'boolean' ? forceOpen : !panel.classList.contains('active');
+  if (open && gameState === 'playing') {
+    activeVoiceLine = t('panel.upgradesBlocked');
+    activeVoiceLineUntil = performance.now() + 2800;
+    return;
+  }
+  closeOtherPanels('upgradesPanel');
+  panel.classList.toggle('active', open);
+  if (open) {
+    if (typeof showUpgradesMessage === 'function') showUpgradesMessage('');
+    if (typeof renderUpgradesPanel === 'function') renderUpgradesPanel();
+  }
+}
 
 function closeOtherPanels(keepId) {
   for (const id of ALL_PANEL_IDS) {
