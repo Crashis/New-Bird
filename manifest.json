@@ -1,0 +1,32 @@
+{
+  "name": "New World: Aeternum — Boj o Aeternum",
+  "short_name": "Aeternum",
+  "description": "Endless grind simulator. Farmi yangy, dokud Amazon nevypne servery.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#1a0f08",
+  "theme_color": "#1a0f08",
+  "lang": "cs",
+  "icons": [
+    {
+      "src": "./assets/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "./assets/skins/bezos.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./assets/skins/bezos.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

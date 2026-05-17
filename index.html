@@ -5,6 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>New World — Odpočítávání konce</title>
 <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#1a0f08">
+<meta name="application-name" content="New World: Aeternum">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Aeternum">
 <link rel="stylesheet" href="./src/css/base.css">
 <link rel="stylesheet" href="./src/css/layout.css">
 <link rel="stylesheet" href="./src/css/game.css">
@@ -136,6 +142,7 @@
         <span class="menu-secondary-break" aria-hidden="true"></span>
         <button class="game-btn menu-btn menu-btn-secondary" id="menuSettingsBtn" onclick="toggleSettingsPanel()" data-i18n="menu.settings">⚙ Settings</button>
         <button class="game-btn menu-btn menu-btn-secondary" id="menuCreditsBtn" onclick="toggleCreditsPanel()" data-i18n="menu.credits">📜 Credits</button>
+        <button class="game-btn menu-btn menu-btn-secondary" id="menuInstallBtn" style="display:none;">📲 Přidat na plochu</button>
         <button class="game-btn menu-btn menu-quit-btn" id="menuQuitBtn" onclick="quitGameFromMainMenu()" data-i18n="menu.quit">✕ Zavřít hru</button>
       </div>
 

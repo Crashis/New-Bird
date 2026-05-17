@@ -35,7 +35,8 @@ const scriptChunks = [
   "./src/js/game/gameLoop.js",
   "./src/js/game/bossFight.js",
   "./src/js/game/input.js",
-  "./src/js/ui/fullscreen.js"
+  "./src/js/ui/fullscreen.js",
+  "./src/js/features/pwaInstall.js"
 ];
 
 function loadClassicScript(src) {
