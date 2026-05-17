@@ -136,6 +136,9 @@ function endGame() {
   }
   document.getElementById('gameBest').textContent = bestScore;
   document.getElementById('finalScore').textContent = score;
+  if (window.NWLeaderboard && typeof window.NWLeaderboard.submitNormalGameScore === 'function') {
+    window.NWLeaderboard.submitNormalGameScore(score);
+  }
   const deathPool = (window.NWI18n && window.NWI18n.getDeathQuotes()) || DEATH_QUOTES;
   document.getElementById('deathQuote').textContent =
     deathPool[Math.floor(Math.random() * deathPool.length)];
@@ -156,6 +159,9 @@ function winGame() {
   if (score > bestScore) {
     bestScore = score;
     try { localStorage.setItem('nw_flappy_best', String(bestScore)); } catch (e) {}
+  }
+  if (window.NWLeaderboard && typeof window.NWLeaderboard.submitNormalGameScore === 'function') {
+    window.NWLeaderboard.submitNormalGameScore(score);
   }
   document.getElementById('gameBest').textContent = bestScore;
   if (!walletAwardedThisRun && score >= WIN_SCORE) {

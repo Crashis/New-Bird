@@ -12,6 +12,7 @@ const scriptChunks = [
   "./src/js/core/constants.js",
   "./src/js/features/currencies.js",
   "./src/js/features/skins.js",
+  "./src/js/features/leaderboard.js",
   "./src/js/ui/panels.js",
   "./src/js/features/settings.js",
   "./src/js/features/cheatCodes.js",
@@ -58,3 +59,12 @@ window.NWI18n?.initI18n?.();
 window.NWCheatCodes?.initCheatCodes?.();
 if (typeof initShellGameDefaults === 'function') initShellGameDefaults();
 if (typeof updateEconomyUi === 'function') updateEconomyUi();
+
+(async () => {
+  try {
+    const firebaseLeaderboard = await import("./features/firebaseLeaderboard.js");
+    await firebaseLeaderboard.initLeaderboardAuth();
+  } catch (error) {
+    console.warn('[leaderboard] Firebase module failed to load; online features disabled', error);
+  }
+})();

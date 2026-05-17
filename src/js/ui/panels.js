@@ -4,7 +4,7 @@ const ALL_PANEL_IDS = [
   'tavernaPanel', 'threeChestsPanel', 'dragonDicePanel',
   'drunkArcherPanel', 'battlepassPanel', 'upgradesPanel',
   'pirateMapPanel', 'dragonEggPanel', 'blacksmithPanel', 'wheelOfFortunePanel',
-  'dungeonsPanel', 'creditsPanel'
+  'dungeonsPanel', 'leaderboardPanel', 'creditsPanel'
 ];
 
 function toggleCreditsPanel(forceOpen) {

@@ -139,6 +139,7 @@
         <button class="game-btn menu-btn" id="menuUpgradesBtn" onclick="toggleUpgradesPanel()" data-i18n="menu.upgrades">⚡ Upgrady</button>
         <button class="game-btn menu-btn" id="menuBattlepassBtn" onclick="toggleBattlepassPanel()" data-i18n="menu.battlepass">🎟️ Battlepass</button>
         <button class="game-btn menu-btn" id="menuDungeonsBtn" onclick="toggleDungeonsPanel()" data-i18n="menu.dungeons">🏰 Dungeons</button>
+        <button class="game-btn menu-btn" id="menuLeaderboardBtn" onclick="toggleLeaderboardPanel()" data-i18n="menu.leaderboard">🏆 Leaderboard</button>
         <span class="menu-secondary-break" aria-hidden="true"></span>
         <button class="game-btn menu-btn menu-btn-secondary" id="menuSettingsBtn" onclick="toggleSettingsPanel()" data-i18n="menu.settings">⚙ Settings</button>
         <button class="game-btn menu-btn menu-btn-secondary" id="menuCreditsBtn" onclick="toggleCreditsPanel()" data-i18n="menu.credits">📜 Credits</button>
@@ -231,6 +232,20 @@
 
       <div class="game-buttons" style="margin-top:0.6rem;">
         <button class="game-btn" onclick="toggleDungeonsPanel(false)" data-i18n="dungeons.close">✕ Zavřít</button>
+      </div>
+    </div>
+
+    <!-- Leaderboard panel -->
+    <div class="shop-panel" id="leaderboardPanel">
+      <div class="panel-header">
+        <h2 data-i18n="leaderboard.title">🏆 Leaderboard</h2>
+        <button class="game-btn panel-close-btn" onclick="toggleLeaderboardPanel(false)">×</button>
+      </div>
+      <div class="shop-subtitle" data-i18n="leaderboard.subtitle">Top 10 hrdinů podle nejlepšího skóre.</div>
+      <div class="leaderboard-list" id="leaderboardBody"></div>
+      <div class="leaderboard-status" id="leaderboardStatus" aria-live="polite"></div>
+      <div class="game-buttons" style="margin-top:0.6rem; justify-content:center; flex-wrap:wrap;">
+        <button class="game-btn" onclick="toggleLeaderboardPanel(false)" data-i18n="leaderboard.close">✕ Zavřít</button>
       </div>
     </div>
 
@@ -1012,6 +1027,10 @@
     <div class="locked-feature">
       <button class="game-btn" onclick="toggleBattlepassPanel()" title="Battlepass" data-i18n="menu.battlepass">🎟️ Battlepass</button>
       <div class="shop-wip" data-i18n="bottom.battlepassHint">Sezónní odměny</div>
+    </div>
+    <div class="locked-feature">
+      <button class="game-btn" onclick="toggleLeaderboardPanel()" title="Leaderboard" data-i18n="menu.leaderboard">🏆 Leaderboard</button>
+      <div class="shop-wip" data-i18n="bottom.leaderboardHint">Online rekordy</div>
     </div>
     <button class="game-btn" onclick="closeGame()" data-i18n="bottom.close">✕ Zavřít hru</button>
   </div>

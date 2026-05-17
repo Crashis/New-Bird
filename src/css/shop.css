@@ -129,3 +129,51 @@
   .upgrade-card.upgrade-locked .shop-buy-btn {
     cursor: not-allowed;
   }
+
+  .leaderboard-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    margin: 0.8rem 0 0.7rem;
+  }
+
+  .leaderboard-row {
+    display: grid;
+    grid-template-columns: 3.4rem minmax(0, 1fr) 5.5rem;
+    align-items: center;
+    gap: 0.65rem;
+    border: 1px solid var(--dark-border);
+    border-radius: 4px;
+    background: rgba(255,255,255,0.025);
+    padding: 0.65rem 0.75rem;
+    font-family: 'Cinzel', serif;
+  }
+
+  .leaderboard-rank {
+    color: var(--gold);
+    font-weight: 700;
+  }
+
+  .leaderboard-name {
+    min-width: 0;
+    overflow: hidden;
+    color: var(--text-light);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .leaderboard-score {
+    color: var(--gold-light);
+    font-weight: 700;
+    text-align: right;
+  }
+
+  .leaderboard-status {
+    min-height: 1rem;
+    color: var(--text-muted);
+    font-family: 'Lato', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    line-height: 1.45;
+    text-align: center;
+  }

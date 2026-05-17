@@ -1,0 +1,48 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /leaderboard/{uid} {
+      allow read: if true;
+
+      allow create: if isSignedInOwner(uid)
+        && hasAllowedFields()
+        && hasValidLeaderboardData()
+        && request.resource.data.createdAt is timestamp
+        && request.resource.data.updatedAt is timestamp;
+
+      allow update: if isSignedInOwner(uid)
+        && resource.data.uid == request.auth.uid
+        && hasAllowedFields()
+        && hasValidLeaderboardData()
+        && request.resource.data.createdAt == resource.data.createdAt
+        && request.resource.data.updatedAt is timestamp
+        && request.resource.data.bestScore >= resource.data.bestScore;
+
+      allow delete: if false;
+    }
+
+    function isSignedInOwner(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+
+    function hasAllowedFields() {
+      return request.resource.data.keys().hasOnly([
+        'uid',
+        'displayName',
+        'bestScore',
+        'createdAt',
+        'updatedAt'
+      ]);
+    }
+
+    function hasValidLeaderboardData() {
+      return request.resource.data.uid == request.auth.uid
+        && request.resource.data.displayName is string
+        && request.resource.data.displayName.size() <= 20
+        && request.resource.data.bestScore is number
+        && request.resource.data.bestScore >= 0
+        && request.resource.data.bestScore <= 100000;
+    }
+  }
+}
