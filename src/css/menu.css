@@ -87,9 +87,9 @@
   }
 
   .menu-actions .menu-btn {
-    min-width: 9rem;
-    padding: 0.75rem 1.1rem;
-    font-size: 0.78rem;
+    min-width: 9.4rem;
+    padding: 0.82rem 1.15rem;
+    font-size: 0.84rem;
     letter-spacing: 0.22em;
     position: relative;
     overflow: hidden;
@@ -111,6 +111,27 @@
     color: var(--text-muted);
     font-size: 0.68rem;
     opacity: 0.78;
+  }
+
+  /* Force line break before secondary actions (Settings / Credits / Quit) */
+  .menu-actions .menu-secondary-break {
+    flex-basis: 100%;
+    height: 0;
+    margin: 0.2rem 0 0;
+    border-top: 1px solid rgba(138,106,31,0.25);
+    opacity: 0.6;
+  }
+
+  .menu-actions .menu-btn-secondary {
+    border-color: rgba(58,46,26,0.75);
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    opacity: 0.85;
+    min-width: 7.5rem;
+  }
+  .menu-actions .menu-btn-secondary:hover {
+    color: var(--gold-light);
+    opacity: 1;
   }
 
   .menu-actions .menu-btn:hover {

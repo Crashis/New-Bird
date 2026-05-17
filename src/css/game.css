@@ -68,7 +68,7 @@
   .game-header {
     color: var(--gold);
     font-family: 'Cinzel Decorative', serif;
-    font-size: 1.2rem;
+    font-size: 1.32rem;
     letter-spacing: 0.2em;
     margin-bottom: 0.8rem;
     text-shadow: 0 0 20px rgba(201,168,76,0.5);
@@ -81,13 +81,13 @@
     margin-bottom: 0.8rem;
     font-family: 'Cinzel', serif;
     color: var(--text-light);
-    font-size: 0.85rem;
+    font-size: 0.94rem;
     letter-spacing: 0.1em;
   }
 
   .game-stats span strong {
     color: var(--gold);
-    font-size: 1.3rem;
+    font-size: 1.42rem;
     margin-left: 0.4rem;
   }
 
@@ -117,7 +117,7 @@
 
   .rotate-hint {
     display: none;
-    width: min(1200px, calc(100vw - 1.5rem));
+    width: min(1400px, calc(100vw - 1.5rem));
     margin: -0.2rem auto 0.55rem;
     color: var(--gold-light);
     font-family: 'Lato', sans-serif;
@@ -151,7 +151,7 @@
     border: 1px solid var(--dark-border);
     color: var(--text-muted);
     font-family: 'Cinzel', serif;
-    font-size: 0.75rem;
+    font-size: 0.82rem;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     padding: 0.7rem 1.5rem;
@@ -395,7 +395,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: min(1200px, calc(100vw - 1.5rem));
+    width: min(1400px, calc(100vw - 1.5rem));
     max-width: 100%;
     touch-action: manipulation;
   }
@@ -500,8 +500,8 @@
 
   #gameCanvas {
     width: 100%;
-    max-width: min(100vw - 1.5rem, 1200px);
-    max-height: calc(100vh - 240px);
+    max-width: min(100vw - 1.5rem, 1400px);
+    max-height: calc(100vh - 220px);
   }
   .game-overlay:fullscreen { padding: 0.4rem; }
   .game-overlay:-webkit-full-screen { padding: 0.4rem; }

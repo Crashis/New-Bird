@@ -16,25 +16,25 @@ const UPGRADE_DEFS = {
   rocketExtraAmmo: {
     max: 3,
     costs: [
-      { yang: 200, dragonCoins: 2 },
-      { yang: 400, dragonCoins: 4 },
-      { yang: 600, dragonCoins: 6 }
+      { yang: 300, dragonCoins: 3 },
+      { yang: 600, dragonCoins: 6 },
+      { yang: 900, dragonCoins: 9 }
     ],
     requiresRocket: true
   },
   rocketReloadSpeed: {
     max: 3,
     costs: [
-      { wallets: 6 },
-      { wallets: 12 },
-      { wallets: 18 }
+      { wallets: 9 },
+      { wallets: 18 },
+      { wallets: 27 }
     ],
     requiresRocket: true
   },
   rocketPower: {
     max: 1,
     costs: [
-      { dragonCoins: 10 }
+      { dragonCoins: 15 }
     ],
     requiresRocket: true
   }
