@@ -147,7 +147,7 @@ const SKINS = [
     id: PULPRDELAC_SKIN_ID,
     name: 'Půlprdeláč',
     desc: 'Legenda sjezdovek. Kdo mu zkříží stopu, odjíždí s natrženýma půlkama.',
-    src: 'assets/skins/Pulprdelac.png',
+    src: 'assets/skins/pulprdelac.png',
     priceWallets: 10,
     unlockedByDefault: false
   },
