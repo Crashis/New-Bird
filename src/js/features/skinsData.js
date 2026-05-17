@@ -7,7 +7,7 @@ const headImg = new Image();
 headImg.src = HEAD_B64;
 
 const UNLOCKED_SKINS_KEY = 'nw_flappy_unlocked_skins';
-const SKIN_PRICE_WALLETS = 2;
+const SKIN_PRICE_WALLETS = 3;
 const CRASHIS_SMAZENY_SKIN_ID = 'crashis-smazeny';
 const MARTIN_SLUNECNY_SKIN_ID = 'martin-slunecny';
 const MOUCHA_SKIN_ID = 'moucha';
@@ -78,7 +78,7 @@ const SKINS = [
     name: 'Martin Slunečný',
     desc: 'Svítí tak moc, že i bugy radši utečou.',
     src: 'assets/skins/Martin-Slunečný.png',
-    priceWallets: SKIN_PRICE_WALLETS,
+    priceWallets: 10,
     unlockedByDefault: false,
     effectDescription: 'Prvních 10 sekund runu máš dvojnásobné Yangy.'
   },
@@ -87,7 +87,7 @@ const SKINS = [
     name: 'Moucha',
     desc: 'Aeternum ji nikdo nezval. Stejně tu pořád lítá.',
     src: 'assets/skins/Moucha.png',
-    priceWallets: SKIN_PRICE_WALLETS,
+    priceWallets: 15,
     unlockedByDefault: false
   },
   {

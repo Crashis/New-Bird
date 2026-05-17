@@ -16,6 +16,7 @@
 <link rel="stylesheet" href="./src/css/menu.css">
 <link rel="stylesheet" href="./src/css/event-phase.css">
 <link rel="stylesheet" href="./src/css/responsive.css">
+<link rel="stylesheet" href="./src/css/taverna.css">
 </head>
 <body>
 
@@ -123,7 +124,7 @@
       <div class="menu-actions">
         <button class="game-btn primary menu-btn" id="startBtn" onclick="startGame()" data-i18n="menu.start">⚔ Start</button>
         <button class="game-btn menu-btn" id="menuShopBtn" onclick="toggleShop()" data-i18n="menu.shop">🛒 Shop</button>
-        <button class="game-btn menu-btn" id="menuShellGameBtn" onclick="toggleShellGamePanel()" data-i18n="menu.shellGame">🎰 Skořápkář</button>
+        <button class="game-btn menu-btn" id="menuShellGameBtn" onclick="toggleTavernaPanel()" data-i18n="menu.shellGame">🍺 Taverna</button>
         <button class="game-btn menu-btn" id="menuSkinsBtn" onclick="toggleSkinsPanel()" data-i18n="menu.skins">🎭 Skiny</button>
         <button class="game-btn menu-btn" id="menuAchievementsBtn" onclick="toggleAchievementsPanel()" data-i18n="menu.achievements">🏆 Achievementy</button>
         <button class="game-btn menu-btn" id="menuSettingsBtn" onclick="toggleSettingsPanel()" data-i18n="menu.settings">⚙ Settings</button>
@@ -416,11 +417,14 @@
 
     <!-- Shell Game panel -->
     <div class="shop-panel shell-game-panel" id="shellGamePanel" style="text-align:center;">
-      <h2 data-i18n="shellGame.title">Skořápkář</h2>
-      <div class="shop-subtitle" data-i18n="shellGame.subtitle">Tři možnosti, jedna kapsa, nulová záruka férovosti.</div>
+      <div class="panel-header">
+        <h2 data-i18n="shellGame.title">🎰 Skořápkář</h2>
+        <button class="game-btn panel-close-btn" id="closeShellGameBtn" onclick="toggleShellGamePanel(false)">×</button>
+      </div>
+      <div class="shop-subtitle" data-i18n="shellGame.subtitle">Kámen, nůžky nebo papír. Výhra vrátí 2× sázku, remíza hraje dál.</div>
 
       <div class="shell-game-bet-row">
-        <label for="shellGameBetInput" class="shell-game-label" data-i18n="shellGame.betLabel">Sázka v Yangách</label>
+        <label for="shellGameBetInput" class="shell-game-label" data-i18n="shellGame.betLabel">Sázka (Yangy)</label>
         <input id="shellGameBetInput" type="number" min="1" step="1" class="shell-game-input" data-i18n-placeholder="shellGame.betPlaceholder" placeholder="Zadej sázku">
         <button class="game-btn primary" id="shellGamePlaceBetBtn" onclick="startShellGameBet()" data-i18n="shellGame.placeBet">Vsadit</button>
       </div>
@@ -431,9 +435,9 @@
       </div>
 
       <div class="shell-game-choices">
-        <button class="game-btn" id="shellGameRockBtn" onclick="playShellGameChoice('rock')" disabled data-i18n="shellGame.rock">Kámen</button>
-        <button class="game-btn" id="shellGameScissorsBtn" onclick="playShellGameChoice('scissors')" disabled data-i18n="shellGame.scissors">Nůžky</button>
-        <button class="game-btn" id="shellGamePaperBtn" onclick="playShellGameChoice('paper')" disabled data-i18n="shellGame.paper">Papír</button>
+        <button class="game-btn" id="shellGameRockBtn" onclick="playShellGameChoice('rock')" disabled data-i18n="shellGame.rock">✊ Kámen</button>
+        <button class="game-btn" id="shellGameScissorsBtn" onclick="playShellGameChoice('scissors')" disabled data-i18n="shellGame.scissors">✌ Nůžky</button>
+        <button class="game-btn" id="shellGamePaperBtn" onclick="playShellGameChoice('paper')" disabled data-i18n="shellGame.paper">🖐 Papír</button>
       </div>
 
       <div class="shell-game-result">
@@ -443,11 +447,122 @@
 
       <p id="shellGameStatus" class="shell-game-status"></p>
 
-      <div class="game-buttons" style="margin-top:0.6rem; justify-content:center;">
+      <div class="game-buttons" style="margin-top:0.6rem; justify-content:center; flex-wrap:wrap;">
         <button class="game-btn" id="shellGameNewBetBtn" onclick="resetShellGameRound()" data-i18n="shellGame.newBet">Nová sázka</button>
-        <button class="game-btn" id="closeShellGameBtn" onclick="toggleShellGamePanel(false)" data-i18n="shellGame.close">✕ Zavřít</button>
+        <button class="game-btn" onclick="backToTaverna()">← Taverna</button>
+        <button class="game-btn" onclick="toggleShellGamePanel(false)" data-i18n="shellGame.close">✕ Zavřít</button>
       </div>
     </div>
+    <!-- ── Taverna panel ───────────────────────────── -->
+    <div class="taverna-panel" id="tavernaPanel">
+      <div class="taverna-header">
+        <h2 class="taverna-title">🍺 Taverna</h2>
+        <button class="game-btn panel-close-btn" onclick="toggleTavernaPanel(false)">×</button>
+      </div>
+      <p class="taverna-subtitle">Vyber si hazardníka, kterému svěříš své měny.</p>
+
+      <div class="taverna-cards">
+
+        <div class="taverna-card" onclick="openTavernaGame('shellGame')">
+          <div class="taverna-card-art">🎰</div>
+          <div class="taverna-card-body">
+            <div class="taverna-card-name">Skořápkář</div>
+            <div class="taverna-card-desc">Podivný hazardér s trojicí kelímků. Kámen, nůžky nebo papír — kdo přečte nepřítele?</div>
+            <div class="taverna-card-price">💰 Libovolné Yangy</div>
+          </div>
+        </div>
+
+        <div class="taverna-card" onclick="openTavernaGame('threeChests')">
+          <div class="taverna-card-art">🏴‍☠️</div>
+          <div class="taverna-card-body">
+            <div class="taverna-card-name">Tři truhly</div>
+            <div class="taverna-card-desc">Pirát s pěti bednami plnými pokladů. Každý den jedno otevření — která skrývá největší bohatství?</div>
+            <div class="taverna-card-price">💰 Vstup 10 Yangů · 1× denně</div>
+          </div>
+        </div>
+
+        <div class="taverna-card" onclick="openTavernaGame('dragonDice')">
+          <div class="taverna-card-art">🐉</div>
+          <div class="taverna-card-body">
+            <div class="taverna-card-name">Dračí kostka</div>
+            <div class="taverna-card-desc">Zahalený kostkař s dračím rituálem. Sázej mince na číslo nebo sudé/liché — osud rozhodne.</div>
+            <div class="taverna-card-price">🐲 Dračí mince</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── Tři truhly panel ────────────────────────── -->
+    <div class="shop-panel" id="threeChestsPanel" style="text-align:center;">
+      <div class="panel-header">
+        <h2>🏴‍☠️ Tři truhly</h2>
+        <button class="game-btn panel-close-btn" onclick="toggleThreeChestsPanel(false)">×</button>
+      </div>
+      <div class="shop-subtitle">Pirát skryl poklady do pěti truhlí. Vyber jednu — ale vstup stojí 10 Yangů a hrát jde jen 1× denně.</div>
+
+      <div class="shop-wallet">
+        <span>Yangy: <strong id="threeChestsYangs">0</strong></span>
+        <span>Dračí mince: <strong id="threeChestsDragonCoins">0</strong></span>
+      </div>
+
+      <div id="threeChestsList" class="three-chests-list"></div>
+      <p id="threeChestsStatus" class="three-chests-status"></p>
+
+      <div class="game-buttons" style="margin-top:0.6rem; justify-content:center; flex-wrap:wrap;">
+        <button class="game-btn primary" id="threeChestsStartBtn" onclick="startThreeChests()">🔑 Otevřít truhly (10 Yangů)</button>
+        <button class="game-btn" onclick="backToTaverna()">← Taverna</button>
+        <button class="game-btn" onclick="toggleThreeChestsPanel(false)">✕ Zavřít</button>
+      </div>
+    </div>
+
+    <!-- ── Dračí kostka panel ──────────────────────── -->
+    <div class="shop-panel" id="dragonDicePanel" style="text-align:center;">
+      <div class="panel-header">
+        <h2>🐉 Dračí kostka</h2>
+        <button class="game-btn panel-close-btn" onclick="toggleDragonDicePanel(false)">×</button>
+      </div>
+      <div class="shop-subtitle">Drak přináší štěstí i zkázu. Sázej dračí mince na číslo (výhra 3×) nebo sudé/liché (výhra 2×).</div>
+
+      <div class="shop-wallet">
+        <span>Dračí mince: <strong id="dragonDiceDragonCoins">0</strong></span>
+      </div>
+
+      <div class="dragon-dice-display" id="dragonDiceFace">🎲</div>
+
+      <div class="dice-bet-types">
+        <button class="dice-bet-type-btn" data-type="number" onclick="selectDiceBetType('number')">Číslo (1–6)</button>
+        <button class="dice-bet-type-btn" data-type="parity" onclick="selectDiceBetType('parity')">Sudé / Liché</button>
+      </div>
+
+      <div class="dice-number-selector" id="dragonDiceNumberSelector">
+        <button class="dice-num-btn" data-num="1" onclick="selectDiceNumber(1)">1</button>
+        <button class="dice-num-btn" data-num="2" onclick="selectDiceNumber(2)">2</button>
+        <button class="dice-num-btn" data-num="3" onclick="selectDiceNumber(3)">3</button>
+        <button class="dice-num-btn" data-num="4" onclick="selectDiceNumber(4)">4</button>
+        <button class="dice-num-btn" data-num="5" onclick="selectDiceNumber(5)">5</button>
+        <button class="dice-num-btn" data-num="6" onclick="selectDiceNumber(6)">6</button>
+      </div>
+
+      <div class="dice-parity-selector" id="dragonDiceParitySelector">
+        <button class="dice-parity-btn" data-parity="even" onclick="selectDiceParity('even')">Sudé</button>
+        <button class="dice-parity-btn" data-parity="odd" onclick="selectDiceParity('odd')">Liché</button>
+      </div>
+
+      <div class="dice-bet-row">
+        <label class="dice-label" for="dragonDiceBetInput">Sázka (DC):</label>
+        <input id="dragonDiceBetInput" type="number" min="1" step="1" class="dice-input" placeholder="Počet DC">
+        <button class="game-btn primary" id="dragonDiceRollBtn" onclick="rollDragonDice()">🎲 Hodit</button>
+      </div>
+
+      <p id="dragonDiceStatus" class="dragon-dice-status"></p>
+
+      <div class="game-buttons" style="margin-top:0.6rem; justify-content:center; flex-wrap:wrap;">
+        <button class="game-btn" onclick="backToTaverna()">← Taverna</button>
+        <button class="game-btn" onclick="toggleDragonDicePanel(false)">✕ Zavřít</button>
+      </div>
+    </div>
+
   </div>
 
   <div class="game-controls" data-i18n="hud.controls">Mezerník · Klik · Tap pro skok</div>
@@ -470,8 +585,8 @@
       <div class="shop-wip" data-i18n="bottom.cheatsHint">Work in progress</div>
     </div>
     <div class="locked-feature">
-      <button class="game-btn" onclick="toggleShellGamePanel()" title="Skořápkář" data-i18n="menu.shellGame">🎰 Skořápkář</button>
-      <div class="shop-wip" data-i18n="bottom.shellGameHint">Ve vývoji</div>
+      <button class="game-btn" onclick="toggleTavernaPanel()" title="Taverna" data-i18n="menu.shellGame">🍺 Taverna</button>
+      <div class="shop-wip" data-i18n="bottom.shellGameHint">Hazard a minihry</div>
     </div>
     <div class="locked-feature">
       <button class="game-btn" onclick="toggleSettingsPanel()" title="Nastavení" data-i18n="menu.settings">⚙ Settings</button>

@@ -1,0 +1,448 @@
+/* ═══════════════════════════════════════════════════════
+   TAVERNA — hlavní overlay + karty minihier
+   ═══════════════════════════════════════════════════════ */
+
+.taverna-panel {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, rgba(10, 6, 3, 0.98) 0%, rgba(18, 12, 5, 0.98) 100%);
+  border: 1px solid var(--gold-dark);
+  border-radius: 4px;
+  z-index: 7;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.4rem 1.2rem 1.2rem;
+  overflow-y: auto;
+  box-shadow: 0 0 80px rgba(201, 168, 76, 0.22), inset 0 0 120px rgba(0, 0, 0, 0.4);
+}
+
+.taverna-panel.active {
+  display: flex;
+}
+
+.taverna-header {
+  position: relative;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 0.2rem;
+}
+
+.taverna-header .panel-close-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.taverna-title {
+  font-family: 'Cinzel Decorative', serif;
+  color: var(--gold);
+  font-size: clamp(1rem, 3vw, 1.45rem);
+  letter-spacing: 0.2em;
+  margin-bottom: 0;
+}
+
+.taverna-subtitle {
+  color: var(--text-muted);
+  font-family: 'Lato', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  margin-bottom: 1.2rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.taverna-cards {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  max-width: 760px;
+  align-content: flex-start;
+}
+
+/* ── Karta minihry ──────────────────────────────── */
+
+.taverna-card {
+  background: rgba(255, 245, 200, 0.03);
+  border: 1px solid var(--gold-dark);
+  border-radius: 8px;
+  padding: 1.1rem 0.9rem 1rem;
+  flex: 1 1 180px;
+  max-width: 215px;
+  min-width: 155px;
+  cursor: pointer;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease,
+              border-color 0.2s ease, background 0.2s ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.taverna-card:hover {
+  transform: translateY(-6px) scale(1.04);
+  box-shadow: 0 8px 28px rgba(201, 168, 76, 0.28),
+              0 0 14px rgba(201, 168, 76, 0.12);
+  border-color: var(--gold);
+  background: rgba(255, 245, 200, 0.07);
+}
+
+.taverna-card:active {
+  transform: translateY(-2px) scale(1.01);
+}
+
+.taverna-card-art {
+  font-size: 2.6rem;
+  margin-bottom: 0.55rem;
+  display: block;
+  line-height: 1;
+  transition: transform 0.25s ease;
+}
+
+.taverna-card:hover .taverna-card-art {
+  animation: tavernaCharBounce 0.4s ease forwards;
+}
+
+@keyframes tavernaCharBounce {
+  0%   { transform: scale(1)    rotate(0deg); }
+  30%  { transform: scale(1.25) rotate(-10deg); }
+  60%  { transform: scale(1.18) rotate(7deg); }
+  100% { transform: scale(1.2)  rotate(-5deg); }
+}
+
+.taverna-card-body {
+  /* wrapper pro mobile-row layout */
+}
+
+.taverna-card-name {
+  font-family: 'Cinzel', serif;
+  color: var(--gold-light);
+  font-size: 0.88rem;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+}
+
+.taverna-card-desc {
+  color: var(--text-muted);
+  font-family: 'Lato', sans-serif;
+  font-size: 0.64rem;
+  line-height: 1.45;
+  margin-bottom: 0.55rem;
+}
+
+.taverna-card-price {
+  color: var(--gold);
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.07em;
+  background: rgba(201, 168, 76, 0.08);
+  padding: 0.2rem 0.5rem;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+/* ═══════════════════════════════════════════════════════
+   TŘI TRUHLY
+   ═══════════════════════════════════════════════════════ */
+
+.three-chests-list {
+  display: flex;
+  gap: 0.55rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 0.9rem 0 0.5rem;
+}
+
+.chest-item {
+  width: 68px;
+  height: 80px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--gold-dark);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+  transition: transform 0.2s ease, box-shadow 0.2s ease,
+              border-color 0.2s ease;
+  font-family: 'Lato', sans-serif;
+}
+
+.chest-item.clickable {
+  cursor: pointer;
+}
+
+.chest-item.clickable:hover {
+  transform: translateY(-4px) scale(1.1);
+  box-shadow: 0 4px 18px rgba(201, 168, 76, 0.35);
+  border-color: var(--gold);
+  animation: chestShake 0.35s ease;
+}
+
+@keyframes chestShake {
+  0%   { transform: translateY(-4px) scale(1.1) rotate(0deg); }
+  25%  { transform: translateY(-4px) scale(1.1) rotate(-5deg); }
+  75%  { transform: translateY(-4px) scale(1.1) rotate(5deg); }
+  100% { transform: translateY(-4px) scale(1.1) rotate(0deg); }
+}
+
+.chest-item.opened {
+  border-color: var(--gold);
+  box-shadow: 0 0 14px rgba(201, 168, 76, 0.45);
+  background: rgba(201, 168, 76, 0.09);
+}
+
+.chest-item.dimmed {
+  opacity: 0.35;
+  filter: grayscale(0.6);
+}
+
+.chest-emoji {
+  font-size: 1.9rem;
+  line-height: 1;
+  margin-bottom: 0.2rem;
+}
+
+.chest-label {
+  font-size: 0.48rem;
+  color: var(--gold-light);
+  text-align: center;
+  letter-spacing: 0.02em;
+  padding: 0 0.15rem;
+  line-height: 1.3;
+}
+
+.three-chests-status {
+  min-height: 1.8rem;
+  font-family: 'Lato', sans-serif;
+  font-size: 0.72rem;
+  text-align: center;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin: 0.3rem 0 0.1rem;
+  line-height: 1.45;
+  padding: 0 0.5rem;
+}
+
+.three-chests-status.win   { color: #86f786; }
+.three-chests-status.error { color: #ff8a8a; }
+.three-chests-status.info  { color: var(--gold-light); }
+
+/* ═══════════════════════════════════════════════════════
+   DRAČÍ KOSTKA
+   ═══════════════════════════════════════════════════════ */
+
+.dragon-dice-display {
+  font-size: 4.5rem;
+  text-align: center;
+  margin: 0.5rem 0;
+  line-height: 1;
+  user-select: none;
+  display: block;
+}
+
+.dragon-dice-display.rolling {
+  animation: diceRoll 0.15s linear infinite;
+}
+
+@keyframes diceRoll {
+  0%   { transform: rotate(-12deg) scale(1.05); }
+  50%  { transform: rotate(12deg)  scale(0.95); }
+  100% { transform: rotate(-12deg) scale(1.05); }
+}
+
+.dice-bet-types {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 0.4rem 0 0.3rem;
+}
+
+.dice-bet-type-btn {
+  padding: 0.3rem 0.75rem;
+  font-size: 0.65rem;
+  border: 1px solid var(--gold-dark);
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'Cinzel', serif;
+  letter-spacing: 0.06em;
+}
+
+.dice-bet-type-btn.selected,
+.dice-bet-type-btn:hover:not(:disabled) {
+  border-color: var(--gold);
+  color: var(--gold-light);
+  background: rgba(201, 168, 76, 0.1);
+}
+
+.dice-bet-type-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.dice-number-selector {
+  display: none;
+  gap: 0.3rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 0.3rem 0;
+}
+
+.dice-parity-selector {
+  display: none;
+  gap: 0.45rem;
+  justify-content: center;
+  margin: 0.3rem 0;
+}
+
+.dice-num-btn,
+.dice-parity-btn {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--gold-dark);
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: 'Cinzel', serif;
+  font-size: 0.82rem;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dice-parity-btn {
+  width: auto;
+  padding: 0 0.85rem;
+}
+
+.dice-num-btn.selected,
+.dice-num-btn:hover:not(:disabled),
+.dice-parity-btn.selected,
+.dice-parity-btn:hover:not(:disabled) {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: rgba(201, 168, 76, 0.13);
+}
+
+.dice-num-btn:disabled,
+.dice-parity-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.dice-bet-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin: 0.5rem 0 0.3rem;
+}
+
+.dice-label {
+  color: var(--text-muted);
+  font-family: 'Lato', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.07em;
+}
+
+.dice-input {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--gold-dark);
+  color: var(--gold-light);
+  font-family: 'Cinzel', serif;
+  font-size: 0.88rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 3px;
+  width: 82px;
+  text-align: center;
+}
+
+.dice-input:focus {
+  outline: none;
+  border-color: var(--gold);
+}
+
+.dragon-dice-status {
+  min-height: 1.8rem;
+  font-family: 'Lato', sans-serif;
+  font-size: 0.72rem;
+  text-align: center;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin: 0.3rem 0 0.1rem;
+  line-height: 1.45;
+  padding: 0 0.5rem;
+}
+
+.dragon-dice-status.win     { color: #86f786; }
+.dragon-dice-status.lose    { color: #ff8a8a; }
+.dragon-dice-status.error   { color: #ffaa7a; }
+.dragon-dice-status.rolling { color: var(--gold-light); }
+.dragon-dice-status.info    { color: var(--gold-light); }
+
+/* ═══════════════════════════════════════════════════════
+   MOBILNÍ LAYOUT
+   ═══════════════════════════════════════════════════════ */
+
+@media (max-width: 520px) {
+  .taverna-cards {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.7rem;
+  }
+
+  .taverna-card {
+    max-width: 300px;
+    width: 100%;
+    min-width: unset;
+    display: flex;
+    flex-direction: row;
+    text-align: left;
+    gap: 0.8rem;
+    padding: 0.85rem 0.9rem;
+    align-items: center;
+  }
+
+  .taverna-card-art {
+    font-size: 2rem;
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
+
+  .taverna-card-body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .taverna-card-price {
+    display: block;
+    text-align: left;
+  }
+
+  .three-chests-list {
+    gap: 0.4rem;
+  }
+
+  .chest-item {
+    width: 56px;
+    height: 66px;
+  }
+
+  .chest-emoji {
+    font-size: 1.55rem;
+  }
+
+  .dragon-dice-display {
+    font-size: 3.5rem;
+  }
+}

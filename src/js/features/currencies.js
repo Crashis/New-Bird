@@ -12,6 +12,13 @@ function updateEconomyUi() {
   if (typeof renderShellGamePanel === 'function') renderShellGamePanel();
   if (typeof renderHeirloomPanel === 'function') renderHeirloomPanel();
 
+  const tcYangs = document.getElementById('threeChestsYangs');
+  const tcDC    = document.getElementById('threeChestsDragonCoins');
+  const ddDC    = document.getElementById('dragonDiceDragonCoins');
+  if (tcYangs) tcYangs.textContent = yang;
+  if (tcDC)    tcDC.textContent    = typeof dragonCoins === 'number' ? dragonCoins : 0;
+  if (ddDC)    ddDC.textContent    = typeof dragonCoins === 'number' ? dragonCoins : 0;
+
   const shieldLevel = document.getElementById('shieldStartLevel');
   const shieldBtn = document.getElementById('buyShieldStartBtn');
   if (shieldLevel) shieldLevel.textContent = shieldStartOwned ? t('economy.owned') : t('economy.notOwned');

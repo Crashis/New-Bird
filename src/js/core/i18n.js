@@ -39,7 +39,7 @@ window.NWI18n = window.NWI18n || {};
       'menu.subtitle': 'Aeternum čeká. Amazon taky.',
       'menu.start': '⚔ Start',
       'menu.shop': '🛒 Shop',
-      'menu.shellGame': '🎰 Skořápkář',
+      'menu.shellGame': '🍺 Taverna',
       'menu.skins': '🎭 Skiny',
       'menu.achievements': '🏆 Achievementy',
       'menu.settings': '⚙ Settings',
@@ -228,13 +228,13 @@ window.NWI18n = window.NWI18n || {};
       'hud.dragonCoins': 'Dračí mince:',
       'toast.dragonCoinPhase3.title': '+1 Dračí mince',
       'toast.dragonCoinPhase3.subtitle': 'Fáze 3 tě pustila mezi dračí účetnictví.',
-      'shellGame.subtitle': 'Tři možnosti, jedna kapsa, nulová záruka férovosti.',
-      'shellGame.betLabel': 'Sázka v Yangách',
+      'shellGame.subtitle': 'Kámen, nůžky nebo papír. Výhra vrátí 2× sázku, remíza hraje dál.',
+      'shellGame.betLabel': 'Sázka (Yangy)',
       'shellGame.betPlaceholder': 'Zadej sázku',
       'shellGame.activeBet': 'Aktivní sázka',
-      'shellGame.rock': 'Kámen',
-      'shellGame.paper': 'Papír',
-      'shellGame.scissors': 'Nůžky',
+      'shellGame.rock': '✊ Kámen',
+      'shellGame.paper': '🖐 Papír',
+      'shellGame.scissors': '✌ Nůžky',
       'shellGame.yourChoice': 'Tvoje volba',
       'shellGame.enemyChoice': 'Volba hry',
       'shellGame.win': 'Vyhrál jsi! Skořápkář právě polyká účtenku.',
@@ -259,7 +259,7 @@ window.NWI18n = window.NWI18n || {};
       'shellGame.close': '✕ Zavřít',
 
       // Bottom buttons
-      'bottom.shellGameHint': 'Ve vývoji',
+      'bottom.shellGameHint': 'Hazard a minihry',
       'bottom.shopHint': 'Upgrady za Yangy',
       'bottom.skinsHint': 'Výběr postavy',
       'bottom.achievementsHint': 'Odměny za postup',
@@ -277,7 +277,8 @@ window.NWI18n = window.NWI18n || {};
       'panel.achievementsBlocked': 'Achievementy si prohlédneš až po přistání. Teď se padá profesionálně.',
       'panel.settingsBlocked': 'Settings mimo aktivní let. Teď není čas na ladění.',
       'panel.skinsBlocked': 'Skiny si vybereš až mimo aktivní let. Amazon módní přehlídku v letu neplatí.',
-      'panel.shellGameBlocked': 'Skořápkáře otevřeš až mimo aktivní let. Podvod počká.',
+      'panel.shellGameBlocked': 'Tavernu otevřeš až mimo aktivní let. Hazard počká.',
+      'panel.tavernaBlocked': 'Tavernu otevřeš až mimo aktivní let. Hazard počká.',
 
       // Canvas status text
       'canvas.yang': 'Yangy {yang}  ·  Peněženky {wallets}',
@@ -357,7 +358,7 @@ window.NWI18n = window.NWI18n || {};
       'menu.subtitle': 'Aeternum waits. Amazon does too.',
       'menu.start': '⚔ Start',
       'menu.shop': '🛒 Shop',
-      'menu.shellGame': '🎰 Shell Game',
+      'menu.shellGame': '🍺 Taverna',
       'menu.skins': '🎭 Skins',
       'menu.achievements': '🏆 Achievements',
       'menu.settings': '⚙ Settings',
@@ -547,13 +548,13 @@ window.NWI18n = window.NWI18n || {};
       'hud.dragonCoins': 'Dragon Coins:',
       'toast.dragonCoinPhase3.title': '+1 Dragon Coin',
       'toast.dragonCoinPhase3.subtitle': 'Phase 3 let you into dragon accounting.',
-      'shellGame.subtitle': 'Three choices, one pocket, zero fairness guaranteed.',
-      'shellGame.betLabel': 'Bet in Yangs',
+      'shellGame.subtitle': 'Rock, scissors or paper. Win returns 2× your bet, draw plays again.',
+      'shellGame.betLabel': 'Bet (Yangs)',
       'shellGame.betPlaceholder': 'Enter bet',
       'shellGame.activeBet': 'Active bet',
-      'shellGame.rock': 'Rock',
-      'shellGame.paper': 'Paper',
-      'shellGame.scissors': 'Scissors',
+      'shellGame.rock': '✊ Rock',
+      'shellGame.paper': '🖐 Paper',
+      'shellGame.scissors': '✌ Scissors',
       'shellGame.yourChoice': 'Your choice',
       'shellGame.enemyChoice': 'Game choice',
       'shellGame.win': 'You won! The hustler is swallowing the receipt.',
@@ -590,7 +591,8 @@ window.NWI18n = window.NWI18n || {};
       'panel.achievementsBlocked': 'Check Achievements after landing. Right now we fall professionally.',
       'panel.settingsBlocked': 'Settings outside active flight. No time for tuning now.',
       'panel.skinsBlocked': 'Choose Skins outside active flight. Amazon does not sponsor in-flight fashion shows.',
-      'panel.shellGameBlocked': 'Shell Game opens outside active flight. The scam can wait.',
+      'panel.shellGameBlocked': 'Taverna opens outside active flight. Gambling can wait.',
+      'panel.tavernaBlocked': 'Taverna opens outside active flight. Gambling can wait.',
 
       // Canvas status text
       'canvas.yang': 'Yangs {yang}  ·  Wallets {wallets}',
@@ -629,7 +631,7 @@ window.NWI18n = window.NWI18n || {};
       'shellGame.close': '✕ Close',
 
       // Bottom buttons
-      'bottom.shellGameHint': 'In development',
+      'bottom.shellGameHint': 'Gambling & minigames',
 
       // Shop
       'shop.maxShields2.title': '🛡🛡 Second Shield',
