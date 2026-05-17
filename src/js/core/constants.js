@@ -13,13 +13,26 @@ const YANG_MIN_PIPES = 3;
 const YANG_FORCE_PIPES = 8;
 const YANG_CHANCE = 0.22;
 const UPGRADE_COST = 100; // used for one-time shield purchase
-const UPGRADE_LEVEL_COSTS = [100, 150, 200]; // cost at level 0, 1, 2
+const UPGRADE_LEVEL_COSTS = [100, 150, 200]; // legacy fallback (shield + first tiers)
 const INVINCIBLE_DURATION_MS = 2000;
 const DOUBLE_YANG_BASE_MS = 8000;
-const DOUBLE_YANG_BONUS_MS = 2000; // per shop level
-const DOUBLE_YANG_MAX_LEVEL = 2;
+const DOUBLE_YANG_BONUS_MS = 2000; // bonus for original levels 1–2
 const CROWN_BONUS_BASE = 1;
-const CROWN_BONUS_MAX_LEVEL = 2;
+
+// Invincibility upgrade — original levels 1–3 add +0.5s each (cost 100/150/200),
+// levels 4–10 add +0.2s each, cost steps by +75.
+const INVINCIBILITY_MAX_LEVEL = 10;
+const INVINCIBILITY_COSTS = [100, 150, 200, 275, 350, 425, 500, 575, 650, 725];
+
+// Double Yang upgrade — original levels 1–2 add +2.0s each (cost 100/150),
+// levels 3–10 add +0.2s each, cost steps by +100.
+const DOUBLE_YANG_MAX_LEVEL = 10;
+const DOUBLE_YANG_COSTS = [100, 150, 250, 350, 450, 550, 650, 750, 850, 950];
+
+// Crown bonus — original levels 1–2 each add +1 score (cost 100/150),
+// extended levels 3–5 continue with +1 score per level and +50 cost step.
+const CROWN_BONUS_MAX_LEVEL = 5;
+const CROWN_BONUS_COSTS = [100, 150, 200, 250, 300];
 const AMAZON_NERF_DURATION_MS = 5000;
 const AMAZON_NERF_SLOW_MULT = 0.85;
 const AMAZON_NERF_SPEED_MULT = 1.15;

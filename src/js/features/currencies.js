@@ -69,12 +69,14 @@ function updateEconomyUi() {
   const invBtn = document.getElementById('buyInvincibilityBtn');
   if (invLevel) invLevel.textContent = t('economy.invLevel', {
     cur: invincibilityLevel,
-    bonus: (invincibilityLevel * 0.5).toFixed(1)
+    max: INVINCIBILITY_MAX_LEVEL,
+    bonus: ((getInvincibleDurationMs() - INVINCIBLE_DURATION_MS) / 1000).toFixed(1)
   });
   if (invBtn) {
-    const invCost = UPGRADE_LEVEL_COSTS[invincibilityLevel] || UPGRADE_LEVEL_COSTS[UPGRADE_LEVEL_COSTS.length - 1];
-    invBtn.textContent = invincibilityLevel >= 3 ? t('economy.maximum') : t('economy.buyFor', { cost: invCost });
-    invBtn.disabled = invincibilityLevel >= 3 || yang < invCost;
+    const invCost = getInvincibilityCost(invincibilityLevel);
+    const atMax = invincibilityLevel >= INVINCIBILITY_MAX_LEVEL;
+    invBtn.textContent = atMax ? t('economy.maximum') : t('economy.buyFor', { cost: invCost });
+    invBtn.disabled = atMax || yang < invCost;
     invBtn.classList.toggle('disabled', invBtn.disabled);
   }
 
@@ -86,9 +88,10 @@ function updateEconomyUi() {
     dur: (getDoubleYangDuration() / 1000).toFixed(1)
   });
   if (dyBtn) {
-    const dyCost = UPGRADE_LEVEL_COSTS[doubleYangLevel] || UPGRADE_LEVEL_COSTS[UPGRADE_LEVEL_COSTS.length - 1];
-    dyBtn.textContent = doubleYangLevel >= DOUBLE_YANG_MAX_LEVEL ? t('economy.maximum') : t('economy.buyFor', { cost: dyCost });
-    dyBtn.disabled = doubleYangLevel >= DOUBLE_YANG_MAX_LEVEL || yang < dyCost;
+    const dyCost = getDoubleYangCost(doubleYangLevel);
+    const atMax = doubleYangLevel >= DOUBLE_YANG_MAX_LEVEL;
+    dyBtn.textContent = atMax ? t('economy.maximum') : t('economy.buyFor', { cost: dyCost });
+    dyBtn.disabled = atMax || yang < dyCost;
     dyBtn.classList.toggle('disabled', dyBtn.disabled);
   }
 
@@ -100,9 +103,10 @@ function updateEconomyUi() {
     val: getCrownBonusValue()
   });
   if (cbBtn) {
-    const cbCost = UPGRADE_LEVEL_COSTS[crownBonusLevel] || UPGRADE_LEVEL_COSTS[UPGRADE_LEVEL_COSTS.length - 1];
-    cbBtn.textContent = crownBonusLevel >= CROWN_BONUS_MAX_LEVEL ? t('economy.maximum') : t('economy.buyFor', { cost: cbCost });
-    cbBtn.disabled = crownBonusLevel >= CROWN_BONUS_MAX_LEVEL || yang < cbCost;
+    const cbCost = getCrownBonusCost(crownBonusLevel);
+    const atMax = crownBonusLevel >= CROWN_BONUS_MAX_LEVEL;
+    cbBtn.textContent = atMax ? t('economy.maximum') : t('economy.buyFor', { cost: cbCost });
+    cbBtn.disabled = atMax || yang < cbCost;
     cbBtn.classList.toggle('disabled', cbBtn.disabled);
   }
 

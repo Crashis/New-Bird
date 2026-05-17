@@ -131,9 +131,9 @@ try {
   dragonCoins = Math.max(0, parseInt(localStorage.getItem(DRAGON_COINS_KEY) || '0', 10) || 0);
   errCubes = Math.max(0, parseInt(localStorage.getItem(ERR_CUBES_KEY) || '0', 10) || 0);
   shieldStartOwned = localStorage.getItem('nw_flappy_upgrade_shield_start') === '1';
-  invincibilityLevel = Math.min(3, Math.max(0, parseInt(localStorage.getItem('nw_flappy_upgrade_invincibility') || '0', 10) || 0));
-  doubleYangLevel = Math.min(2, Math.max(0, parseInt(localStorage.getItem('nw_flappy_upgrade_double_yang') || '0', 10) || 0));
-  crownBonusLevel = Math.min(2, Math.max(0, parseInt(localStorage.getItem('nw_flappy_upgrade_crown_bonus') || '0', 10) || 0));
+  invincibilityLevel = Math.min(INVINCIBILITY_MAX_LEVEL, Math.max(0, parseInt(localStorage.getItem('nw_flappy_upgrade_invincibility') || '0', 10) || 0));
+  doubleYangLevel = Math.min(DOUBLE_YANG_MAX_LEVEL, Math.max(0, parseInt(localStorage.getItem('nw_flappy_upgrade_double_yang') || '0', 10) || 0));
+  crownBonusLevel = Math.min(CROWN_BONUS_MAX_LEVEL, Math.max(0, parseInt(localStorage.getItem('nw_flappy_upgrade_crown_bonus') || '0', 10) || 0));
   maxShields2Owned = localStorage.getItem('nw_flappy_upgrade_max_shields_2') === '1';
 } catch (e) {}
 

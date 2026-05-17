@@ -89,7 +89,7 @@ window.NWI18n = window.NWI18n || {};
       'bossFight.phase2Toast': 'BOSS FÁZE 2',
       'voice.errCube': 'Za šutry a kameny, bratře!',
       'heirloom.title': '🚀 Heirloom',
-      'heirloom.subtitle': 'Univerzální vybavení pro všechny skiny. Stav se ukládá lokálně.',
+      'heirloom.subtitle': 'Univerzální vybavení pro všechny skiny. Postup se ukládá automaticky.',
       'heirloom.close': '✕ Zavřít',
       'heirloom.rocket.name': '🚀 Raketomet',
       'heirloom.rocket.description': 'Pravým tlačítkem vystřelíš raketu, která zničí první překážku před tebou.',
@@ -177,7 +177,7 @@ window.NWI18n = window.NWI18n || {};
 
       // Shop
       'shop.title': '🛒 Amazon Shop',
-      'shop.subtitle': 'Upgrady se ukládají lokálně v prohlížeči. Cena roste s levelem: 100 → 150 → 200 Yangů.',
+      'shop.subtitle': 'Postup se ukládá automaticky. Cena roste s každým levelem.',
       'shop.yang': 'Yangy:',
       'shop.wallets': 'Peněženky:',
       'shop.close': '✕ Zavřít shop',
@@ -189,11 +189,11 @@ window.NWI18n = window.NWI18n || {};
       'shop.maxShields2Bought': 'Druhý štít koupen. Teď pojme dva zásahy.',
       'shop.maxShields2NotEnough': 'Nedostatek měn. Potřebuješ 666 Yangů, 6 Peněženek a 6 Dračích mincí.',
       'shop.inv.title': '⚜ Delší nesmrtelnost',
-      'shop.inv.desc': 'Každý level prodlouží power-up nesmrtelnosti o 0,5 sekundy. Maximum jsou 3 levely.',
+      'shop.inv.desc': 'Power-up nesmrtelnosti. Levely 1–3 přidávají +0,5 s, levely 4–10 přidávají +0,2 s. Maximum je 10 levelů.',
       'shop.dy.title': '⚡ Delší Double Yang',
-      'shop.dy.desc': 'Power-up Double Yang dává po dobu efektu dvojnásobek Yangů. Každý level prodlouží trvání o 2 sekundy. Základ 8s. Maximum 2 levely.',
+      'shop.dy.desc': 'Power-up Double Yang dává po dobu efektu dvojnásobek Yangů. Levely 1–2 přidávají +2 s, levely 3–10 přidávají +0,2 s. Základ 8 s. Maximum 10 levelů.',
       'shop.crown.title': '👑 Silnější Crown Bonus',
-      'shop.crown.desc': 'Power-up koruny okamžitě přičte skóre. Každý level přidá +1 skóre. Základ +1, max 2 levely (+3 skóre).',
+      'shop.crown.desc': 'Power-up koruny okamžitě přičte skóre. Každý level přidá +1 skóre. Základ +1, maximum 5 levelů (+6 skóre).',
       'shop.noYang': 'Nemáš dost Yangů. Potřebuješ 100.',
       'shop.noYangFor': 'Nemáš dost Yangů. Potřebuješ {cost}.',
       'shop.shieldBought': 'Shield Start koupen. Další run začne se štítem.',
@@ -208,7 +208,7 @@ window.NWI18n = window.NWI18n || {};
       'economy.maximum': 'Maximum',
       'economy.buy100': 'Koupit — 100 Yangů',
       'economy.buyFor': 'Koupit — {cost} Yangů',
-      'economy.invLevel': 'Level {cur}/3 (+{bonus}s)',
+      'economy.invLevel': 'Level {cur}/{max} (+{bonus}s)',
       'economy.dyLevel': 'Level {cur}/{max} ({dur}s)',
       'economy.crownLevel': 'Level {cur}/{max} (+{val} skóre)',
 
@@ -281,7 +281,7 @@ window.NWI18n = window.NWI18n || {};
 
       // Settings panel
       'settings.title': '⚙ Settings',
-      'settings.subtitle': 'Tvoje nastavení se ukládá lokálně v prohlížeči.',
+      'settings.subtitle': 'Tvoje nastavení se ukládá automaticky.',
       'settings.sfx': 'Zvuky',
       'settings.sfxHint': 'Herní SFX — Hmmm, sběr, štít',
       'settings.music': 'Hudba',
@@ -402,7 +402,7 @@ window.NWI18n = window.NWI18n || {};
       // Upgrady
       'menu.upgrades': '⚡ Upgrady',
       'upgrades.title': '⚡ Upgrady',
-      'upgrades.subtitle': 'Permanentní vylepšení. Stav se ukládá lokálně.',
+      'upgrades.subtitle': 'Permanentní vylepšení. Postup se ukládá automaticky.',
       'upgrades.close': '✕ Zavřít',
       'upgrades.upgrade': 'Vylepšit',
       'upgrades.locked': 'Zamčeno',
@@ -728,7 +728,7 @@ window.NWI18n = window.NWI18n || {};
       'bossFight.phase2Toast': 'BOSS PHASE 2',
       'voice.errCube': 'Rock and Stones, brothers!',
       'heirloom.title': '🚀 Heirloom',
-      'heirloom.subtitle': 'Universal gear for every skin. State is stored locally.',
+      'heirloom.subtitle': 'Universal gear for every skin. Progress is saved automatically.',
       'heirloom.close': '✕ Close',
       'heirloom.rocket.name': '🚀 Rocket Launcher',
       'heirloom.rocket.description': 'Right-click to fire a rocket that destroys the first obstacle ahead.',
@@ -816,7 +816,7 @@ window.NWI18n = window.NWI18n || {};
 
       // Shop
       'shop.title': '🛒 Amazon Shop',
-      'shop.subtitle': 'Upgrades are stored locally in your browser. Price increases with level: 100 → 150 → 200 Yangs.',
+      'shop.subtitle': 'Progress is saved automatically. Price grows with each level.',
       'shop.yang': 'Yangs:',
       'shop.wallets': 'Wallets:',
       'shop.close': '✕ Close shop',
@@ -828,11 +828,11 @@ window.NWI18n = window.NWI18n || {};
       'shop.maxShields2Bought': 'Second Shield purchased. Now holds two hits.',
       'shop.maxShields2NotEnough': 'Not enough currency. Need 666 Yangs, 6 Wallets and 6 Dragon Coins.',
       'shop.inv.title': '⚜ Longer Immortality',
-      'shop.inv.desc': 'Each level extends the immortality power-up by 0.5 seconds. Maximum 3 levels.',
+      'shop.inv.desc': 'Immortality power-up. Levels 1–3 add +0.5 s each, levels 4–10 add +0.2 s. Maximum 10 levels.',
       'shop.dy.title': '⚡ Longer Double Yang',
-      'shop.dy.desc': 'The Double Yang power-up doubles your Yangs during its effect. Each level extends it by 2 seconds. Base 8s. Maximum 2 levels.',
+      'shop.dy.desc': 'The Double Yang power-up doubles your Yangs during its effect. Levels 1–2 add +2 s, levels 3–10 add +0.2 s. Base 8 s. Maximum 10 levels.',
       'shop.crown.title': '👑 Stronger Crown Bonus',
-      'shop.crown.desc': 'The crown power-up immediately adds score. Each level adds +1 score. Base +1, max 2 levels (+3 score).',
+      'shop.crown.desc': 'The crown power-up immediately adds score. Each level adds +1 score. Base +1, maximum 5 levels (+6 score).',
       'shop.noYang': "You don't have enough Yangs. You need 100.",
       'shop.noYangFor': "You don't have enough Yangs. You need {cost}.",
       'shop.shieldBought': 'Shield Start purchased. Next run will start with a shield.',
@@ -847,7 +847,7 @@ window.NWI18n = window.NWI18n || {};
       'economy.maximum': 'Maximum',
       'economy.buy100': 'Buy — 100 Yangs',
       'economy.buyFor': 'Buy — {cost} Yangs',
-      'economy.invLevel': 'Level {cur}/3 (+{bonus}s)',
+      'economy.invLevel': 'Level {cur}/{max} (+{bonus}s)',
       'economy.dyLevel': 'Level {cur}/{max} ({dur}s)',
       'economy.crownLevel': 'Level {cur}/{max} (+{val} score)',
 
@@ -920,7 +920,7 @@ window.NWI18n = window.NWI18n || {};
 
       // Settings panel
       'settings.title': '⚙ Settings',
-      'settings.subtitle': 'Your settings are stored locally in your browser.',
+      'settings.subtitle': 'Your settings are saved automatically.',
       'settings.sfx': 'Sounds',
       'settings.sfxHint': 'Game SFX — Hmm, collect, shield',
       'settings.music': 'Music',
@@ -1050,7 +1050,7 @@ window.NWI18n = window.NWI18n || {};
       // Upgrades
       'menu.upgrades': '⚡ Upgrades',
       'upgrades.title': '⚡ Upgrades',
-      'upgrades.subtitle': 'Permanent upgrades. Stored locally.',
+      'upgrades.subtitle': 'Permanent upgrades. Progress is saved automatically.',
       'upgrades.close': '✕ Close',
       'upgrades.upgrade': 'Upgrade',
       'upgrades.locked': 'Locked',

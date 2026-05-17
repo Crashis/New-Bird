@@ -22,9 +22,24 @@ function buyShieldStart() {
   showUnlockToast(t('toast.upgradeUnlocked'), t('toast.upgradeSubtitle'), 'upgrade');
 }
 
+function getInvincibilityCost(level) {
+  if (level >= INVINCIBILITY_MAX_LEVEL) return null;
+  return INVINCIBILITY_COSTS[level];
+}
+
+function getDoubleYangCost(level) {
+  if (level >= DOUBLE_YANG_MAX_LEVEL) return null;
+  return DOUBLE_YANG_COSTS[level];
+}
+
+function getCrownBonusCost(level) {
+  if (level >= CROWN_BONUS_MAX_LEVEL) return null;
+  return CROWN_BONUS_COSTS[level];
+}
+
 function buyInvincibilityUpgrade() {
-  if (invincibilityLevel >= 3) return;
-  const cost = UPGRADE_LEVEL_COSTS[invincibilityLevel] || UPGRADE_LEVEL_COSTS[UPGRADE_LEVEL_COSTS.length - 1];
+  if (invincibilityLevel >= INVINCIBILITY_MAX_LEVEL) return;
+  const cost = getInvincibilityCost(invincibilityLevel);
   if (!spendYang(cost)) {
     showShopMessage(t('shop.noYangFor', { cost }));
     return;
@@ -32,13 +47,13 @@ function buyInvincibilityUpgrade() {
   invincibilityLevel++;
   saveEconomy();
   updateEconomyUi();
-  showShopMessage(t('shop.invExtended', { dur: (2 + invincibilityLevel * 0.5).toFixed(1) }));
+  showShopMessage(t('shop.invExtended', { dur: (getInvincibleDurationMs() / 1000).toFixed(1) }));
   showUnlockToast(t('toast.upgradeUnlocked'), t('toast.upgradeSubtitle'), 'upgrade');
 }
 
 function buyDoubleYangUpgrade() {
   if (doubleYangLevel >= DOUBLE_YANG_MAX_LEVEL) return;
-  const cost = UPGRADE_LEVEL_COSTS[doubleYangLevel] || UPGRADE_LEVEL_COSTS[UPGRADE_LEVEL_COSTS.length - 1];
+  const cost = getDoubleYangCost(doubleYangLevel);
   if (!spendYang(cost)) {
     showShopMessage(t('shop.noYangFor', { cost }));
     return;
@@ -52,7 +67,7 @@ function buyDoubleYangUpgrade() {
 
 function buyCrownBonusUpgrade() {
   if (crownBonusLevel >= CROWN_BONUS_MAX_LEVEL) return;
-  const cost = UPGRADE_LEVEL_COSTS[crownBonusLevel] || UPGRADE_LEVEL_COSTS[UPGRADE_LEVEL_COSTS.length - 1];
+  const cost = getCrownBonusCost(crownBonusLevel);
   if (!spendYang(cost)) {
     showShopMessage(t('shop.noYangFor', { cost }));
     return;
@@ -65,11 +80,15 @@ function buyCrownBonusUpgrade() {
 }
 
 function getInvincibleDurationMs() {
-  return INVINCIBLE_DURATION_MS + invincibilityLevel * 500;
+  const baseLevels = Math.min(3, invincibilityLevel);
+  const extLevels = Math.max(0, invincibilityLevel - 3);
+  return INVINCIBLE_DURATION_MS + baseLevels * 500 + extLevels * 200;
 }
 
 function getDoubleYangDuration() {
-  return DOUBLE_YANG_BASE_MS + doubleYangLevel * DOUBLE_YANG_BONUS_MS;
+  const baseLevels = Math.min(2, doubleYangLevel);
+  const extLevels = Math.max(0, doubleYangLevel - 2);
+  return DOUBLE_YANG_BASE_MS + baseLevels * DOUBLE_YANG_BONUS_MS + extLevels * 200;
 }
 
 function getCrownBonusValue() {

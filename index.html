@@ -275,7 +275,7 @@
     <!-- Shop panel -->
     <div class="shop-panel" id="shopPanel">
       <h2 data-i18n="shop.title">🛒 Amazon Shop</h2>
-      <div class="shop-subtitle" data-i18n="shop.subtitle">Upgrady se ukládají lokálně v prohlížeči. Každý upgrade stojí 100 Yangů.</div>
+      <div class="shop-subtitle" data-i18n="shop.subtitle">Postup se ukládá automaticky. Cena roste s každým levelem.</div>
       <div class="shop-wallet">
         <span><span data-i18n="shop.yang">Yangy:</span> <strong id="shopYang">0</strong></span>
         <span><span data-i18n="shop.wallets">Peněženky:</span> <strong id="shopWallets">0</strong></span>
@@ -294,27 +294,27 @@
 
       <div class="shop-item">
         <div class="shop-item-title" data-i18n="shop.inv.title">⚜ Delší nesmrtelnost</div>
-        <div class="shop-item-desc" data-i18n="shop.inv.desc">Každý level prodlouží power-up nesmrtelnosti o 0,5 sekundy. Maximum jsou 3 levely.</div>
+        <div class="shop-item-desc" data-i18n="shop.inv.desc">Power-up nesmrtelnosti. Levely 1–3 přidávají +0,5 s, levely 4–10 přidávají +0,2 s. Maximum je 10 levelů.</div>
         <div class="shop-item-bottom">
-          <span class="shop-level" id="invincibilityLevel">Level 0/3</span>
+          <span class="shop-level" id="invincibilityLevel">Level 0/10 (+0.0s)</span>
           <button class="game-btn shop-buy-btn" id="buyInvincibilityBtn" onclick="buyInvincibilityUpgrade()">Koupit — 100 Yangů</button>
         </div>
       </div>
 
       <div class="shop-item">
         <div class="shop-item-title" data-i18n="shop.dy.title">⚡ Delší Double Yang</div>
-        <div class="shop-item-desc" data-i18n="shop.dy.desc">Power-up Double Yang dává po dobu efektu dvojnásobek Yangů. Každý level prodlouží trvání o 2 sekundy. Základ 8s. Maximum 2 levely.</div>
+        <div class="shop-item-desc" data-i18n="shop.dy.desc">Power-up Double Yang dává po dobu efektu dvojnásobek Yangů. Levely 1–2 přidávají +2 s, levely 3–10 přidávají +0,2 s. Základ 8 s. Maximum 10 levelů.</div>
         <div class="shop-item-bottom">
-          <span class="shop-level" id="doubleYangLevel">Level 0/2 (8.0s)</span>
+          <span class="shop-level" id="doubleYangLevel">Level 0/10 (8.0s)</span>
           <button class="game-btn shop-buy-btn" id="buyDoubleYangBtn" onclick="buyDoubleYangUpgrade()">Koupit — 100 Yangů</button>
         </div>
       </div>
 
       <div class="shop-item">
         <div class="shop-item-title" data-i18n="shop.crown.title">👑 Silnější Crown Bonus</div>
-        <div class="shop-item-desc" data-i18n="shop.crown.desc">Power-up koruny okamžitě přičte skóre. Každý level přidá +1 skóre. Základ +1, max 2 levely (+3 skóre).</div>
+        <div class="shop-item-desc" data-i18n="shop.crown.desc">Power-up koruny okamžitě přičte skóre. Každý level přidá +1 skóre. Základ +1, maximum 5 levelů (+6 skóre).</div>
         <div class="shop-item-bottom">
-          <span class="shop-level" id="crownBonusLevel">Level 0/2 (+1 skóre)</span>
+          <span class="shop-level" id="crownBonusLevel">Level 0/5 (+1 skóre)</span>
           <button class="game-btn shop-buy-btn" id="buyCrownBonusBtn" onclick="buyCrownBonusUpgrade()">Koupit — 100 Yangů</button>
         </div>
       </div>
@@ -385,7 +385,7 @@
     <!-- Settings panel -->
     <div class="shop-panel" id="settingsPanel">
       <h2 data-i18n="settings.title">⚙ Settings</h2>
-      <div class="shop-subtitle" data-i18n="settings.subtitle">Tvoje nastavení se ukládá lokálně v prohlížeči.</div>
+      <div class="shop-subtitle" data-i18n="settings.subtitle">Tvoje nastavení se ukládá automaticky.</div>
 
       <div class="settings-row">
         <div class="label-wrap">
@@ -451,7 +451,7 @@
         <h2 data-i18n="heirloom.title">🚀 Heirloom</h2>
         <button class="game-btn panel-close-btn" id="closeHeirloomBtn" onclick="toggleHeirloomPanel(false)">×</button>
       </div>
-      <div class="shop-subtitle" data-i18n="heirloom.subtitle">Univerzální vybavení pro všechny skiny. Stav se ukládá lokálně.</div>
+      <div class="shop-subtitle" data-i18n="heirloom.subtitle">Univerzální vybavení pro všechny skiny. Postup se ukládá automaticky.</div>
 
       <!-- Měny -->
       <div class="shop-item-desc" style="margin-bottom:0.4rem;">
@@ -536,7 +536,7 @@
         <h2 data-i18n="upgrades.title">⚡ Upgrady</h2>
         <button class="game-btn panel-close-btn" id="closeUpgradesBtn" onclick="toggleUpgradesPanel(false)">×</button>
       </div>
-      <div class="shop-subtitle" data-i18n="upgrades.subtitle">Permanentní vylepšení. Stav se ukládá lokálně.</div>
+      <div class="shop-subtitle" data-i18n="upgrades.subtitle">Permanentní vylepšení. Postup se ukládá automaticky.</div>
 
       <div class="shop-item-desc" style="margin-bottom:0.4rem;">
         <span data-i18n="shop.yang">Yangy:</span> <strong id="upgradesYangs">0</strong>
