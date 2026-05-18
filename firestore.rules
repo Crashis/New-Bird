@@ -44,5 +44,68 @@ service cloud.firestore {
         && request.resource.data.bestScore >= 0
         && request.resource.data.bestScore <= 100000;
     }
+
+    match /users/{uid} {
+      allow read: if isSignedInOwner(uid);
+
+      allow create: if isSignedInOwner(uid)
+        && hasUserAllowedFields()
+        && hasValidUserData()
+        && request.resource.data.createdAt is timestamp
+        && request.resource.data.updatedAt is timestamp;
+
+      allow update: if isSignedInOwner(uid)
+        && resource.data.uid == request.auth.uid
+        && hasUserAllowedFields()
+        && hasValidUserData()
+        && request.resource.data.updatedAt is timestamp;
+
+      allow delete: if false;
+    }
+
+    function hasUserAllowedFields() {
+      return request.resource.data.keys().hasOnly([
+        'uid',
+        'displayName',
+        'cloudSaveVersion',
+        'hasCloudSave',
+        'createdAt',
+        'updatedAt',
+        'progress'
+      ]);
+    }
+
+    function hasValidUserData() {
+      return request.resource.data.uid == request.auth.uid
+        && request.resource.data.displayName is string
+        && request.resource.data.displayName.size() <= 20
+        && request.resource.data.cloudSaveVersion is number
+        && request.resource.data.hasCloudSave is bool
+        && request.resource.data.progress is map
+        && (
+          !('bestScore' in request.resource.data.progress)
+          || (request.resource.data.progress.bestScore is number
+              && request.resource.data.progress.bestScore >= 0
+              && request.resource.data.progress.bestScore <= 100000)
+        )
+        && (
+          !('yang' in request.resource.data.progress)
+          || (request.resource.data.progress.yang is number
+              && request.resource.data.progress.yang >= 0
+              && request.resource.data.progress.yang <= 10000000)
+        )
+        && (
+          !('wallets' in request.resource.data.progress)
+          || (request.resource.data.progress.wallets is number
+              && request.resource.data.progress.wallets >= 0
+              && request.resource.data.progress.wallets <= 1000000)
+        )
+        && (
+          !('dragonCoins' in request.resource.data.progress)
+          || (request.resource.data.progress.dragonCoins is number
+              && request.resource.data.progress.dragonCoins >= 0
+              && request.resource.data.progress.dragonCoins <= 1000000)
+        );
+    }
   }
 }
