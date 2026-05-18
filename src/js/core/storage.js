@@ -40,6 +40,7 @@ window.NWStorage.saveNumber = function saveNumber(key, value) {
   try { localStorage.setItem(key, String(value)); } catch (e) {}
 };
 
+// PROGRESS_KEYS: complete registry of localStorage keys that belong to player progress (used by cloud-save migration). STORAGE_KEYS above is the legacy partial list — both must stay in sync for the keys that overlap. DO NOT rename existing keys here — they already exist in players' browsers on GitHub Pages and renaming would orphan their saves.
 window.NWStorage.PROGRESS_KEYS = Object.freeze({
   // Currencies
   BEST: 'nw_flappy_best',
