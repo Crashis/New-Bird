@@ -164,6 +164,105 @@ const SKINS = [
   }
 ];
 
+for (const s of SKINS) {
+  if (!s.category) s.category = 'player';
+}
+
+// ===== TRAILS — čistě kosmetické stopy za hráčem =====
+const UNLOCKED_TRAILS_KEY = 'nw_flappy_unlocked_trails';
+const SELECTED_TRAIL_KEY = 'nw_flappy_selected_trail';
+const SELECTED_TRAIL_COLOR_KEY = 'nw_flappy_selected_trail_color';
+
+const TRAIL_COLOR_PALETTE = [
+  { id: 'green',  hex: '#34d36a' },
+  { id: 'blue',   hex: '#3aa7ff' },
+  { id: 'violet', hex: '#a86bff' },
+  { id: 'red',    hex: '#ff5a4a' },
+  { id: 'yellow', hex: '#ffd84a' },
+  { id: 'orange', hex: '#ff9430' },
+  { id: 'pink',   hex: '#ff7ad0' },
+  { id: 'white',  hex: '#f6efe0' }
+];
+const TRAIL_DEFAULT_COLOR = '#3aa7ff';
+
+const TRAILS = [
+  {
+    id: 'arcane-glow',
+    name: 'Arcane Glow',
+    desc: 'Záře z dávných esencí Aeterna. Vybereš barvu, hra zazáří.',
+    category: 'trails',
+    type: 'glow',
+    customizableColor: true,
+    cost: { yang: 555, wallets: 15, errCubes: 3 }
+  },
+  {
+    id: 'ember-trail',
+    name: 'Ember Trail',
+    desc: 'Drobné jiskry a plamínky — Aeternum hoří za tvými zády.',
+    category: 'trails',
+    type: 'fire',
+    customizableColor: false,
+    cost: { yang: 1000, wallets: 50, dragonCoins: 10, errCubes: 6 }
+  }
+];
+
+// ===== SPECIALS — overlay efekty na postavu =====
+const UNLOCKED_SPECIALS_KEY = 'nw_flappy_unlocked_specials';
+const SELECTED_SPECIALS_KEY = 'nw_flappy_selected_specials';
+
+const SPECIALS = [
+  {
+    id: 'ghost-rider',
+    name: 'Ghost Rider',
+    desc: 'Vlasy v plamenech. Lebka zůstává tvoje (zatím).',
+    category: 'specials',
+    cost: { yang: 1000, wallets: 50, dragonCoins: 15, errCubes: 10 }
+  },
+  {
+    id: 'wraith-eyes',
+    name: 'Wraith Eyes',
+    desc: 'Oči, ve kterých svítí Korupce. Občas se rozhoří víc.',
+    category: 'specials',
+    cost: { yang: 888, wallets: 35, dragonCoins: 10, errCubes: 8 }
+  }
+];
+
+(function applyUnlockedTrailsFromStorage() {
+  let saved = [];
+  try {
+    const raw = localStorage.getItem(UNLOCKED_TRAILS_KEY);
+    if (raw) { const parsed = JSON.parse(raw); if (Array.isArray(parsed)) saved = parsed; }
+  } catch (e) {}
+  const set = new Set(saved);
+  for (const t of TRAILS) t.unlocked = set.has(t.id);
+})();
+
+(function applyUnlockedSpecialsFromStorage() {
+  let saved = [];
+  try {
+    const raw = localStorage.getItem(UNLOCKED_SPECIALS_KEY);
+    if (raw) { const parsed = JSON.parse(raw); if (Array.isArray(parsed)) saved = parsed; }
+  } catch (e) {}
+  const set = new Set(saved);
+  for (const s of SPECIALS) s.unlocked = set.has(s.id);
+})();
+
+function saveUnlockedTrails() {
+  try {
+    const ids = TRAILS.filter(t => t.unlocked).map(t => t.id);
+    localStorage.setItem(UNLOCKED_TRAILS_KEY, JSON.stringify(ids));
+  } catch (e) {}
+  try { if (window.NWCloudSave && typeof window.NWCloudSave.queueCloudSave === 'function') window.NWCloudSave.queueCloudSave('trail'); } catch (e) {}
+}
+
+function saveUnlockedSpecials() {
+  try {
+    const ids = SPECIALS.filter(s => s.unlocked).map(s => s.id);
+    localStorage.setItem(UNLOCKED_SPECIALS_KEY, JSON.stringify(ids));
+  } catch (e) {}
+  try { if (window.NWCloudSave && typeof window.NWCloudSave.queueCloudSave === 'function') window.NWCloudSave.queueCloudSave('special'); } catch (e) {}
+}
+
 (function applyUnlockedSkinsFromStorage() {
   let saved = [];
   try {

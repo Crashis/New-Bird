@@ -59,6 +59,11 @@ window.NWStorage.PROGRESS_KEYS = Object.freeze({
   // Skins
   SELECTED_SKIN: 'nw_flappy_selected_skin',
   UNLOCKED_SKINS: 'nw_flappy_unlocked_skins',
+  UNLOCKED_TRAILS: 'nw_flappy_unlocked_trails',
+  SELECTED_TRAIL: 'nw_flappy_selected_trail',
+  SELECTED_TRAIL_COLOR: 'nw_flappy_selected_trail_color',
+  UNLOCKED_SPECIALS: 'nw_flappy_unlocked_specials',
+  SELECTED_SPECIALS: 'nw_flappy_selected_specials',
   // Achievements
   ACHIEVEMENTS: 'nw_flappy_achievements',
   // Heirlooms

@@ -171,6 +171,44 @@ try {
   }
 } catch (e) {}
 
+let selectedTrailId = null;
+let selectedTrailColor = TRAIL_DEFAULT_COLOR;
+let selectedSpecialIds = [];
+
+try {
+  const t = localStorage.getItem('nw_flappy_selected_trail');
+  if (t) {
+    const trail = TRAILS.find(x => x.id === t);
+    if (trail && trail.unlocked) selectedTrailId = t;
+  }
+  const tc = localStorage.getItem('nw_flappy_selected_trail_color');
+  if (tc && /^#[0-9a-fA-F]{6}$/.test(tc)) selectedTrailColor = tc;
+  const raw = localStorage.getItem('nw_flappy_selected_specials');
+  if (raw) {
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) {
+      selectedSpecialIds = parsed.filter(id => {
+        const s = SPECIALS.find(x => x.id === id);
+        return s && s.unlocked;
+      });
+    }
+  }
+} catch (e) {}
+
+function saveSelectedTrail() {
+  try {
+    if (selectedTrailId) localStorage.setItem('nw_flappy_selected_trail', selectedTrailId);
+    else localStorage.removeItem('nw_flappy_selected_trail');
+    localStorage.setItem('nw_flappy_selected_trail_color', selectedTrailColor);
+  } catch (e) {}
+  try { if (window.NWCloudSave && typeof window.NWCloudSave.queueCloudSave === 'function') window.NWCloudSave.queueCloudSave('trail-select'); } catch (e) {}
+}
+
+function saveSelectedSpecials() {
+  try { localStorage.setItem('nw_flappy_selected_specials', JSON.stringify(selectedSpecialIds)); } catch (e) {}
+  try { if (window.NWCloudSave && typeof window.NWCloudSave.queueCloudSave === 'function') window.NWCloudSave.queueCloudSave('specials-select'); } catch (e) {}
+}
+
 try {
   for (const key of Object.keys(SETTINGS_KEYS)) {
     const stored = localStorage.getItem(SETTINGS_KEYS[key]);
