@@ -65,7 +65,66 @@ if (typeof updateEconomyUi === 'function') updateEconomyUi();
 (async () => {
   try {
     const firebaseLeaderboard = await import("./features/firebaseLeaderboard.js");
-    await firebaseLeaderboard.initLeaderboardAuth();
+    const uid = await firebaseLeaderboard.initLeaderboardAuth();
+    if (!uid) return;
+
+    const cloudSaveModule = await import("./features/cloudSave.js");
+    const initOk = cloudSaveModule.initCloudSave({ uid });
+    if (!initOk) return;
+
+    const cloudExists = await cloudSaveModule.hasCloudSave();
+    const localSnap = (window.NWProgressSnapshot && window.NWProgressSnapshot.readLocalProgressSnapshot())
+      || null;
+    const hasLocal = !!(window.NWProgressSnapshot && window.NWProgressSnapshot.isLocalProgressMeaningful(localSnap));
+    const decision = window.NWCloudMigration.decideMigrationAction({
+      firebaseAvailable: true,
+      hasLocal,
+      hasCloud: cloudExists,
+      migrationDismissed: window.NWCloudMigration.wasMigrationDismissed()
+    });
+
+    console.log('[cloudSave] migration decision', {
+      uidExists: !!uid,
+      cloudExists,
+      localMeaningful: hasLocal,
+      decision: decision.action,
+      reason: decision.reason
+    });
+
+    if (decision.action === 'noop') return;
+
+    let cloudSnap = null;
+    if (decision.action !== 'prompt-upload') {
+      cloudSnap = await cloudSaveModule.loadCloudProgress();
+    }
+
+    const localSummary = hasLocal && window.NWProgressSnapshot
+      ? window.NWProgressSnapshot.summarizeProgressSnapshot(localSnap)
+      : null;
+    const cloudSummary = cloudSnap && window.NWProgressSnapshot
+      ? window.NWProgressSnapshot.summarizeProgressSnapshot(cloudSnap)
+      : null;
+
+    window.NWCloudMigration.openMigrationDialog({
+      action: decision.action,
+      localSummary,
+      cloudSummary,
+      onChoice: async (choice) => {
+        try {
+          if (choice === 'upload') {
+            await cloudSaveModule.uploadLocalProgressToCloud('migration-accept');
+            window.NWCloudMigration.clearMigrationDismissed();
+          } else if (choice === 'download') {
+            const ok = await cloudSaveModule.downloadCloudProgressToLocal();
+            if (ok) window.location.reload();
+          } else if (choice === 'dismiss') {
+            window.NWCloudMigration.markMigrationDismissed();
+          }
+        } catch (error) {
+          console.warn('[cloudSave] migration choice failed', error);
+        }
+      }
+    });
   } catch (error) {
     console.warn('[leaderboard] Firebase module failed to load; online features disabled', error);
   }
