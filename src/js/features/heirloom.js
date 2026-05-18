@@ -27,6 +27,11 @@ const HEIRLOOM_PAYSAFE_PURCHASED_KEY = 'heirloomPaysafePurchased';
 const HEIRLOOM_PAYSAFE_COST_YANGS = 1111;
 const HEIRLOOM_PAYSAFE_BONUS_YANGS = 1333;
 
+const HEIRLOOM_NESCHOPENKA_PURCHASED_KEY = 'heirloomNeschopenkaPurchased';
+const HEIRLOOM_NESCHOPENKA_COST_YANGS = 666;
+const HEIRLOOM_NESCHOPENKA_COST_WALLETS = 30;
+const HEIRLOOM_NESCHOPENKA_COST_DRAGON_COINS = 8;
+
 const MAX_EQUIPPED_HEIRLOOMS = 2;
 
 let heirloomRocketPurchased = false;
@@ -41,6 +46,7 @@ let heirloomGodiasEquipped = false;
 
 let heirloomConcertPurchased = false;
 let heirloomPaysafePurchased = false;
+let heirloomNeschopenkaPurchased = false;
 
 function loadBool(key, fallback) {
   try {
@@ -76,6 +82,42 @@ function loadHeirloomState() {
 
   heirloomConcertPurchased = loadBool(HEIRLOOM_CONCERT_PURCHASED_KEY, false);
   heirloomPaysafePurchased = loadBool(HEIRLOOM_PAYSAFE_PURCHASED_KEY, false);
+  heirloomNeschopenkaPurchased = loadBool(HEIRLOOM_NESCHOPENKA_PURCHASED_KEY, false);
+}
+
+// ===== Neschopenka — passive: +1 Bezos boss attempt per day (only when Bezos is unlocked) =====
+function isHeirloomNeschopenkaPurchased() { return heirloomNeschopenkaPurchased === true; }
+
+function canAffordHeirloomNeschopenka() {
+  return getCurrentYangs() >= HEIRLOOM_NESCHOPENKA_COST_YANGS
+    && getCurrentWallets() >= HEIRLOOM_NESCHOPENKA_COST_WALLETS
+    && getCurrentDragonCoins() >= HEIRLOOM_NESCHOPENKA_COST_DRAGON_COINS;
+}
+
+function showHeirloomNeschopenkaMessage(message) {
+  const el = document.getElementById('heirloomNeschopenkaMessage');
+  if (el) el.textContent = message || '';
+}
+
+function purchaseHeirloomNeschopenka() {
+  if (heirloomNeschopenkaPurchased) return;
+  if (!canAffordHeirloomNeschopenka()) {
+    showHeirloomNeschopenkaMessage(t('heirloom.neschopenka.notEnough'));
+    return;
+  }
+  yang -= HEIRLOOM_NESCHOPENKA_COST_YANGS;
+  wallets -= HEIRLOOM_NESCHOPENKA_COST_WALLETS;
+  dragonCoins -= HEIRLOOM_NESCHOPENKA_COST_DRAGON_COINS;
+  if (typeof saveEconomy === 'function') saveEconomy();
+  if (typeof saveDragonCoins === 'function') saveDragonCoins();
+  heirloomNeschopenkaPurchased = true;
+  try { localStorage.setItem(HEIRLOOM_NESCHOPENKA_PURCHASED_KEY, '1'); } catch (e) {}
+  if (typeof showUnlockToast === 'function') {
+    showUnlockToast(t('heirloom.neschopenka.unlocked'), t('heirloom.neschopenka.description'), 'upgrade');
+  }
+  showHeirloomNeschopenkaMessage(t('heirloom.neschopenka.unlocked'));
+  renderHeirloomPanel();
+  if (typeof updateEconomyUi === 'function') updateEconomyUi();
 }
 
 // ===== Concert Ticket (Petr Spálený) — passive: unlocks voice line =====
@@ -702,6 +744,27 @@ function renderHeirloomPanel() {
       paysafeBtnEl.onclick = null;
       paysafeBtnEl.disabled = true;
       paysafeBtnEl.classList.add('disabled');
+    }
+  }
+
+  // ── Neschopenka ──
+  const neschStatusEl = document.getElementById('heirloomNeschopenkaStatus');
+  const neschBtnEl = document.getElementById('toggleHeirloomNeschopenkaBtn');
+  if (!isHeirloomNeschopenkaPurchased()) {
+    if (neschStatusEl) neschStatusEl.textContent = t('heirloom.neschopenka.locked');
+    if (neschBtnEl) {
+      neschBtnEl.textContent = t('heirloom.neschopenka.unlock');
+      neschBtnEl.onclick = purchaseHeirloomNeschopenka;
+      neschBtnEl.disabled = false;
+      neschBtnEl.classList.toggle('disabled', !canAffordHeirloomNeschopenka());
+    }
+  } else {
+    if (neschStatusEl) neschStatusEl.textContent = t('heirloom.neschopenka.purchased');
+    if (neschBtnEl) {
+      neschBtnEl.textContent = t('heirloom.neschopenka.purchased');
+      neschBtnEl.onclick = null;
+      neschBtnEl.disabled = true;
+      neschBtnEl.classList.add('disabled');
     }
   }
 

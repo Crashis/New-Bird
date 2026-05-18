@@ -85,6 +85,7 @@ const ERR_CUBES_KEY = 'nw_flappy_err_cubes';
 const HEIRLOOM_ROCKET_PURCHASED_KEY = 'heirloomRocketPurchased';
 const BEZOS_BOSS_TICKET_KEY = 'bezosBossTicketUnlocked';
 const BEZOS_BOSS_LAST_WIN_KEY = 'bezosBossLastWinDate';
+const BEZOS_BOSS_BONUS_USED_DATE_KEY = 'bezosBossBonusUsedDate';
 
 let bezosBossTicketUnlocked = false;
 try {
@@ -111,12 +112,29 @@ function getBezosBossLastWinDate() {
   try { return localStorage.getItem(BEZOS_BOSS_LAST_WIN_KEY) || ''; } catch (e) { return ''; }
 }
 
+function getBezosBossBonusUsedDate() {
+  try { return localStorage.getItem(BEZOS_BOSS_BONUS_USED_DATE_KEY) || ''; } catch (e) { return ''; }
+}
+
+function hasNeschopenkaBonusAvailableToday() {
+  if (!isBezosBossTicketUnlocked()) return false;
+  if (typeof isHeirloomNeschopenkaPurchased !== 'function' || !isHeirloomNeschopenkaPurchased()) return false;
+  return getBezosBossBonusUsedDate() !== getTodayLocalDateString();
+}
+
 function setBezosBossLastWinToday() {
-  try { localStorage.setItem(BEZOS_BOSS_LAST_WIN_KEY, getTodayLocalDateString()); } catch (e) {}
+  const today = getTodayLocalDateString();
+  if (getBezosBossLastWinDate() !== today) {
+    try { localStorage.setItem(BEZOS_BOSS_LAST_WIN_KEY, today); } catch (e) {}
+    return;
+  }
+  try { localStorage.setItem(BEZOS_BOSS_BONUS_USED_DATE_KEY, today); } catch (e) {}
 }
 
 function wasBezosBossWonToday() {
-  return getBezosBossLastWinDate() === getTodayLocalDateString();
+  if (getBezosBossLastWinDate() !== getTodayLocalDateString()) return false;
+  if (hasNeschopenkaBonusAvailableToday()) return false;
+  return true;
 }
 
 // Load best score from localStorage

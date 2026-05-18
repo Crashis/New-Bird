@@ -158,6 +158,15 @@ window.NWI18n = window.NWI18n || {};
       'heirloom.paysafe.unlocked': '💳 Mareše Paysafekarta zakoupena! +1333 Yangů.',
       'heirloom.paysafe.notEnough': 'Nedostatek Yangů. Potřebuješ 1111.',
 
+      'heirloom.neschopenka.name': '🩺 Neschopenka',
+      'heirloom.neschopenka.description': 'Neschopenka od doktora. Oficiálně nemůžeš pracovat, neoficiálně máš čas dát Bezosovi ještě jednu přes držku. +1 pokus na Bezos bossfight denně (jen pokud je Bezos už odemčený).',
+      'heirloom.neschopenka.price': 'Cena: 666 Yangů · 30 Peněženek · 8 Dračích mincí',
+      'heirloom.neschopenka.locked': 'Zamčeno',
+      'heirloom.neschopenka.unlock': 'Koupit',
+      'heirloom.neschopenka.purchased': 'Zakoupeno',
+      'heirloom.neschopenka.unlocked': '🩺 Neschopenka vystavena! Bezos si pro dnešek užije bonusovou návštěvu.',
+      'heirloom.neschopenka.notEnough': 'Nedostatek měn. Potřebuješ 666 Yangů, 30 Peněženek a 8 Dračích mincí.',
+
       'toast.rocketRestored.title': 'RAKETA OBNOVENA',
       'toast.rocketRestored.subtitle': 'Bezos ti v panice poslal munici.',
       'toast.noRocketAmmo.title': 'BEZ NÁBOJE',
@@ -806,6 +815,15 @@ window.NWI18n = window.NWI18n || {};
       'heirloom.paysafe.purchased': 'Purchased',
       'heirloom.paysafe.unlocked': "💳 Mareš's Paysafe Card purchased! +1333 Yangs.",
       'heirloom.paysafe.notEnough': 'Not enough Yangs. Need 1111.',
+
+      'heirloom.neschopenka.name': '🩺 Sick Note',
+      'heirloom.neschopenka.description': "Doctor's sick note. Officially you can't work — unofficially, you have time to punch Bezos one more time. +1 Bezos boss attempt per day (only when Bezos is already unlocked).",
+      'heirloom.neschopenka.price': 'Cost: 666 Yangs · 30 Wallets · 8 Dragon Coins',
+      'heirloom.neschopenka.locked': 'Locked',
+      'heirloom.neschopenka.unlock': 'Buy',
+      'heirloom.neschopenka.purchased': 'Purchased',
+      'heirloom.neschopenka.unlocked': '🩺 Sick note filed! Bezos gets a bonus appointment today.',
+      'heirloom.neschopenka.notEnough': 'Not enough currency. Need 666 Yangs, 30 Wallets and 8 Dragon Coins.',
 
       'toast.rocketRestored.title': 'ROCKET RESTORED',
       'toast.rocketRestored.subtitle': 'Bezos panic-shipped you more ammo.',
