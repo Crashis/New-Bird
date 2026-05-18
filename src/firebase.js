@@ -1,5 +1,13 @@
 import { getApp, getApps, initializeApp } from 'https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js';
-import { getAuth, onAuthStateChanged, signInAnonymously } from 'https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js';
+import {
+  getAuth,
+  onAuthStateChanged,
+  signInAnonymously,
+  GoogleAuthProvider,
+  linkWithPopup,
+  signInWithPopup,
+  signOut
+} from 'https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js';
 import {
   collection,
   doc,
@@ -84,7 +92,11 @@ export const firebaseSDK = {
   query,
   runTransaction,
   serverTimestamp,
-  signInAnonymously
+  signInAnonymously,
+  GoogleAuthProvider,
+  linkWithPopup,
+  signInWithPopup,
+  signOut
 };
 
 export { firebaseConfig };
