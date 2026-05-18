@@ -69,6 +69,7 @@ function startGame() {
 }
 
 function startGameNow() {
+  if (typeof clearTrailParticles === 'function') clearTrailParticles();
   gameState = 'playing';
   player = { x: 160, y: canvas.height / 2, vy: 0, r: 38, rotation: 0 };
   pipes = [];
@@ -433,6 +434,7 @@ function draw() {
   }
   for (const p of pipes) drawCoin(p.coin);
   for (const p of pipes) drawYang(p.yang);
+  if (typeof drawTrailParticles === 'function') drawTrailParticles();
   drawParticles();
   drawPlayer();
   if (typeof drawRocketLauncher === 'function') drawRocketLauncher();
@@ -455,6 +457,7 @@ function loop() {
   }
   if (gameState === 'playing') {
     update();
+    if (typeof updateTrailParticles === 'function') updateTrailParticles();
   }
   draw();
   if (gameState === 'playing' || isStartingCountdown) {
@@ -464,6 +467,7 @@ function loop() {
 
 function openGame() {
   clearStartCountdownTimeout();
+  if (typeof clearTrailParticles === 'function') clearTrailParticles();
   // Po jakémkoli návratu do menu (např. z boss fightu) vždy předpokládáme
   // normální režim — boss fight se nikdy nesmí přelít do normální hry.
   currentGameMode = 'normal';
