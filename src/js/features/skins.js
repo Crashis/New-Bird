@@ -31,7 +31,7 @@ function toggleSkinsPanel(forceOpen) {
 function setSkinCategory(cat) {
   if (cat !== 'player' && cat !== 'trails' && cat !== 'specials') return;
   currentSkinCategory = cat;
-  document.querySelectorAll('.skins-tab').forEach(b => {
+  document.querySelectorAll('.skin-tab, .skins-tab').forEach(b => {
     b.classList.toggle('active', b.dataset.skinTab === cat);
   });
   renderSkinsPanel();
@@ -164,6 +164,12 @@ function renderSkinDetail(host, item) {
   meta.textContent = (item.category === 'player') ? '' : 'Kosmetický efekt — bez vlivu na gameplay';
   host.appendChild(meta);
 
+  const status = document.createElement('div');
+  const itemStatus = getSkinItemStatus(item);
+  status.className = 'detail-status' + (itemStatus.kind === 'locked' ? ' locked' : '');
+  status.textContent = itemStatus.label;
+  host.appendChild(status);
+
   const cost = document.createElement('div');
   cost.className = 'detail-cost';
   if (!item.unlocked) {
@@ -227,7 +233,7 @@ function appendDetailActions(host, item) {
       const can = wallets >= price;
       host.appendChild(makeBtn(t('skins.buy', { price }), () => tryBuyPlayerSkin(item.id), !can));
     } else if (item.id === selectedSkinId) {
-      host.appendChild(makeBtn(t('skins.selected'), null, true));
+      host.appendChild(makeBtn('Aktivn\u00ed', null, true));
     } else {
       host.appendChild(makeBtn(t('skins.select'), () => { setSelectedSkin(item.id); renderSkinsPanel(); }));
     }
@@ -248,6 +254,14 @@ function appendDetailActions(host, item) {
       host.appendChild(makeBtn('Nasadit', () => { equipSpecial(item.id); renderSkinsPanel(); }));
     }
   }
+}
+
+function getSkinItemStatus(item) {
+  if (!item || !item.unlocked) return { kind: 'locked', label: 'Zam\u010deno' };
+  if (item.category === 'player' && item.id === selectedSkinId) return { kind: 'active', label: 'Aktivn\u00ed' };
+  if (item.category === 'trails' && item.id === selectedTrailId) return { kind: 'active', label: 'Aktivn\u00ed' };
+  if (item.category === 'specials' && isSpecialEquipped(item.id)) return { kind: 'active', label: 'Aktivn\u00ed' };
+  return { kind: 'owned', label: 'Vlastn\u011bno' };
 }
 
 function makeBtn(label, onclick, disabled) {

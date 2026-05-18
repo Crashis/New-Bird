@@ -459,6 +459,12 @@
     width: min(96vw, 560px);
   }
 
+  .shop-panel.large-panel.skins-panel-v2 {
+    width: calc(100vw - 3rem);
+    max-width: calc(100vw - 3rem);
+    min-height: min(78svh, 620px);
+  }
+
   .settings-row {
     align-items: flex-start;
   }
