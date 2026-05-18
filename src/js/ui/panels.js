@@ -511,6 +511,9 @@ function initGoogleLinkUi() {
   const errorEl = document.getElementById('googleAccountErrorText');
   if (!statusEl || !linkBtn) return;
 
+  let credentialInUse = false;
+  let lastState = null;
+
   function showError(message) {
     if (!errorEl) return;
     if (!message) {
@@ -523,22 +526,34 @@ function initGoogleLinkUi() {
   }
 
   function applyState(state) {
+    lastState = state;
     if (!state || !state.signedIn) {
-      statusEl.textContent = 'Cloud save zatím není dostupný.';
+      statusEl.textContent = 'Online účet není dostupný.';
       linkBtn.disabled = true;
       linkBtn.textContent = 'Propojit s Google účtem';
       if (signInBtn) signInBtn.hidden = true;
       return;
     }
     if (state.anonymous) {
-      statusEl.textContent = 'Hraješ jako anonymní hráč.';
+      if (credentialInUse) {
+        statusEl.textContent = 'Hraješ jako anonymní hráč. Tenhle Google účet už má existující cloud save.';
+      } else {
+        statusEl.textContent = 'Hraješ jako anonymní hráč. Progress je uložený pod dočasným anonymním účtem.';
+      }
       linkBtn.disabled = false;
       linkBtn.hidden = false;
       linkBtn.textContent = 'Propojit s Google účtem';
-      if (signInBtn) signInBtn.hidden = true;
+      if (signInBtn) {
+        signInBtn.hidden = false;
+        signInBtn.disabled = false;
+        signInBtn.textContent = credentialInUse
+          ? 'Přihlásit existující Google účet'
+          : 'Přihlásit se existujícím Google účtem';
+      }
     } else {
+      credentialInUse = false;
       const who = state.email || state.displayName || 'Google účet';
-      statusEl.textContent = 'Propojeno s Google účtem: ' + who;
+      statusEl.textContent = 'Přihlášen přes Google: ' + who;
       linkBtn.disabled = true;
       linkBtn.textContent = 'Google účet propojen';
       if (signInBtn) signInBtn.hidden = true;
@@ -570,7 +585,14 @@ function initGoogleLinkUi() {
     try {
       const res = await window.NWGoogleAuth.linkCurrentAnonymousUserWithGoogle();
       if (!res.ok) {
-        showError(res.error && res.error.message ? res.error.message : 'Něco se pokazilo.');
+        const kind = res.error && res.error.kind;
+        if (kind === 'credential-in-use' || kind === 'email-in-use') {
+          credentialInUse = true;
+          showError('Tenhle Google účet už má existující cloud save. Použij „Přihlásit existující Google účet“ níže.');
+          applyState(lastState);
+        } else {
+          showError(res.error && res.error.message ? res.error.message : 'Něco se pokazilo.');
+        }
         linkBtn.disabled = false;
       }
     } catch (e) {
@@ -584,16 +606,88 @@ function initGoogleLinkUi() {
     signInBtn.addEventListener('click', async () => {
       if (!window.NWGoogleAuth || typeof window.NWGoogleAuth.signInWithGoogle !== 'function') return;
       showError('');
+
+      const confirmed = window.confirm(
+        'Přihlášením k existujícímu Google účtu se načte jeho cloud save. ' +
+        'Tvůj aktuální lokální progress nebude automaticky smazán, ale může být po načtení cloudu přepsán. ' +
+        'Chceš pokračovat?'
+      );
+      if (!confirmed) return;
+
       signInBtn.disabled = true;
       try {
+        const prevUid = lastState && lastState.uid;
         const res = await window.NWGoogleAuth.signInWithGoogle();
         if (!res.ok) {
           showError(res.error && res.error.message ? res.error.message : 'Něco se pokazilo.');
+          signInBtn.disabled = false;
+          return;
         }
-      } finally {
+
+        const newUid = res.user && res.user.uid;
+        credentialInUse = false;
+
+        if (newUid && prevUid && newUid !== prevUid && window.NWCloudSave
+            && typeof window.NWCloudSave.initCloudSave === 'function') {
+          try { window.NWCloudSave.initCloudSave({ uid: newUid }); }
+          catch (e) { console.warn('[googleLink] re-init cloudSave failed', e); }
+        }
+
+        await handlePostSignInMigration();
+      } catch (e) {
+        console.warn('[googleLink] signIn click failed', e);
+        showError('Něco se pokazilo. Zkus to znovu.');
         signInBtn.disabled = false;
       }
     });
+  }
+
+  async function handlePostSignInMigration() {
+    if (!window.NWCloudSave) return;
+    let cloudExists = false;
+    try { cloudExists = await window.NWCloudSave.hasCloudSave(); }
+    catch (e) { console.warn('[googleLink] hasCloudSave failed', e); }
+
+    const localSnap = (window.NWProgressSnapshot && window.NWProgressSnapshot.readLocalProgressSnapshot()) || null;
+    const hasLocal = !!(window.NWProgressSnapshot
+      && window.NWProgressSnapshot.isLocalProgressMeaningful
+      && window.NWProgressSnapshot.isLocalProgressMeaningful(localSnap));
+
+    if (cloudExists) {
+      let cloudSnap = null;
+      try { cloudSnap = await window.NWCloudSave.loadCloudProgress(); }
+      catch (e) { console.warn('[googleLink] loadCloudProgress failed', e); }
+
+      if (window.NWCloudMigration && typeof window.NWCloudMigration.openMigrationDialog === 'function') {
+        const summarize = window.NWProgressSnapshot && window.NWProgressSnapshot.summarizeProgressSnapshot;
+        const localSummary = hasLocal && summarize ? summarize(localSnap) : null;
+        const cloudSummary = cloudSnap && summarize ? summarize(cloudSnap) : null;
+        const action = hasLocal ? 'prompt-conflict' : 'prompt-download';
+        window.NWCloudMigration.openMigrationDialog({
+          action,
+          localSummary,
+          cloudSummary,
+          onChoice: async (choice) => {
+            try {
+              if (choice === 'download') {
+                const ok = await window.NWCloudSave.downloadCloudProgressToLocal();
+                if (ok) window.location.reload();
+              } else if (choice === 'upload') {
+                await window.NWCloudSave.uploadLocalProgressToCloud('post-signin-upload');
+              }
+            } catch (e) { console.warn('[googleLink] post-signin choice failed', e); }
+          }
+        });
+      } else if (window.confirm('Našli jsme cloud save k tomuto Google účtu. Chceš ho načíst?')) {
+        const ok = await window.NWCloudSave.downloadCloudProgressToLocal();
+        if (ok) window.location.reload();
+      }
+    } else if (hasLocal) {
+      if (window.confirm('K tomuto Google účtu zatím není žádný cloud save. Chceš tam nahrát aktuální lokální progress?')) {
+        try { await window.NWCloudSave.uploadLocalProgressToCloud('post-signin-upload'); }
+        catch (e) { console.warn('[googleLink] upload failed', e); }
+      }
+    }
   }
 }
 

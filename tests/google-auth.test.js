@@ -45,7 +45,13 @@ assert.ok(indexSource.includes('id="googleAccountErrorText"'), 'index.html must 
 // panels.js: wires Google link UI
 assert.ok(panelsSource.includes('initGoogleLinkUi'), 'panels.js must define initGoogleLinkUi');
 assert.ok(panelsSource.includes('linkCurrentAnonymousUserWithGoogle'), 'panels.js must call linkCurrentAnonymousUserWithGoogle');
-assert.ok(panelsSource.includes('Propojeno s Google'), 'panels.js must render linked-account label');
+assert.ok(panelsSource.includes('Přihlášen přes Google'), 'panels.js must render linked-account label with email');
 assert.ok(panelsSource.includes('Hraješ jako anonymní'), 'panels.js must render anonymous-account label');
+assert.ok(panelsSource.includes('Přihlásit existující Google účet'), 'panels.js must offer existing-account sign-in label after credential-in-use');
+assert.ok(/credentialInUse\s*=\s*true/.test(panelsSource), 'panels.js must track credential-in-use state');
+assert.ok(panelsSource.includes('handlePostSignInMigration'), 'panels.js must run post-signIn migration flow');
+assert.ok(panelsSource.includes('window.confirm('), 'panels.js must confirm before destructive sign-in');
+assert.ok(/initCloudSave\(\s*{\s*uid:\s*newUid/.test(panelsSource), 'panels.js must re-init cloudSave with new uid after signIn');
+assert.ok(googleAuthSource.includes('lastSnapshot'), 'googleAuth must cache last snapshot for subscribers');
 
 console.log('google-auth.test.js: all checks passed');

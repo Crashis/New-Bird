@@ -2,8 +2,12 @@ import { auth, firebaseSDK } from '../../firebase.js';
 
 const listeners = new Set();
 let currentUser = null;
+let lastSnapshot = null;
 
 function warn(msg, err) { console.warn(`[googleAuth] ${msg}`, err || ''); }
+function logDebug(msg, data) {
+  try { console.log(`[googleAuth] ${msg}`, data || ''); } catch (e) {}
+}
 
 function snapshot() {
   if (!currentUser) return { signedIn: false, anonymous: false, email: null, displayName: null, uid: null };
@@ -18,6 +22,7 @@ function snapshot() {
 
 function emit() {
   const snap = snapshot();
+  lastSnapshot = snap;
   for (const fn of listeners) {
     try { fn(snap); } catch (e) { /* ignore */ }
   }
@@ -38,7 +43,8 @@ export function getAuthState() {
 export function subscribeAuthState(fn) {
   if (typeof fn !== 'function') return () => {};
   listeners.add(fn);
-  try { fn(snapshot()); } catch (e) {}
+  const initial = lastSnapshot || snapshot();
+  try { fn(initial); } catch (e) {}
   return () => listeners.delete(fn);
 }
 
@@ -85,9 +91,11 @@ export async function linkCurrentAnonymousUserWithGoogle() {
     return { ok: false, error: { kind: 'already-linked', message: 'Účet je už propojený.' } };
   }
   try {
+    logDebug('linkWithPopup start', { uid: user.uid, isAnonymous: user.isAnonymous });
     const provider = buildGoogleProvider();
     const result = await firebaseSDK.linkWithPopup(user, provider);
     currentUser = result && result.user ? result.user : auth.currentUser;
+    logDebug('linkWithPopup ok', { uid: currentUser && currentUser.uid, isAnonymous: currentUser && currentUser.isAnonymous });
     emit();
     try {
       if (window.NWCloudSave && typeof window.NWCloudSave.flushCloudSave === 'function') {
@@ -96,17 +104,25 @@ export async function linkCurrentAnonymousUserWithGoogle() {
     } catch (e) { warn('flush after link failed', e); }
     return { ok: true, user: currentUser };
   } catch (error) {
-    warn('linkWithPopup failed', error);
-    return { ok: false, error: mapAuthError(error) };
+    const mapped = mapAuthError(error);
+    if (mapped.kind === 'credential-in-use') {
+      warn('credential-already-in-use — Google account belongs to a different Firebase user', error && error.code);
+    } else {
+      warn('linkWithPopup failed', error);
+    }
+    return { ok: false, error: mapped };
   }
 }
 
 export async function signInWithGoogle() {
   if (!auth) return { ok: false, error: { kind: 'unavailable', message: 'Firebase auth není dostupný.' } };
   try {
+    const before = auth.currentUser;
+    logDebug('signInWithPopup start', { previousUid: before && before.uid, previousAnonymous: before && before.isAnonymous });
     const provider = buildGoogleProvider();
     const result = await firebaseSDK.signInWithPopup(auth, provider);
     currentUser = result && result.user ? result.user : auth.currentUser;
+    logDebug('signInWithPopup ok', { uid: currentUser && currentUser.uid, isAnonymous: currentUser && currentUser.isAnonymous });
     emit();
     return { ok: true, user: currentUser };
   } catch (error) {
