@@ -164,6 +164,20 @@
     touch-action: pan-y;
   }
 
+  /* large-panel má vyšší specificitu — sjednotíme s mobilním vzhledem */
+  .shop-panel.large-panel {
+    width: min(96vw, 640px);
+    max-width: none;
+    max-height: min(82svh, 720px);
+    padding: 1rem 0.95rem 0.95rem;
+  }
+
+  .shop-panel.large-panel .panel-header {
+    top: -1rem;
+    margin: -1rem -0.95rem 0.55rem;
+    padding: 0.85rem 0.95rem 0.45rem;
+  }
+
   .shop-panel h2 {
     font-size: clamp(1rem, 5vw, 1.35rem);
     letter-spacing: 0.08em;

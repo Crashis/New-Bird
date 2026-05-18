@@ -213,7 +213,7 @@
     </div>
 
     <!-- Dungeons panel -->
-    <div class="shop-panel" id="dungeonsPanel">
+    <div class="shop-panel large-panel" id="dungeonsPanel">
       <div class="panel-header">
         <h2 data-i18n="dungeons.title">🏰 Dungeons</h2>
         <button class="game-btn panel-close-btn" onclick="toggleDungeonsPanel(false)">×</button>
@@ -236,18 +236,18 @@
     </div>
 
     <!-- Leaderboard panel -->
-    <div class="shop-panel" id="leaderboardPanel">
+    <div class="shop-panel large-panel" id="leaderboardPanel">
       <div class="panel-header">
         <h2 data-i18n="leaderboard.title">🏆 Leaderboard</h2>
         <button class="game-btn panel-close-btn" onclick="toggleLeaderboardPanel(false)">×</button>
       </div>
       <div class="shop-subtitle" data-i18n="leaderboard.subtitle">Top 10 hrdinů podle nejlepšího skóre.</div>
-      <div class="leaderboard-nickname" style="display:flex; gap:0.4rem; align-items:center; flex-wrap:wrap; margin:0.4rem 0;">
-        <label for="leaderboardNicknameInput" style="font-size:0.85rem;" data-i18n="leaderboard.nickname.label">Tvoje jméno:</label>
+      <div class="leaderboard-nickname">
+        <label for="leaderboardNicknameInput" data-i18n="leaderboard.nickname.label">Jméno hráče</label>
         <input id="leaderboardNicknameInput" type="text" maxlength="20" autocomplete="off" spellcheck="false"
-               placeholder="Anonymní hráč" style="flex:1; min-width:120px; padding:0.25rem 0.5rem;" />
-        <button class="game-btn" id="leaderboardNicknameSave" type="button" data-i18n="leaderboard.nickname.save">Uložit</button>
-        <div class="leaderboard-nickname-status" id="leaderboardNicknameStatus" aria-live="polite" style="flex-basis:100%; font-size:0.8rem; min-height:1em;"></div>
+               placeholder="Anonymní hráč" data-i18n-placeholder="leaderboard.nickname.placeholder" />
+        <button class="game-btn" id="leaderboardNicknameSave" type="button" data-i18n="leaderboard.nickname.save">Uložit jméno</button>
+        <div class="leaderboard-nickname-status" id="leaderboardNicknameStatus" aria-live="polite"></div>
       </div>
       <div class="leaderboard-list" id="leaderboardBody"></div>
       <div class="leaderboard-status" id="leaderboardStatus" aria-live="polite"></div>
@@ -257,7 +257,7 @@
     </div>
 
     <!-- Credits panel -->
-    <div class="shop-panel" id="creditsPanel" style="text-align:center;">
+    <div class="shop-panel large-panel" id="creditsPanel" style="text-align:center;">
       <div class="panel-header">
         <h2 data-i18n="credits.title">📜 Credits</h2>
         <button class="game-btn panel-close-btn" onclick="toggleCreditsPanel(false)">×</button>
@@ -302,7 +302,7 @@
     </div>
 
     <!-- Shop panel -->
-    <div class="shop-panel" id="shopPanel">
+    <div class="shop-panel large-panel" id="shopPanel">
       <h2 data-i18n="shop.title">🛒 Amazon Shop</h2>
       <div class="shop-subtitle" data-i18n="shop.subtitle">Postup se ukládá automaticky. Cena roste s každým levelem.</div>
       <div class="shop-wallet">
@@ -364,7 +364,7 @@
     </div>
 
     <!-- Skins panel -->
-    <div class="shop-panel" id="skinsPanel" style="text-align:center;">
+    <div class="shop-panel large-panel" id="skinsPanel" style="text-align:center;">
       <h2 data-i18n="skins.title">🎭 Výběr postavy</h2>
       <div class="shop-subtitle" data-i18n="skins.subtitle">Vyber si skin pro svého hrdinu. Odemykej nové postavy hraním.</div>
 
@@ -387,7 +387,7 @@
     </div>
 
     <!-- Achievements panel -->
-    <div class="shop-panel achievements-panel" id="achievementsPanel">
+    <div class="shop-panel large-panel achievements-panel" id="achievementsPanel">
       <div class="panel-header">
         <h2 data-i18n="achievements.title">🏆 Achievementy</h2>
         <button class="game-btn panel-close-btn" id="closeAchievementsBtn" onclick="toggleAchievementsPanel(false)">×</button>
@@ -412,7 +412,7 @@
     </div>
 
     <!-- Settings panel -->
-    <div class="shop-panel" id="settingsPanel">
+    <div class="shop-panel large-panel" id="settingsPanel">
       <h2 data-i18n="settings.title">⚙ Settings</h2>
       <div class="shop-subtitle" data-i18n="settings.subtitle">Tvoje nastavení se ukládá automaticky.</div>
 
@@ -475,7 +475,7 @@
     </div>
 
     <!-- Heirloom panel -->
-    <div class="shop-panel" id="heirloomPanel">
+    <div class="shop-panel large-panel" id="heirloomPanel">
       <div class="panel-header">
         <h2 data-i18n="heirloom.title">🚀 Heirloom</h2>
         <button class="game-btn panel-close-btn" id="closeHeirloomBtn" onclick="toggleHeirloomPanel(false)">×</button>
@@ -572,7 +572,7 @@
     </div>
 
     <!-- Upgrades panel -->
-    <div class="shop-panel upgrades-panel" id="upgradesPanel">
+    <div class="shop-panel large-panel upgrades-panel" id="upgradesPanel">
       <div class="panel-header">
         <h2 data-i18n="upgrades.title">⚡ Upgrady</h2>
         <button class="game-btn panel-close-btn" id="closeUpgradesBtn" onclick="toggleUpgradesPanel(false)">×</button>
@@ -1055,14 +1055,25 @@
   </div>
 </div>
 
-<!-- Optional local Firebase config (gitignored). Create from src/firebase.config.local.example.js. -->
+<!-- Firebase config loader.
+     1) Production config (committed, used on GitHub Pages).
+     2) Local config (gitignored) — overrides production for local dev.
+     Both load silently; missing files do not break the game (leaderboard falls back). -->
 <script>
   (function () {
-    var s = document.createElement('script');
-    s.src = './src/firebase.config.local.js';
-    s.async = false;
-    s.onerror = function () { /* no local config — leaderboard runs offline */ };
-    document.currentScript.parentNode.insertBefore(s, document.currentScript.nextSibling);
+    var sources = [
+      './src/firebase.config.production.js',
+      './src/firebase.config.local.js'
+    ];
+    var anchor = document.currentScript;
+    sources.forEach(function (src) {
+      var s = document.createElement('script');
+      s.src = src;
+      s.async = false;
+      s.onerror = function () { /* missing config file — ignore silently */ };
+      anchor.parentNode.insertBefore(s, anchor.nextSibling);
+      anchor = s;
+    });
   })();
 </script>
 <script type="module" src="./src/js/main.js"></script>

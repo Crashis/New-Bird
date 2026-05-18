@@ -13,6 +13,38 @@
 
   .shop-panel.active { display: block; }
 
+  /* ===== LARGE PANEL — sjednocený layout pro hlavní menu panely =====
+     Inspirace Tavern (max-width ~760-820px). Interní scroll, sticky header,
+     aby celá stránka nerostla s počtem položek. */
+  .shop-panel.large-panel {
+    width: min(820px, calc(100% - 2rem));
+    max-width: 92vw;
+    max-height: min(85vh, 720px);
+    padding: 1.2rem 1.4rem 1.1rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+  }
+
+  .shop-panel.large-panel .panel-header {
+    position: sticky;
+    top: -1.2rem; /* skryje padding-top za sticky pozadím */
+    margin: -1.2rem -1.4rem 0.55rem;
+    padding: 1rem 1.4rem 0.5rem;
+    background: linear-gradient(180deg,
+                  rgba(10,8,6,0.985) 80%,
+                  rgba(10,8,6,0.0));
+    z-index: 6;
+  }
+
+  .shop-panel.large-panel > .game-buttons {
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba(201,168,76,0.12);
+    margin-top: 0.8rem;
+  }
+
   .shop-panel h2 {
     font-family: 'Cinzel Decorative', serif;
     color: var(--gold);
@@ -133,25 +165,59 @@
   .leaderboard-list {
     display: flex;
     flex-direction: column;
-    gap: 0.45rem;
-    margin: 0.8rem 0 0.7rem;
+    gap: 0.5rem;
+    margin: 0.9rem 0 0.7rem;
   }
 
   .leaderboard-row {
     display: grid;
-    grid-template-columns: 3.4rem minmax(0, 1fr) 5.5rem;
+    grid-template-columns: 3rem minmax(0, 1fr) 6rem;
     align-items: center;
-    gap: 0.65rem;
+    gap: 0.75rem;
     border: 1px solid var(--dark-border);
-    border-radius: 4px;
-    background: rgba(255,255,255,0.025);
-    padding: 0.65rem 0.75rem;
+    border-radius: 6px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.04), rgba(255,255,255,0.015));
+    padding: 0.7rem 0.9rem;
     font-family: 'Cinzel', serif;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+  }
+
+  .leaderboard-row:hover {
+    border-color: var(--gold-dark);
+    transform: translateX(2px);
+  }
+
+  .leaderboard-row.rank-1 {
+    border-color: rgba(255, 215, 0, 0.7);
+    background: linear-gradient(90deg, rgba(255, 215, 0, 0.18), rgba(255, 215, 0, 0.04));
+    box-shadow: 0 0 18px rgba(255, 215, 0, 0.25);
+  }
+  .leaderboard-row.rank-2 {
+    border-color: rgba(220, 220, 220, 0.55);
+    background: linear-gradient(90deg, rgba(220, 220, 220, 0.14), rgba(220, 220, 220, 0.03));
+    box-shadow: 0 0 14px rgba(220, 220, 220, 0.18);
+  }
+  .leaderboard-row.rank-3 {
+    border-color: rgba(205, 127, 50, 0.6);
+    background: linear-gradient(90deg, rgba(205, 127, 50, 0.16), rgba(205, 127, 50, 0.03));
+    box-shadow: 0 0 14px rgba(205, 127, 50, 0.2);
+  }
+  .leaderboard-row.is-current-player {
+    outline: 1px solid var(--gold);
+    box-shadow: 0 0 18px rgba(201, 168, 76, 0.45);
   }
 
   .leaderboard-rank {
     color: var(--gold);
     font-weight: 700;
+    font-size: 1.05rem;
+    text-align: center;
+    letter-spacing: 0.04em;
+  }
+  .leaderboard-row.rank-1 .leaderboard-rank,
+  .leaderboard-row.rank-2 .leaderboard-rank,
+  .leaderboard-row.rank-3 .leaderboard-rank {
+    font-size: 1.4rem;
   }
 
   .leaderboard-name {
@@ -160,20 +226,88 @@
     color: var(--text-light);
     text-overflow: ellipsis;
     white-space: nowrap;
+    letter-spacing: 0.04em;
+  }
+  .leaderboard-row.is-current-player .leaderboard-name {
+    color: var(--gold-light);
+    font-weight: 700;
   }
 
   .leaderboard-score {
     color: var(--gold-light);
     font-weight: 700;
     text-align: right;
+    font-size: 0.95rem;
   }
 
   .leaderboard-status {
     min-height: 1rem;
     color: var(--text-muted);
     font-family: 'Lato', sans-serif;
-    font-size: 0.72rem;
-    letter-spacing: 0.08em;
-    line-height: 1.45;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    line-height: 1.5;
     text-align: center;
+    padding: 0.85rem 0.9rem;
+    border: 1px dashed rgba(201, 168, 76, 0.25);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.02);
+    margin: 0.4rem 0 0.2rem;
+  }
+
+  .leaderboard-status:empty {
+    display: none;
+  }
+
+  .leaderboard-status.loading { color: var(--gold-light); }
+  .leaderboard-status.error   { color: #ffaa7a; }
+  .leaderboard-status.empty   { color: var(--text-muted); font-style: italic; }
+
+  /* Nickname sekce */
+  .leaderboard-nickname {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin: 0.5rem 0 0.7rem;
+    padding: 0.7rem 0.85rem;
+    border: 1px solid var(--dark-border);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.025);
+  }
+
+  .leaderboard-nickname label {
+    font-family: 'Cinzel', serif;
+    color: var(--gold-light);
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    flex-shrink: 0;
+  }
+
+  .leaderboard-nickname input {
+    flex: 1 1 160px;
+    min-width: 120px;
+    padding: 0.4rem 0.65rem;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid var(--gold-dark);
+    border-radius: 4px;
+    color: var(--text-light);
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.04em;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .leaderboard-nickname input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 10px rgba(201, 168, 76, 0.35);
+  }
+
+  .leaderboard-nickname-status {
+    flex-basis: 100%;
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    min-height: 1em;
+    color: var(--text-muted);
   }

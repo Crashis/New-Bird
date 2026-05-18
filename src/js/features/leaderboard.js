@@ -121,11 +121,15 @@
     onlineService = service && typeof service === 'object' ? service : null;
   }
 
-  function setLeaderboardStatus(text) {
+  function setLeaderboardStatus(text, tone) {
     const status = global.document && global.document.getElementById('leaderboardStatus');
     if (!status) return;
     status.textContent = text || '';
+    status.classList.remove('loading', 'error', 'empty');
+    if (tone) status.classList.add(tone);
   }
+
+  const RANK_MEDALS = ['🥇', '🥈', '🥉'];
 
   function clearLeaderboardBody() {
     const body = global.document && global.document.getElementById('leaderboardBody');
@@ -141,18 +145,23 @@
     const body = clearLeaderboardBody();
     if (!body) return;
     const safeEntries = Array.isArray(entries) ? entries.slice(0, 10) : [];
+    const currentName = getCurrentDisplayName();
     for (let i = 0; i < safeEntries.length; i++) {
       const entry = safeEntries[i] || {};
       const row = global.document.createElement('div');
-      row.className = 'leaderboard-row';
+      const rankIndex = i + 1;
+      const entryName = sanitizeDisplayName(entry.displayName);
+      const classes = ['leaderboard-row', `rank-${rankIndex}`];
+      if (currentName && entryName === currentName) classes.push('is-current-player');
+      row.className = classes.join(' ');
 
       const rank = global.document.createElement('span');
       rank.className = 'leaderboard-rank';
-      rank.textContent = `#${i + 1}`;
+      rank.textContent = i < RANK_MEDALS.length ? RANK_MEDALS[i] : `#${rankIndex}`;
 
       const name = global.document.createElement('span');
       name.className = 'leaderboard-name';
-      name.textContent = sanitizeDisplayName(entry.displayName);
+      name.textContent = entryName;
 
       const scoreEl = global.document.createElement('span');
       scoreEl.className = 'leaderboard-score';
@@ -166,20 +175,24 @@
   }
 
   async function loadLeaderboardPanel() {
-    setLeaderboardStatus(translate('leaderboard.loading', 'Načítám leaderboard...'));
+    setLeaderboardStatus(translate('leaderboard.loading', 'Načítám hrdiny z databáze...'), 'loading');
     renderLeaderboardRows([]);
     if (!onlineService || typeof onlineService.fetchTopScores !== 'function') {
-      setLeaderboardStatus(translate('leaderboard.sleeping', SLEEPING_MESSAGE));
+      setLeaderboardStatus(translate('leaderboard.sleeping', SLEEPING_MESSAGE), 'error');
       return;
     }
     try {
       const entries = await onlineService.fetchTopScores();
       renderLeaderboardRows(entries);
-      setLeaderboardStatus(entries && entries.length ? '' : translate('leaderboard.empty', 'Zatím tu nikdo není.'));
+      if (entries && entries.length) {
+        setLeaderboardStatus('');
+      } else {
+        setLeaderboardStatus(translate('leaderboard.empty', 'Zatím tu nikdo není. Buď první legenda.'), 'empty');
+      }
     } catch (error) {
       console.warn('[leaderboard] read failed', error);
       renderLeaderboardRows([]);
-      setLeaderboardStatus(translate('leaderboard.sleeping', SLEEPING_MESSAGE));
+      setLeaderboardStatus(translate('leaderboard.sleeping', SLEEPING_MESSAGE), 'error');
     }
   }
 
