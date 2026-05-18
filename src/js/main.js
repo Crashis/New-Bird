@@ -1,6 +1,7 @@
 const scriptChunks = [
   "./src/js/core/i18n.js",
   "./src/js/core/storage.js",
+  "./src/js/features/progressSnapshot.js",
   "./src/js/core/utils.js",
   "./src/js/ui/dom.js",
   "./src/js/ui/menu.js",
