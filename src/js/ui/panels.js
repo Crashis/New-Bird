@@ -355,3 +355,101 @@ function toggleWheelOfFortunePanel(forceOpen) {
   if (!open && typeof stopWheelAnimation === 'function') stopWheelAnimation();
   if (open && typeof initWheelOfFortune === 'function') initWheelOfFortune();
 }
+
+function initCloudSavePanel() {
+  if (typeof document === 'undefined') return;
+  const statusEl = document.getElementById('cloudSaveStatusText');
+  const uploadBtn = document.getElementById('cloudSaveUploadBtn');
+  const downloadBtn = document.getElementById('cloudSaveDownloadBtn');
+  const migrateBtn = document.getElementById('cloudSaveRunMigrationBtn');
+  if (!statusEl) return;
+
+  function statusLabel(status) {
+    switch (status) {
+      case 'disabled': return 'Cloud save: vypnuto';
+      case 'ready': return 'Cloud save: připraveno';
+      case 'saving': return 'Cloud save: ukládá se...';
+      case 'synced': return 'Cloud save: synchronizováno';
+      case 'error': return 'Cloud save: chyba — hraješ lokálně';
+      case 'idle': return 'Cloud save: čeká na inicializaci';
+      default: return 'Cloud save: ' + (status || 'neznámý stav');
+    }
+  }
+
+  function refresh() {
+    if (window.NWCloudSave && typeof window.NWCloudSave.getCloudSaveStatus === 'function') {
+      const { status } = window.NWCloudSave.getCloudSaveStatus();
+      statusEl.textContent = statusLabel(status);
+      const enabled = status !== 'disabled' && status !== 'idle';
+      if (uploadBtn) uploadBtn.disabled = !enabled;
+      if (downloadBtn) downloadBtn.disabled = !enabled;
+    } else {
+      statusEl.textContent = statusLabel('disabled');
+      if (uploadBtn) uploadBtn.disabled = true;
+      if (downloadBtn) downloadBtn.disabled = true;
+    }
+  }
+
+  refresh();
+  let unsub = null;
+  function trySubscribe() {
+    if (unsub) return;
+    if (window.NWCloudSave && typeof window.NWCloudSave.subscribeCloudSaveStatus === 'function') {
+      unsub = window.NWCloudSave.subscribeCloudSaveStatus(refresh);
+    }
+  }
+  trySubscribe();
+  // NWCloudSave is created when cloudSave.js ESM module loads asynchronously
+  // after Firebase auth. Retry subscription a few times until it appears.
+  let attempts = 0;
+  const retry = setInterval(() => {
+    attempts += 1;
+    refresh();
+    trySubscribe();
+    if (unsub || attempts >= 30) clearInterval(retry);
+  }, 1000);
+
+  if (uploadBtn) {
+    uploadBtn.addEventListener('click', async () => {
+      if (!window.NWCloudSave || typeof window.NWCloudSave.uploadLocalProgressToCloud !== 'function') return;
+      uploadBtn.disabled = true;
+      try {
+        await window.NWCloudSave.uploadLocalProgressToCloud('manual-upload');
+      } finally {
+        uploadBtn.disabled = false;
+      }
+    });
+  }
+
+  if (downloadBtn) {
+    downloadBtn.addEventListener('click', async () => {
+      if (!window.NWCloudSave || typeof window.NWCloudSave.downloadCloudProgressToLocal !== 'function') return;
+      const ok = window.confirm('Tím přepíšeš lokální progress cloudovým. Pokračovat?');
+      if (!ok) return;
+      downloadBtn.disabled = true;
+      try {
+        const success = await window.NWCloudSave.downloadCloudProgressToLocal();
+        if (success) window.location.reload();
+      } finally {
+        downloadBtn.disabled = false;
+      }
+    });
+  }
+
+  if (migrateBtn) {
+    migrateBtn.addEventListener('click', () => {
+      if (window.NWCloudMigration && typeof window.NWCloudMigration.clearMigrationDismissed === 'function') {
+        window.NWCloudMigration.clearMigrationDismissed();
+      }
+      window.location.reload();
+    });
+  }
+}
+
+if (typeof document !== 'undefined') {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCloudSavePanel);
+  } else {
+    initCloudSavePanel();
+  }
+}
