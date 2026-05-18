@@ -232,12 +232,27 @@
     return 'equal';
   }
 
+  function createDefaultProgressSnapshot() {
+    return normalizeProgressSnapshot({});
+  }
+
+  function resetLocalProgressToDefaults() {
+    const list = (global.NWStorage && global.NWStorage.PROGRESS_KEY_LIST) || [];
+    for (const key of list) {
+      try { global.localStorage.removeItem(key); } catch (e) {}
+    }
+    // Also clear the migration dismissed flag so the cloud-save flow restarts cleanly.
+    try { global.localStorage.removeItem('cloudSaveMigrationDismissed'); } catch (e) {}
+  }
+
   global.NWProgressSnapshot = {
     readLocalProgressSnapshot,
     normalizeProgressSnapshot,
     applyProgressSnapshotToLocalStorage,
     isLocalProgressMeaningful,
     summarizeProgressSnapshot,
-    compareProgressSnapshots
+    compareProgressSnapshots,
+    createDefaultProgressSnapshot,
+    resetLocalProgressToDefaults
   };
 })(typeof window !== 'undefined' ? window : globalThis);

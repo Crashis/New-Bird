@@ -145,3 +145,30 @@
     gap: 0.4rem;
     flex-wrap: wrap;
   }
+
+  .settings-danger-zone {
+    margin: 0.8rem 0 0.4rem;
+    padding: 0.6rem 0.8rem;
+    border: 1px solid rgba(139, 26, 26, 0.55);
+    border-radius: 6px;
+    background: rgba(139, 26, 26, 0.08);
+  }
+  .settings-danger-title {
+    color: #ff7a6a;
+    letter-spacing: 0.08em;
+  }
+  .danger-btn {
+    border-color: var(--red-accent, #8b1a1a) !important;
+    color: #ffd0c8 !important;
+    background: linear-gradient(180deg, rgba(139,26,26,0.55), rgba(90,15,15,0.55)) !important;
+  }
+  .danger-btn:hover:not(:disabled) {
+    background: linear-gradient(180deg, rgba(180,40,40,0.75), rgba(120,20,20,0.75)) !important;
+    color: #fff !important;
+  }
+  .danger-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .settings-reset-status-error { color: #ff9a9a; }
+  .settings-reset-status-ok { color: #80f0c0; }

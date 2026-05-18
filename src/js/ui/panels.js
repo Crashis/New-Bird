@@ -446,6 +446,61 @@ function initCloudSavePanel() {
   }
 
   initGoogleLinkUi();
+  initResetProgressUi();
+}
+
+function initResetProgressUi() {
+  if (typeof document === 'undefined') return;
+  const btn = document.getElementById('settingsResetProgressBtn');
+  const statusEl = document.getElementById('settingsResetProgressStatus');
+  if (!btn) return;
+
+  function showStatus(message, kind) {
+    if (!statusEl) return;
+    statusEl.textContent = message || '';
+    statusEl.className = 'settings-cloud-status';
+    if (kind === 'error') statusEl.classList.add('settings-reset-status-error');
+    else if (kind === 'ok') statusEl.classList.add('settings-reset-status-ok');
+    statusEl.style.display = message ? '' : 'none';
+  }
+
+  btn.addEventListener('click', async () => {
+    const confirmed = window.confirm(
+      'Opravdu chceš resetovat celý progress? Přijdeš o měny, skiny, upgrady, achievementy, heirloomy i dungeon progress.'
+    );
+    if (!confirmed) return;
+    const typed = window.prompt('Pro potvrzení napiš RESET.');
+    if (typed == null) return;
+    if (String(typed).trim().toUpperCase() !== 'RESET') {
+      showStatus('Reset zrušen — potvrzovací text neodpovídá.', 'error');
+      return;
+    }
+    if (!window.NWProgressReset || typeof window.NWProgressReset.resetAllProgress !== 'function') {
+      showStatus('Reset modul není dostupný.', 'error');
+      return;
+    }
+
+    btn.disabled = true;
+    showStatus('Resetuji progress…', null);
+    try {
+      const result = await window.NWProgressReset.resetAllProgress();
+      if (result && result.ok) {
+        showStatus('Progress byl resetován. Začínáš znovu od nuly.', 'ok');
+        setTimeout(() => { try { window.location.reload(); } catch (e) {} }, 600);
+        return;
+      }
+      if (result && result.stage === 'cloud') {
+        showStatus('Cloud reset selhal. Lokální progress zůstal nedotčený. Zkus to prosím znovu.', 'error');
+      } else {
+        showStatus('Reset selhal. Zkus to prosím znovu.', 'error');
+      }
+    } catch (e) {
+      console.warn('[resetProgress] failed', e);
+      showStatus('Reset selhal. Zkus to prosím znovu.', 'error');
+    } finally {
+      btn.disabled = false;
+    }
+  });
 }
 
 function initGoogleLinkUi() {

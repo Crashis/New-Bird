@@ -135,6 +135,13 @@ export async function downloadCloudProgressToLocal() {
   return false;
 }
 
+export async function resetCloudProgressToDefaults(reason = 'reset') {
+  if (!isAvailable()) return false;
+  if (!window.NWProgressSnapshot || typeof window.NWProgressSnapshot.createDefaultProgressSnapshot !== 'function') return false;
+  const fresh = window.NWProgressSnapshot.createDefaultProgressSnapshot();
+  return saveCloudProgress(fresh, reason);
+}
+
 export function queueCloudSave(reason = 'autosave') {
   if (!isAvailable()) return;
   pendingReason = reason;
@@ -176,6 +183,7 @@ if (typeof window !== 'undefined') {
     uploadLocalProgressToCloud,
     downloadCloudProgressToLocal,
     queueCloudSave,
-    flushCloudSave
+    flushCloudSave,
+    resetCloudProgressToDefaults
   };
 }
