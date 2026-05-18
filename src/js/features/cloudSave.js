@@ -16,6 +16,7 @@ let lastError = null;
 let pendingTimer = null;
 let pendingReason = null;
 let lastSavedAt = 0;
+let isFlushing = false;
 const statusListeners = new Set();
 
 function setStatus(status, error = null) {
@@ -65,6 +66,7 @@ export async function hasCloudSave() {
     return data.hasCloudSave === true;
   } catch (error) {
     console.warn('[cloudSave] hasCloudSave failed', error);
+    setStatus('error', error);
     return false;
   }
 }
@@ -136,7 +138,7 @@ export async function downloadCloudProgressToLocal() {
 export function queueCloudSave(reason = 'autosave') {
   if (!isAvailable()) return;
   pendingReason = reason;
-  if (pendingTimer) return;
+  if (pendingTimer || isFlushing) return;
   pendingTimer = setTimeout(() => {
     pendingTimer = null;
     const r = pendingReason || 'autosave';
@@ -153,8 +155,14 @@ export async function flushCloudSave(reason = 'flush') {
   }
   if (!isAvailable()) return false;
   if (!window.NWProgressSnapshot) return false;
-  const snap = window.NWProgressSnapshot.readLocalProgressSnapshot();
-  return saveCloudProgress(snap, reason);
+  if (isFlushing) return false;
+  isFlushing = true;
+  try {
+    const snap = window.NWProgressSnapshot.readLocalProgressSnapshot();
+    return await saveCloudProgress(snap, reason);
+  } finally {
+    isFlushing = false;
+  }
 }
 
 if (typeof window !== 'undefined') {
