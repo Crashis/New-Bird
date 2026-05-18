@@ -88,6 +88,10 @@ test('readLocalProgressSnapshot picks up currencies and upgrades', () => {
     nw_flappy_err_cubes: '1',
     nw_flappy_upgrade_shield_start: '1',
     nw_flappy_upgrade_invincibility: '2',
+    nw_flappy_upgrade_double_yang: '3',
+    nw_flappy_upgrade_crown_bonus: '1',
+    nw_flappy_upgrade_max_shields_2: '1',
+    nw_flappy_player_upgrades: '{"currencyLuck":4,"rocketExtraAmmo":2,"rocketReloadSpeed":1,"rocketPower":1}',
     nw_flappy_selected_skin: 'godias-zubaty',
     nw_flappy_unlocked_skins: '["skin-a","skin-b"]',
     heirloomRocketPurchased: '1',
@@ -102,6 +106,15 @@ test('readLocalProgressSnapshot picks up currencies and upgrades', () => {
   assert.strictEqual(snap.errCubes, 1);
   assert.strictEqual(snap.upgrades.shieldStart, true);
   assert.strictEqual(snap.upgrades.invincibility, 2);
+  assert.strictEqual(snap.upgrades.doubleYang, 3);
+  assert.strictEqual(snap.upgrades.crownBonus, 1);
+  assert.strictEqual(snap.upgrades.maxShields2, true);
+  assert.deepStrictEqual(snap.upgrades.player, {
+    currencyLuck: 4,
+    rocketExtraAmmo: 2,
+    rocketReloadSpeed: 1,
+    rocketPower: 1
+  });
   assert.strictEqual(snap.selectedSkin, 'godias-zubaty');
   assert.deepStrictEqual(snap.ownedSkins, ['skin-a', 'skin-b']);
   assert.strictEqual(snap.heirlooms.rocketPurchased, true);
@@ -155,7 +168,7 @@ test('applyProgressSnapshotToLocalStorage writes all keys and round-trips', () =
   const ctx = loadEnv();
   const input = {
     bestScore: 123, yang: 50, wallets: 5, dragonCoins: 3, errCubes: 1,
-    upgrades: { shieldStart: true, invincibility: 2, doubleYang: 1, crownBonus: 0, maxShields2: true, immortalityUses: 3, player: { currencyLuck: 4 } },
+    upgrades: { shieldStart: true, invincibility: 2, doubleYang: 1, crownBonus: 0, maxShields2: true, immortalityUses: 3, player: { currencyLuck: 4, rocketExtraAmmo: 2, rocketReloadSpeed: 1, rocketPower: 1 } },
     selectedSkin: 'godias-zubaty', ownedSkins: ['skin-a', 'skin-b'],
     achievements: { first_run: { unlocked: true, rewardClaimed: true, unlockedAt: 1 } },
     heirlooms: { rocketPurchased: true, rocketEquipped: false, potionPurchased: false, potionEquipped: false, godiasPurchased: false, godiasEquipped: false, concertPurchased: false, paysafePurchased: false, neschopenkaPurchased: true },
@@ -169,6 +182,10 @@ test('applyProgressSnapshotToLocalStorage writes all keys and round-trips', () =
   assert.strictEqual(out.yang, 50);
   assert.deepStrictEqual(out.ownedSkins, ['skin-a', 'skin-b']);
   assert.strictEqual(out.upgrades.shieldStart, true);
+  assert.strictEqual(out.upgrades.invincibility, 2);
+  assert.strictEqual(out.upgrades.doubleYang, 1);
+  assert.strictEqual(out.upgrades.maxShields2, true);
+  assert.deepStrictEqual(out.upgrades.player, { currencyLuck: 4, rocketExtraAmmo: 2, rocketReloadSpeed: 1, rocketPower: 1 });
   assert.strictEqual(out.heirlooms.rocketPurchased, true);
   assert.strictEqual(out.heirlooms.neschopenkaPurchased, true);
   assert.strictEqual(out.boss.bezosTicketUnlocked, true);

@@ -8,6 +8,14 @@ function spendYang(amount) {
   return true;
 }
 
+function queueShopUpgradeCloudSave() {
+  try {
+    if (window.NWCloudSave && typeof window.NWCloudSave.queueCloudSave === 'function') {
+      window.NWCloudSave.queueCloudSave('upgrade');
+    }
+  } catch (e) {}
+}
+
 function buyShieldStart() {
   if (shieldStartOwned) return;
   const cost = UPGRADE_LEVEL_COSTS[0];
@@ -17,6 +25,7 @@ function buyShieldStart() {
   }
   shieldStartOwned = true;
   saveEconomy();
+  queueShopUpgradeCloudSave();
   updateEconomyUi();
   showShopMessage(t('shop.shieldBought'));
   showUnlockToast(t('toast.upgradeUnlocked'), t('toast.upgradeSubtitle'), 'upgrade');
@@ -46,6 +55,7 @@ function buyInvincibilityUpgrade() {
   }
   invincibilityLevel++;
   saveEconomy();
+  queueShopUpgradeCloudSave();
   updateEconomyUi();
   showShopMessage(t('shop.invExtended', { dur: (getInvincibleDurationMs() / 1000).toFixed(1) }));
   showUnlockToast(t('toast.upgradeUnlocked'), t('toast.upgradeSubtitle'), 'upgrade');
@@ -60,6 +70,7 @@ function buyDoubleYangUpgrade() {
   }
   doubleYangLevel++;
   saveEconomy();
+  queueShopUpgradeCloudSave();
   updateEconomyUi();
   showShopMessage(t('shop.dyExtended', { dur: (getDoubleYangDuration() / 1000).toFixed(1) }));
   showUnlockToast(t('toast.upgradeUnlocked'), t('toast.upgradeSubtitle'), 'upgrade');
@@ -74,6 +85,7 @@ function buyCrownBonusUpgrade() {
   }
   crownBonusLevel++;
   saveEconomy();
+  queueShopUpgradeCloudSave();
   updateEconomyUi();
   showShopMessage(t('shop.crownUp', { val: getCrownBonusValue() }));
   showUnlockToast(t('toast.upgradeUnlocked'), t('toast.upgradeSubtitle'), 'upgrade');
@@ -137,6 +149,7 @@ function buyMaxShields2() {
   maxShields2Owned = true;
   saveEconomy();
   saveDragonCoins();
+  queueShopUpgradeCloudSave();
   updateEconomyUi();
   showShopMessage(t('shop.maxShields2Bought'));
   showUnlockToast(t('toast.upgradeUnlocked'), t('toast.upgradeSubtitle'), 'upgrade');

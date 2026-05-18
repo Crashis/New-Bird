@@ -24,6 +24,7 @@ function createElement() {
 
 function loadShopEnv(options = {}) {
   const store = new Map();
+  const queuedCloudSaveReasons = [];
   const elements = {
     maxShields2Level: createElement(),
     buyMaxShields2Btn: createElement(),
@@ -45,6 +46,13 @@ function loadShopEnv(options = {}) {
       }
     },
     performance: { now() { return 0; } },
+    window: {
+      NWCloudSave: {
+        queueCloudSave(reason) {
+          queuedCloudSaveReasons.push(reason);
+        }
+      }
+    },
     t(key, values) {
       if (key === 'economy.owned') return 'Vlastnis';
       if (key === 'economy.notOwned') return 'Nevlastnis';
@@ -62,10 +70,14 @@ function loadShopEnv(options = {}) {
     showUnlockToast() {},
     UPGRADE_LEVEL_COSTS: [100, 150, 200],
     INVINCIBLE_DURATION_MS: 2000,
+    INVINCIBILITY_MAX_LEVEL: 3,
+    INVINCIBILITY_COSTS: [100, 150, 200],
     DOUBLE_YANG_BASE_MS: 8000,
     DOUBLE_YANG_BONUS_MS: 2000,
+    DOUBLE_YANG_COSTS: [100, 150],
     DOUBLE_YANG_MAX_LEVEL: 2,
     CROWN_BONUS_BASE: 1,
+    CROWN_BONUS_COSTS: [100, 150],
     CROWN_BONUS_MAX_LEVEL: 2,
     POWERUP_TYPE_WEIGHTS: [['invincibility', 1]],
     yang: Number(options.yang || 0),
@@ -81,7 +93,12 @@ function loadShopEnv(options = {}) {
   context.saveEconomy = function saveEconomy() {
     store.set('nw_flappy_yang', String(context.yang));
     store.set('nw_flappy_wallets', String(context.wallets));
+    store.set('nw_flappy_upgrade_shield_start', context.shieldStartOwned ? '1' : '0');
+    store.set('nw_flappy_upgrade_invincibility', String(context.invincibilityLevel));
+    store.set('nw_flappy_upgrade_double_yang', String(context.doubleYangLevel));
+    store.set('nw_flappy_upgrade_crown_bonus', String(context.crownBonusLevel));
     store.set('nw_flappy_upgrade_max_shields_2', context.maxShields2Owned ? '1' : '0');
+    context.window.NWCloudSave.queueCloudSave('economy');
   };
   context.saveDragonCoins = function saveDragonCoins() {
     store.set('nw_flappy_dragon_coins', String(context.dragonCoins));
@@ -89,7 +106,7 @@ function loadShopEnv(options = {}) {
   vm.createContext(context);
   vm.runInContext(currenciesSource, context);
   vm.runInContext(shopSource, context);
-  return { context, elements, store };
+  return { context, elements, store, queuedCloudSaveReasons };
 }
 
 function readGlobal(context, name) {
@@ -126,6 +143,48 @@ test('buying second shield spends all three currencies atomically', () => {
   assert.strictEqual(readGlobal(env.context, 'yang'), 34);
   assert.strictEqual(readGlobal(env.context, 'wallets'), 1);
   assert.strictEqual(readGlobal(env.context, 'dragonCoins'), 0);
+});
+
+test('buying invincibility upgrade persists the new level and queues upgrade cloud save', () => {
+  const env = loadShopEnv({ yang: 250 });
+
+  env.context.buyInvincibilityUpgrade();
+
+  assert.strictEqual(readGlobal(env.context, 'invincibilityLevel'), 1);
+  assert.strictEqual(env.store.get('nw_flappy_upgrade_invincibility'), '1');
+  assert.strictEqual(env.store.get('nw_flappy_yang'), '150');
+  assert.ok(env.queuedCloudSaveReasons.includes('upgrade'));
+});
+
+test('buying double yang upgrade persists the new level and queues upgrade cloud save', () => {
+  const env = loadShopEnv({ yang: 250 });
+
+  env.context.buyDoubleYangUpgrade();
+
+  assert.strictEqual(readGlobal(env.context, 'doubleYangLevel'), 1);
+  assert.strictEqual(env.store.get('nw_flappy_upgrade_double_yang'), '1');
+  assert.strictEqual(env.store.get('nw_flappy_yang'), '150');
+  assert.ok(env.queuedCloudSaveReasons.includes('upgrade'));
+});
+
+test('buying crown bonus upgrade persists the new level and queues upgrade cloud save', () => {
+  const env = loadShopEnv({ yang: 250 });
+
+  env.context.buyCrownBonusUpgrade();
+
+  assert.strictEqual(readGlobal(env.context, 'crownBonusLevel'), 1);
+  assert.strictEqual(env.store.get('nw_flappy_upgrade_crown_bonus'), '1');
+  assert.strictEqual(env.store.get('nw_flappy_yang'), '150');
+  assert.ok(env.queuedCloudSaveReasons.includes('upgrade'));
+});
+
+test('buying second shield queues upgrade cloud save', () => {
+  const env = loadShopEnv({ yang: 700, wallets: 7, dragonCoins: 6 });
+
+  env.context.buyMaxShields2();
+
+  assert.strictEqual(env.store.get('nw_flappy_upgrade_max_shields_2'), '1');
+  assert.ok(env.queuedCloudSaveReasons.includes('upgrade'));
 });
 
 test('second shield markup advertises the combined price', () => {

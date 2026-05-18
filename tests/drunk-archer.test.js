@@ -68,6 +68,13 @@ function loadArcherEnv(options = {}) {
     wallets: Number(options.wallets || 0),
     dragonCoins: Number(options.dragonCoins || 0),
     errCubes: Number(options.errCubes || 0),
+    t(key) {
+      const dict = {
+        'drunkArcher.noErrCubes': 'Nemáš žádnou Err kostku.',
+        'drunkArcher.missed': 'Netrefil ses. Err kostka je pryč.'
+      };
+      return dict[key] || key;
+    },
     updateEconomyUiCalls: 0,
     updateEconomyUi() {
       context.updateEconomyUiCalls++;
@@ -156,5 +163,5 @@ test('miss consumes the Err cube and pays no reward', () => {
   assert.strictEqual(readGlobal(env.context, 'yang'), 0);
   assert.strictEqual(readGlobal(env.context, 'wallets'), 0);
   assert.strictEqual(readGlobal(env.context, 'dragonCoins'), 0);
-  assert.match(env.elements.drunkArcherStatus.textContent, /Err kostka je fuč/);
+  assert.match(env.elements.drunkArcherStatus.textContent, /Err kostka je pry/);
 });

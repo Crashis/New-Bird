@@ -83,8 +83,16 @@ function loadErrCubeEnv(options = {}) {
     particles: [],
     ACHIEVEMENTS: [],
     SKINS: [],
+    TRAILS: [],
+    SPECIALS: [],
+    TRAIL_DEFAULT_COLOR: '#ffffff',
     IMMORTALITY_USES_KEY: 'nw_flappy_immortality_uses',
-    t(key) { return key; },
+    t(key) {
+      const dict = {
+        'voice.errCube': 'Rock and Stones, brothers!'
+      };
+      return dict[key] || key;
+    },
     renderShellGamePanel() {},
     renderHeirloomPanel() {},
     renderUpgradesPanel() {},

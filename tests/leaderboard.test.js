@@ -171,7 +171,7 @@ test('leaderboard panel renders ranked rows from service results', async () => {
   assert.strictEqual(env.context.closedPanel, 'leaderboardPanel');
   assert.strictEqual(env.elements.leaderboardPanel.classList.contains('active'), true);
   assert.strictEqual(env.elements.leaderboardBody.children.length, 2);
-  assert.strictEqual(env.elements.leaderboardBody.children[0].children[0].textContent, '#1');
+  assert.strictEqual(env.elements.leaderboardBody.children[0].children[0].textContent, '🥇');
   assert.strictEqual(env.elements.leaderboardBody.children[0].children[1].textContent, 'Ada');
   assert.strictEqual(env.elements.leaderboardBody.children[0].children[2].textContent, '99');
 });
