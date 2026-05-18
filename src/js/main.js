@@ -72,6 +72,13 @@ if (typeof updateEconomyUi === 'function') updateEconomyUi();
     const initOk = cloudSaveModule.initCloudSave({ uid });
     if (!initOk) return;
 
+    try {
+      const googleAuthModule = await import("./features/googleAuth.js");
+      googleAuthModule.initGoogleAuth();
+    } catch (e) {
+      console.warn('[googleAuth] module failed to load', e);
+    }
+
     const cloudExists = await cloudSaveModule.hasCloudSave();
     const localSnap = (window.NWProgressSnapshot && window.NWProgressSnapshot.readLocalProgressSnapshot())
       || null;
