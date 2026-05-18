@@ -144,7 +144,7 @@
     };
   }
 
-  function writeNum(key, v) { try { global.localStorage.setItem(key, String(v|0)); } catch(e){} }
+  function writeNum(key, v) { try { global.localStorage.setItem(key, String(Math.max(0, Math.floor(Number(v) || 0)))); } catch(e){} }
   function writeBool(key, v) { try { global.localStorage.setItem(key, v ? '1' : '0'); } catch(e){} }
   function writeStr(key, v) { try { global.localStorage.setItem(key, String(v||'')); } catch(e){} }
   function writeJson(key, v) { try { global.localStorage.setItem(key, JSON.stringify(v)); } catch(e){} }
@@ -181,6 +181,7 @@
     writeStr(KEYS.DRAGON_EGG_DATE, s.dungeons.dragonEggDate);
     writeNum(KEYS.DRAGON_EGG_USES, s.dungeons.dragonEggUses);
     if (s.dungeons.dragonEggState) writeJson(KEYS.DRAGON_EGG_STATE, s.dungeons.dragonEggState);
+    else { try { global.localStorage.removeItem(KEYS.DRAGON_EGG_STATE); } catch(e){} }
     writeStr(KEYS.BLACKSMITH_DATE, s.dungeons.blacksmithDate);
     writeNum(KEYS.BLACKSMITH_PLAYS, s.dungeons.blacksmithPlays);
     writeStr(KEYS.THREE_CHESTS_DATE, s.dungeons.threeChestsDate);
