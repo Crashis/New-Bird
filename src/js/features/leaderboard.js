@@ -88,6 +88,7 @@
     } else {
       setNicknameStatus(okMessage + translate('leaderboard.nickname.localOnly', ' (zatím jen lokálně)'), 'ok');
     }
+    try { if (global.NWCloudSave && typeof global.NWCloudSave.flushCloudSave === 'function') global.NWCloudSave.flushCloudSave('nickname-change'); } catch (e) {}
     return safeName;
   }
 

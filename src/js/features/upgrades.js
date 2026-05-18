@@ -67,6 +67,7 @@ function loadPlayerUpgrades() {
 
 function savePlayerUpgrades() {
   try { localStorage.setItem(PLAYER_UPGRADES_KEY, JSON.stringify(playerUpgrades)); } catch (e) {}
+  try { if (window.NWCloudSave && typeof window.NWCloudSave.queueCloudSave === 'function') window.NWCloudSave.queueCloudSave('upgrade'); } catch (e) {}
 }
 
 loadPlayerUpgrades();

@@ -256,6 +256,7 @@ function saveEconomy() {
     localStorage.setItem('nw_flappy_upgrade_crown_bonus', String(crownBonusLevel));
     localStorage.setItem('nw_flappy_upgrade_max_shields_2', maxShields2Owned ? '1' : '0');
   } catch (e) {}
+  try { if (window.NWCloudSave && typeof window.NWCloudSave.queueCloudSave === 'function') window.NWCloudSave.queueCloudSave('economy'); } catch (e) {}
 }
 
 function loadAchievements() {
@@ -289,8 +290,10 @@ function loadAchievements() {
 
 function saveAchievements() {
   try { localStorage.setItem(ACHIEVEMENT_STORAGE_KEY, JSON.stringify(unlockedAchievements)); } catch (e) {}
+  try { if (window.NWCloudSave && typeof window.NWCloudSave.queueCloudSave === 'function') window.NWCloudSave.queueCloudSave('achievement'); } catch (e) {}
 }
 
 function saveAchievementCounters() {
   try { localStorage.setItem(IMMORTALITY_USES_KEY, String(immortalityUses)); } catch (e) {}
+  try { if (window.NWCloudSave && typeof window.NWCloudSave.queueCloudSave === 'function') window.NWCloudSave.queueCloudSave('achievement-counter'); } catch (e) {}
 }

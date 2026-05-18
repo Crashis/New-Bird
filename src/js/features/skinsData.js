@@ -184,6 +184,7 @@ function saveUnlockedSkins() {
     const ids = SKINS.filter(s => s.unlocked && !s.unlockedByDefault).map(s => s.id);
     localStorage.setItem(UNLOCKED_SKINS_KEY, JSON.stringify(ids));
   } catch (e) {}
+  try { if (window.NWCloudSave && typeof window.NWCloudSave.queueCloudSave === 'function') window.NWCloudSave.queueCloudSave('skin'); } catch (e) {}
 }
 
 const ACHIEVEMENT_REWARD_YANG = 10;

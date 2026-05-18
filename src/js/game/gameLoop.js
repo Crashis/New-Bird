@@ -130,6 +130,7 @@ function endGame() {
   if (isNewRecord) {
     bestScore = score;
     try { localStorage.setItem('nw_flappy_best', String(bestScore)); } catch (e) {}
+    try { if (window.NWCloudSave && typeof window.NWCloudSave.flushCloudSave === 'function') window.NWCloudSave.flushCloudSave('gameover-best'); } catch (e) {}
     document.getElementById('newRecord').classList.add('show');
   } else {
     document.getElementById('newRecord').classList.remove('show');
@@ -159,6 +160,7 @@ function winGame() {
   if (score > bestScore) {
     bestScore = score;
     try { localStorage.setItem('nw_flappy_best', String(bestScore)); } catch (e) {}
+    try { if (window.NWCloudSave && typeof window.NWCloudSave.flushCloudSave === 'function') window.NWCloudSave.flushCloudSave('gameover-best'); } catch (e) {}
   }
   if (window.NWLeaderboard && typeof window.NWLeaderboard.submitNormalGameScore === 'function') {
     window.NWLeaderboard.submitNormalGameScore(score);
