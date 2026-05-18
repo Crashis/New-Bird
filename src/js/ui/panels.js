@@ -444,6 +444,102 @@ function initCloudSavePanel() {
       window.location.reload();
     });
   }
+
+  initGoogleLinkUi();
+}
+
+function initGoogleLinkUi() {
+  if (typeof document === 'undefined') return;
+  const statusEl = document.getElementById('googleAccountStatusText');
+  const linkBtn = document.getElementById('googleAccountLinkBtn');
+  const signInBtn = document.getElementById('googleAccountSignInBtn');
+  const errorEl = document.getElementById('googleAccountErrorText');
+  if (!statusEl || !linkBtn) return;
+
+  function showError(message) {
+    if (!errorEl) return;
+    if (!message) {
+      errorEl.textContent = '';
+      errorEl.style.display = 'none';
+      return;
+    }
+    errorEl.textContent = message;
+    errorEl.style.display = '';
+  }
+
+  function applyState(state) {
+    if (!state || !state.signedIn) {
+      statusEl.textContent = 'Cloud save zatím není dostupný.';
+      linkBtn.disabled = true;
+      linkBtn.textContent = 'Propojit s Google účtem';
+      if (signInBtn) signInBtn.hidden = true;
+      return;
+    }
+    if (state.anonymous) {
+      statusEl.textContent = 'Hraješ jako anonymní hráč.';
+      linkBtn.disabled = false;
+      linkBtn.hidden = false;
+      linkBtn.textContent = 'Propojit s Google účtem';
+      if (signInBtn) signInBtn.hidden = true;
+    } else {
+      const who = state.email || state.displayName || 'Google účet';
+      statusEl.textContent = 'Propojeno s Google účtem: ' + who;
+      linkBtn.disabled = true;
+      linkBtn.textContent = 'Google účet propojen';
+      if (signInBtn) signInBtn.hidden = true;
+    }
+  }
+
+  let unsub = null;
+  function trySubscribe() {
+    if (unsub) return;
+    if (window.NWGoogleAuth && typeof window.NWGoogleAuth.subscribeAuthState === 'function') {
+      unsub = window.NWGoogleAuth.subscribeAuthState(applyState);
+    }
+  }
+  trySubscribe();
+  if (!unsub) {
+    applyState(null);
+    let attempts = 0;
+    const retry = setInterval(() => {
+      attempts += 1;
+      trySubscribe();
+      if (unsub || attempts >= 30) clearInterval(retry);
+    }, 1000);
+  }
+
+  linkBtn.addEventListener('click', async () => {
+    if (!window.NWGoogleAuth || typeof window.NWGoogleAuth.linkCurrentAnonymousUserWithGoogle !== 'function') return;
+    showError('');
+    linkBtn.disabled = true;
+    try {
+      const res = await window.NWGoogleAuth.linkCurrentAnonymousUserWithGoogle();
+      if (!res.ok) {
+        showError(res.error && res.error.message ? res.error.message : 'Něco se pokazilo.');
+        linkBtn.disabled = false;
+      }
+    } catch (e) {
+      console.warn('[googleLink] click failed', e);
+      showError('Něco se pokazilo. Zkus to znovu.');
+      linkBtn.disabled = false;
+    }
+  });
+
+  if (signInBtn) {
+    signInBtn.addEventListener('click', async () => {
+      if (!window.NWGoogleAuth || typeof window.NWGoogleAuth.signInWithGoogle !== 'function') return;
+      showError('');
+      signInBtn.disabled = true;
+      try {
+        const res = await window.NWGoogleAuth.signInWithGoogle();
+        if (!res.ok) {
+          showError(res.error && res.error.message ? res.error.message : 'Něco se pokazilo.');
+        }
+      } finally {
+        signInBtn.disabled = false;
+      }
+    });
+  }
 }
 
 if (typeof document !== 'undefined') {
