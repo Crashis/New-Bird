@@ -377,25 +377,22 @@
     </div>
 
     <!-- Skins panel -->
-    <div class="shop-panel large-panel" id="skinsPanel" style="text-align:center;">
-      <h2 data-i18n="skins.title">🎭 Výběr postavy</h2>
+    <div class="shop-panel large-panel skins-panel-v2" id="skinsPanel">
+      <div class="panel-header">
+        <h2 data-i18n="skins.title">🎭 Výběr postavy</h2>
+        <button class="game-btn panel-close-btn" id="closeSkinsBtn" onclick="toggleSkinsPanel(false)">×</button>
+      </div>
       <div class="shop-subtitle" data-i18n="skins.subtitle">Vyber si skin pro svého hrdinu. Odemykej nové postavy hraním.</div>
 
-      <div class="skins-nav">
-        <button class="game-btn skin-arrow" onclick="previousSkin()">&#8592;</button>
-        <div class="skin-avatar-wrap">
-          <img class="skin-avatar" id="skinPreviewImg" src="" alt="skin preview">
-        </div>
-        <button class="game-btn skin-arrow" onclick="nextSkin()">&#8594;</button>
+      <div class="skins-tabs" role="tablist">
+        <button class="skins-tab active" data-skin-tab="player" onclick="setSkinCategory('player')">Player</button>
+        <button class="skins-tab" data-skin-tab="trails" onclick="setSkinCategory('trails')">Trails</button>
+        <button class="skins-tab" data-skin-tab="specials" onclick="setSkinCategory('specials')">Specials</button>
       </div>
 
-      <div class="skin-name" id="skinPreviewName">Godias Zubatý</div>
-      <div class="skin-desc" id="skinPreviewDesc">Původní New World hrdina. Zubatý úsměv straší Amazonce ve snech.</div>
-      <div class="skin-status" id="skinPreviewStatus"></div>
-
-      <div class="game-buttons" style="margin-top:0.6rem;">
-        <button class="game-btn primary" id="skinSelectBtn" onclick="selectCurrentSkin()" data-i18n="skins.selectBtn">Vybrat</button>
-        <button class="game-btn" onclick="toggleSkinsPanel(false)" data-i18n="skins.close">✕ Zavřít</button>
+      <div class="skins-body">
+        <div class="skins-grid" id="skinsGrid"></div>
+        <div class="skins-detail" id="skinsDetail"></div>
       </div>
     </div>
 
