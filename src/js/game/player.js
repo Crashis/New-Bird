@@ -72,5 +72,6 @@ function drawPlayer() {
     ctx.setLineDash([]);
   }
 
+  if (typeof drawSpecialsOverlay === 'function') drawSpecialsOverlay();
   ctx.restore();
 }

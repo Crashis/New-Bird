@@ -15,6 +15,7 @@ const scriptChunks = [
   "./src/js/core/constants.js",
   "./src/js/features/currencies.js",
   "./src/js/features/trails.js",
+  "./src/js/features/specials.js",
   "./src/js/features/skins.js",
   "./src/js/features/leaderboard.js",
   "./src/js/ui/panels.js",
