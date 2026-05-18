@@ -44,6 +44,7 @@ export function subscribeAuthState(fn) {
 
 function buildGoogleProvider() {
   const provider = new firebaseSDK.GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: 'select_account' });
   return provider;
 }
 
@@ -55,14 +56,23 @@ function mapAuthError(error) {
   if (code === 'auth/popup-blocked') {
     return { kind: 'popup-blocked', message: 'Prohlížeč zablokoval popup. Povol popupy a zkus to znovu.' };
   }
-  if (code === 'auth/credential-already-in-use' || code === 'auth/email-already-in-use') {
+  if (code === 'auth/credential-already-in-use') {
     return {
       kind: 'credential-in-use',
       message: 'Tenhle Google účet už má vlastní save. Přepnutí účtu zatím není automatické.'
     };
   }
+  if (code === 'auth/email-already-in-use' || code === 'auth/account-exists-with-different-credential') {
+    return {
+      kind: 'email-in-use',
+      message: 'Tenhle e-mail už patří k jinému účtu. Přepnutí účtu zatím není automatické.'
+    };
+  }
   if (code === 'auth/operation-not-allowed') {
     return { kind: 'provider-disabled', message: 'Google sign-in není povolen ve Firebase projektu.' };
+  }
+  if (code === 'auth/network-request-failed') {
+    return { kind: 'network', message: 'Chyba sítě. Zkontroluj připojení a zkus to znovu.' };
   }
   return { kind: 'unknown', message: 'Něco se pokazilo. Zkus to prosím znovu.' };
 }
