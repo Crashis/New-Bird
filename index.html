@@ -313,7 +313,10 @@
 
     <!-- Shop panel -->
     <div class="shop-panel large-panel" id="shopPanel">
-      <h2 data-i18n="shop.title">🛒 Amazon Shop</h2>
+      <div class="panel-header">
+        <h2 data-i18n="shop.title">🛒 Amazon Shop</h2>
+        <button class="game-btn panel-close-btn" id="closeShopBtn" onclick="toggleShop(false)">×</button>
+      </div>
       <div class="shop-subtitle" data-i18n="shop.subtitle">Postup se ukládá automaticky. Cena roste s každým levelem.</div>
       <div class="shop-wallet">
         <span><span data-i18n="shop.yang">Yangy:</span> <strong id="shopYang">0</strong></span>
