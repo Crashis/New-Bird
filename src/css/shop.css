@@ -311,3 +311,17 @@
     min-height: 1em;
     color: var(--text-muted);
   }
+
+/* Cloud migration dialog summary block */
+.cloud-migration-summary {
+  margin: 0.6rem 0 0.4rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #cce6ff;
+}
+.cloud-migration-summary > div {
+  padding: 0.3rem 0;
+}
+.cloud-migration-summary strong {
+  color: #ffd86b;
+}
