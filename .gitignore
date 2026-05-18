@@ -4,6 +4,9 @@
 # Read me
 README.md
 
+# Local docs
+docs/
+
 # OS
 .DS_Store
 Thumbs.db
