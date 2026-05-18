@@ -27,3 +27,6 @@ dist/
 
 # Local Firebase config (contains real API keys — never commit)
 src/firebase.config.local.js
+
+# Firestore rules
+firestore.rules
