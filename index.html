@@ -488,6 +488,16 @@
           <button type="button" class="game-btn" id="cloudSaveDownloadBtn">Načíst cloud</button>
           <button type="button" class="game-btn" id="cloudSaveRunMigrationBtn">Spustit migraci znovu</button>
         </div>
+
+        <div class="settings-google-account" id="settingsGoogleAccountSection" style="margin-top:0.8rem;">
+          <p class="settings-cloud-status" id="googleAccountStatusText" aria-live="polite">Hraješ jako anonymní hráč</p>
+          <p class="hint" style="margin-bottom:0.4rem;">Propoj účet s Googlem, aby sis mohl načíst progress i na jiném zařízení.</p>
+          <div class="settings-cloud-buttons">
+            <button type="button" class="game-btn" id="googleAccountLinkBtn">Propojit s Google účtem</button>
+            <button type="button" class="game-btn" id="googleAccountSignInBtn" hidden>Přihlásit přes Google</button>
+          </div>
+          <p class="settings-cloud-status" id="googleAccountErrorText" aria-live="polite" style="color:#ff9a9a; display:none;"></p>
+        </div>
       </div>
 
       <div class="settings-footer-quote" data-i18n="settings.footer">Víc si toho nenastavíš ty mamrde</div>
