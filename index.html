@@ -242,6 +242,13 @@
         <button class="game-btn panel-close-btn" onclick="toggleLeaderboardPanel(false)">×</button>
       </div>
       <div class="shop-subtitle" data-i18n="leaderboard.subtitle">Top 10 hrdinů podle nejlepšího skóre.</div>
+      <div class="leaderboard-nickname" style="display:flex; gap:0.4rem; align-items:center; flex-wrap:wrap; margin:0.4rem 0;">
+        <label for="leaderboardNicknameInput" style="font-size:0.85rem;" data-i18n="leaderboard.nickname.label">Tvoje jméno:</label>
+        <input id="leaderboardNicknameInput" type="text" maxlength="20" autocomplete="off" spellcheck="false"
+               placeholder="Anonymní hráč" style="flex:1; min-width:120px; padding:0.25rem 0.5rem;" />
+        <button class="game-btn" id="leaderboardNicknameSave" type="button" data-i18n="leaderboard.nickname.save">Uložit</button>
+        <div class="leaderboard-nickname-status" id="leaderboardNicknameStatus" aria-live="polite" style="flex-basis:100%; font-size:0.8rem; min-height:1em;"></div>
+      </div>
       <div class="leaderboard-list" id="leaderboardBody"></div>
       <div class="leaderboard-status" id="leaderboardStatus" aria-live="polite"></div>
       <div class="game-buttons" style="margin-top:0.6rem; justify-content:center; flex-wrap:wrap;">
@@ -1048,6 +1055,16 @@
   </div>
 </div>
 
+<!-- Optional local Firebase config (gitignored). Create from src/firebase.config.local.example.js. -->
+<script>
+  (function () {
+    var s = document.createElement('script');
+    s.src = './src/firebase.config.local.js';
+    s.async = false;
+    s.onerror = function () { /* no local config — leaderboard runs offline */ };
+    document.currentScript.parentNode.insertBefore(s, document.currentScript.nextSibling);
+  })();
+</script>
 <script type="module" src="./src/js/main.js"></script>
 </body>
 </html>

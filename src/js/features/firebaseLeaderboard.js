@@ -57,6 +57,27 @@ async function submitBestScore(score, displayName) {
   });
 }
 
+async function updateDisplayName(displayName) {
+  if (!currentUid || !db) return false;
+  const safeName = getSafeDisplayName(displayName);
+  const ref = firebaseSDK.doc(db, LEADERBOARD_COLLECTION, currentUid);
+  try {
+    await firebaseSDK.runTransaction(db, async transaction => {
+      const snapshot = await transaction.get(ref);
+      if (!snapshot.exists()) return;
+      const now = firebaseSDK.serverTimestamp();
+      transaction.update(ref, {
+        displayName: safeName,
+        updatedAt: now
+      });
+    });
+    return true;
+  } catch (error) {
+    warn('displayName update failed', error);
+    return false;
+  }
+}
+
 async function fetchTopScores() {
   if (!db) return [];
   const leaderboardQuery = firebaseSDK.query(
@@ -81,6 +102,7 @@ function installLeaderboardService() {
   api.setOnlineService({
     getUid: () => currentUid,
     submitBestScore,
+    updateDisplayName,
     fetchTopScores
   });
 }
@@ -112,4 +134,4 @@ export async function initLeaderboardAuth() {
   }
 }
 
-export { LEADERBOARD_COLLECTION, fetchTopScores, submitBestScore };
+export { LEADERBOARD_COLLECTION, fetchTopScores, submitBestScore, updateDisplayName };

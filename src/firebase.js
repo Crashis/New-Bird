@@ -12,25 +12,31 @@ import {
   serverTimestamp
 } from 'https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js';
 
-// This static project does not have a bundler-backed env system right now.
-// Paste your Firebase web app config here, or set window.__FIREBASE_CONFIG__
-// before src/js/main.js loads.
+// This static project has no bundler-backed env system. The recommended way
+// to provide Firebase config is to copy `src/firebase.config.local.example.js`
+// to `src/firebase.config.local.js` (gitignored) and load it from index.html
+// before `src/js/main.js`. It sets `window.__FIREBASE_CONFIG__`.
+// Never commit real keys into this file.
 const firebaseConfig = {
-  apiKey: '...',
-  authDomain: '...',
-  projectId: '...',
-  appId: '...'
+  apiKey: '',
+  authDomain: '',
+  projectId: '',
+  storageBucket: '',
+  messagingSenderId: '',
+  appId: ''
 };
 
 function readEnvConfig() {
-  const env = import.meta.env || {};
+  const env = (typeof import.meta !== 'undefined' && import.meta.env) || {};
   const config = {
     apiKey: env.VITE_FIREBASE_API_KEY,
     authDomain: env.VITE_FIREBASE_AUTH_DOMAIN,
     projectId: env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: env.VITE_FIREBASE_MESSAGING_SENDER_ID,
     appId: env.VITE_FIREBASE_APP_ID
   };
-  return Object.values(config).every(Boolean) ? config : null;
+  return config.apiKey && config.projectId && config.appId ? config : null;
 }
 
 function readWindowConfig() {
@@ -46,8 +52,7 @@ function hasUsableConfig(config) {
     config.apiKey &&
     config.authDomain &&
     config.projectId &&
-    config.appId &&
-    !String(config.apiKey).includes('...')
+    config.appId
   );
 }
 

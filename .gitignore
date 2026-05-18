@@ -1,6 +1,9 @@
 # Claude Code settings
 .claude/
 
+# Read me
+README.md
+
 # OS
 .DS_Store
 Thumbs.db
@@ -10,3 +13,17 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Local Firebase config (contains real API keys — never commit)
+src/firebase.config.local.js

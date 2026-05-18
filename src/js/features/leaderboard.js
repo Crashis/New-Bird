@@ -24,19 +24,97 @@
     return safeName.slice(0, MAX_DISPLAY_NAME_LENGTH);
   }
 
+  const PLAYER_NAME_STORAGE_KEY = 'nw_player_name';
+  const LEGACY_NAME_KEYS = ['nw_flappy_player_name', 'playerName', 'displayName'];
+  const MAX_RAW_NAME_INPUT = 200;
+
+  function readLocalStorage(key) {
+    try {
+      return (global.localStorage && global.localStorage.getItem(key)) || '';
+    } catch (e) {
+      return '';
+    }
+  }
+
+  function writeLocalStorage(key, value) {
+    try {
+      if (global.localStorage) global.localStorage.setItem(key, value);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   function getStoredPlayerName() {
-    const keys = ['nw_flappy_player_name', 'nw_player_name', 'playerName', 'displayName'];
-    for (const key of keys) {
-      try {
-        const value = global.localStorage && global.localStorage.getItem(key);
-        if (value && value.trim()) return value;
-      } catch (e) {}
+    const primary = readLocalStorage(PLAYER_NAME_STORAGE_KEY);
+    if (primary && primary.trim()) return primary;
+    for (const key of LEGACY_NAME_KEYS) {
+      const value = readLocalStorage(key);
+      if (value && value.trim()) return value;
     }
     return '';
   }
 
   function getCurrentDisplayName() {
     return sanitizeDisplayName(getStoredPlayerName());
+  }
+
+  function setNicknameStatus(text, tone) {
+    const status = global.document && global.document.getElementById('leaderboardNicknameStatus');
+    if (!status) return;
+    status.textContent = text || '';
+    status.style.color = tone === 'error' ? '#e57373' : tone === 'ok' ? '#7bd389' : '';
+  }
+
+  async function setPlayerName(rawValue) {
+    const truncatedRaw = typeof rawValue === 'string' ? rawValue.slice(0, MAX_RAW_NAME_INPUT) : '';
+    const trimmed = truncatedRaw.trim();
+    const safeName = sanitizeDisplayName(trimmed);
+    const valueToStore = trimmed ? safeName : '';
+    writeLocalStorage(PLAYER_NAME_STORAGE_KEY, valueToStore);
+
+    const okMessage = trimmed
+      ? translate('leaderboard.nickname.saved', 'Jméno uložené.')
+      : translate('leaderboard.nickname.cleared', 'Jméno smazané, používá se „Anonymní hráč“.');
+
+    if (onlineService && typeof onlineService.updateDisplayName === 'function') {
+      try {
+        const updated = await onlineService.updateDisplayName(safeName);
+        setNicknameStatus(okMessage + (updated ? '' : translate('leaderboard.nickname.localOnly', ' (zatím jen lokálně)')), 'ok');
+      } catch (error) {
+        console.warn('[leaderboard] nickname update failed', error);
+        setNicknameStatus(translate('leaderboard.nickname.warnSync', 'Uloženo lokálně, online sync selhal.'), 'error');
+      }
+    } else {
+      setNicknameStatus(okMessage + translate('leaderboard.nickname.localOnly', ' (zatím jen lokálně)'), 'ok');
+    }
+    return safeName;
+  }
+
+  function syncNicknameInputUi() {
+    const input = global.document && global.document.getElementById('leaderboardNicknameInput');
+    if (!input) return;
+    const stored = readLocalStorage(PLAYER_NAME_STORAGE_KEY);
+    input.value = stored ? sanitizeDisplayName(stored) : '';
+    setNicknameStatus('', null);
+  }
+
+  let nicknameUiWired = false;
+  function wireNicknameUi() {
+    if (nicknameUiWired) return;
+    const doc = global.document;
+    if (!doc) return;
+    const input = doc.getElementById('leaderboardNicknameInput');
+    const button = doc.getElementById('leaderboardNicknameSave');
+    if (!input || !button) return;
+    button.addEventListener('click', () => { setPlayerName(input.value); });
+    input.addEventListener('keydown', event => {
+      if (event && event.key === 'Enter') {
+        event.preventDefault();
+        setPlayerName(input.value);
+      }
+    });
+    nicknameUiWired = true;
   }
 
   function setOnlineService(service) {
@@ -130,13 +208,18 @@
     }
     if (typeof global.closeOtherPanels === 'function') global.closeOtherPanels('leaderboardPanel');
     panel.classList.toggle('active', open);
-    if (open) await loadLeaderboardPanel();
+    if (open) {
+      wireNicknameUi();
+      syncNicknameInputUi();
+      await loadLeaderboardPanel();
+    }
   }
 
   const api = {
     validateScore,
     sanitizeDisplayName,
     getCurrentDisplayName,
+    setPlayerName,
     setOnlineService,
     renderLeaderboardRows,
     loadLeaderboardPanel,
