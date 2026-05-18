@@ -48,6 +48,11 @@
       },
       selectedSkin: readStr(KEYS.SELECTED_SKIN, ''),
       ownedSkins,
+      ownedTrails: (function(){ const v = readJson(KEYS.UNLOCKED_TRAILS, []); return Array.isArray(v) ? v.filter(s => typeof s === 'string') : []; })(),
+      selectedTrail: readStr(KEYS.SELECTED_TRAIL, ''),
+      selectedTrailColor: readStr(KEYS.SELECTED_TRAIL_COLOR, ''),
+      ownedSpecials: (function(){ const v = readJson(KEYS.UNLOCKED_SPECIALS, []); return Array.isArray(v) ? v.filter(s => typeof s === 'string') : []; })(),
+      selectedSpecials: (function(){ const v = readJson(KEYS.SELECTED_SPECIALS, []); return Array.isArray(v) ? v.filter(s => typeof s === 'string') : []; })(),
       achievements,
       heirlooms: {
         rocketPurchased: readBool(KEYS.HEIRLOOM_ROCKET_PURCHASED),
@@ -114,6 +119,11 @@
       },
       selectedSkin: sanitStr(i.selectedSkin, ''),
       ownedSkins: sanitArr(i.ownedSkins, []).filter(s => typeof s === 'string'),
+      ownedTrails: sanitArr(i.ownedTrails, []).filter(s => typeof s === 'string'),
+      selectedTrail: sanitStr(i.selectedTrail, ''),
+      selectedTrailColor: (function(){ const c = sanitStr(i.selectedTrailColor, ''); return /^#[0-9a-fA-F]{6}$/.test(c) ? c : ''; })(),
+      ownedSpecials: sanitArr(i.ownedSpecials, []).filter(s => typeof s === 'string'),
+      selectedSpecials: sanitArr(i.selectedSpecials, []).filter(s => typeof s === 'string'),
       achievements: sanitObj(i.achievements, {}),
       heirlooms: {
         rocketPurchased: sanitBool(h.rocketPurchased),
@@ -187,6 +197,11 @@
     writeStr(KEYS.THREE_CHESTS_DATE, s.dungeons.threeChestsDate);
     writeStr(KEYS.WHEEL_DATE, s.dungeons.wheelDate);
     if (s.nickname) writeStr(KEYS.PLAYER_NAME, s.nickname);
+    writeJson(KEYS.UNLOCKED_TRAILS, s.ownedTrails);
+    if (s.selectedTrail) writeStr(KEYS.SELECTED_TRAIL, s.selectedTrail); else { try { global.localStorage.removeItem(KEYS.SELECTED_TRAIL); } catch(e){} }
+    if (s.selectedTrailColor) writeStr(KEYS.SELECTED_TRAIL_COLOR, s.selectedTrailColor);
+    writeJson(KEYS.UNLOCKED_SPECIALS, s.ownedSpecials);
+    writeJson(KEYS.SELECTED_SPECIALS, s.selectedSpecials);
   }
 
   function isLocalProgressMeaningful(snap) {
@@ -200,6 +215,8 @@
     if (snap.achievements && Object.keys(snap.achievements).length > 0) return true;
     if (snap.heirlooms && Object.values(snap.heirlooms).some(v => v === true)) return true;
     if (snap.upgrades && (snap.upgrades.shieldStart || snap.upgrades.invincibility > 0 || snap.upgrades.doubleYang > 0 || snap.upgrades.crownBonus > 0 || snap.upgrades.maxShields2)) return true;
+    if (Array.isArray(snap.ownedTrails) && snap.ownedTrails.length > 0) return true;
+    if (Array.isArray(snap.ownedSpecials) && snap.ownedSpecials.length > 0) return true;
     return false;
   }
 
