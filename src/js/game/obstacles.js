@@ -19,8 +19,9 @@ function spawnPipe() {
   pipesSincePowerup++;
 
   const _luckBonus = (typeof getCurrencySpawnBonus === 'function') ? getCurrencySpawnBonus() : { yang: 0, wallet: 0, dragonCoin: 0 };
+  const _moonYangBonus = (typeof getMoonLevelYangSpawnBonus === 'function') ? getMoonLevelYangSpawnBonus() : 0;
   const yangAllowed = pipesSinceYang >= YANG_MIN_PIPES &&
-    (Math.random() < (YANG_CHANCE + (_luckBonus.yang || 0)) || pipesSinceYang >= YANG_FORCE_PIPES);
+    (Math.random() < (YANG_CHANCE + (_luckBonus.yang || 0) + _moonYangBonus) || pipesSinceYang >= YANG_FORCE_PIPES);
 
   if (yangAllowed) {
     pipe.yang = {
@@ -143,7 +144,8 @@ function applyPowerup(coin) {
     }
     case 'wallet': {
       const _godiaMult = (typeof getGodiasWalletMultiplier === 'function') ? getGodiasWalletMultiplier() : 1;
-      const earned = 1 * _godiaMult;
+      const _moonMult = (typeof getRunCurrencyMultiplier === 'function') ? getRunCurrencyMultiplier() : 1;
+      const earned = 1 * _godiaMult * _moonMult;
       wallets += earned;
       if (typeof saveEconomy === 'function') saveEconomy();
       if (typeof updateEconomyUi === 'function') updateEconomyUi();
@@ -154,7 +156,8 @@ function applyPowerup(coin) {
     }
     case 'dragonCoin': {
       const _godiaMult = (typeof getGodiasWalletMultiplier === 'function') ? getGodiasWalletMultiplier() : 1;
-      const earned = 1 * _godiaMult;
+      const _moonMult = (typeof getRunCurrencyMultiplier === 'function') ? getRunCurrencyMultiplier() : 1;
+      const earned = 1 * _godiaMult * _moonMult;
       if (typeof addDragonCoins === 'function') addDragonCoins(earned);
       activeVoiceLine = `+${earned} Dračí mince!`;
       activeVoiceLineUntil = performance.now() + 2400;
@@ -162,7 +165,8 @@ function applyPowerup(coin) {
       break;
     }
     case 'errCube': {
-      if (typeof addErrCubes === 'function') addErrCubes(1);
+      const _moonMult = (typeof getRunCurrencyMultiplier === 'function') ? getRunCurrencyMultiplier() : 1;
+      if (typeof addErrCubes === 'function') addErrCubes(1 * _moonMult);
       playErrCubeVoiceLine();
       spawnPickupParticles(coin, '#ff4c7a', '#9b5cff', 30);
       break;

@@ -286,7 +286,7 @@ function saveUnlockedSkins() {
   try { if (window.NWCloudSave && typeof window.NWCloudSave.queueCloudSave === 'function') window.NWCloudSave.queueCloudSave('skin'); } catch (e) {}
 }
 
-const ACHIEVEMENT_REWARD_YANG = 10;
+const ACHIEVEMENT_REWARD_YANG = 25;
 const ACHIEVEMENT_STORAGE_KEY = 'nw_flappy_achievements';
 const IMMORTALITY_USES_KEY = 'nw_flappy_immortality_uses';
 const CRASHIS_CONFUSED_SKIN_ID = (SKINS.find(s => s.name === 'Crashis Confused') || {}).id || 'crashis-confused';
@@ -363,6 +363,24 @@ const ACHIEVEMENTS = [
     title: 'Meeting přežit',
     description: 'Přežij meeting s nejvyšším bossem v Dungeons.',
     rewardYang: ACHIEVEMENT_REWARD_YANG
+  },
+  {
+    id: 'bought_any_trail',
+    title: 'Nebeská záře',
+    description: 'Koupil sis stopu za sebou.',
+    rewardYang: 50
+  },
+  {
+    id: 'bought_any_special',
+    title: 'Cítíš se výjimečně',
+    description: 'Koupil sis speciální skin.',
+    rewardYang: 50
+  },
+  {
+    id: 'bezos_low_damage',
+    title: 'Ten tvrdej chleba má',
+    description: 'Poraz bosse Bezose s více než 50 % HP.',
+    rewardYang: 100
   }
 ];
 

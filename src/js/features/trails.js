@@ -39,6 +39,7 @@ function buyTrail(id) {
   saveErrCubes();
   updateEconomyUi();
   showUnlockToast('Trail odemčen', trail.name, 'skin');
+  if (typeof unlockAchievement === 'function') unlockAchievement('bought_any_trail');
   return true;
 }
 

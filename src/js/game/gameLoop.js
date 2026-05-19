@@ -65,6 +65,9 @@ function startGameCountdown() {
 }
 
 function startGame() {
+  // Pojistka: kliknutí "Znovu" / "Start" v menu vždy spustí normální hru.
+  // Moon Level start jde výhradně přes startMoonLevel(), které spotřebuje ticket.
+  if (typeof resetMoonLevelModeIfActive === 'function') resetMoonLevelModeIfActive();
   startGameCountdown();
 }
 
@@ -125,6 +128,7 @@ function endGame() {
   if (typeof notifyRunEnded === 'function') notifyRunEnded();
   gameState = 'over';
   stopGameMusic();
+  if (typeof resetMoonLevelModeIfActive === 'function') resetMoonLevelModeIfActive();
   if (typeof applySelectedSkinRunStopEffects === 'function') applySelectedSkinRunStopEffects();
   applySelectedSkinEndGameEffects();
   const isNewRecord = score > bestScore;
@@ -156,6 +160,9 @@ function winGame() {
   if (typeof notifyRunEnded === 'function') notifyRunEnded();
   gameState = 'over';
   stopGameMusic();
+  // POZN: winGame je milestone (skóre 20). Pokud hráč klikne "Pokračovat
+  // (Endless)", musí Moon Level multiplier zůstat aktivní po celý run.
+  // Reset Moon módu řeší až endGame / openGame / closeGame.
   playHmm(); // celebratory HMM
   // Update best score if applicable
   if (score > bestScore) {
@@ -236,6 +243,12 @@ function continueGame() {
 }
 
 function drawBackground() {
+  // Moon Level má vlastní šedavé pozadí.
+  if (typeof isMoonLevelActive === 'function' && isMoonLevelActive()
+      && typeof drawMoonBackground === 'function') {
+    drawMoonBackground();
+    return;
+  }
   // Dark sky gradient — barva závisí na aktuální fázi.
   const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
   if (currentGamePhase === GAME_PHASES.VOID) {
@@ -468,8 +481,8 @@ function loop() {
 function openGame() {
   clearStartCountdownTimeout();
   if (typeof clearTrailParticles === 'function') clearTrailParticles();
-  // Po jakémkoli návratu do menu (např. z boss fightu) vždy předpokládáme
-  // normální režim — boss fight se nikdy nesmí přelít do normální hry.
+  // Po jakémkoli návratu do menu (např. z boss fightu / Moon Levelu) vždy
+  // předpokládáme normální režim — speciální módy se nikdy nesmí přelít do hry.
   currentGameMode = 'normal';
   ['bossWinPanel', 'bossLossPanel'].forEach(id => {
     const el = document.getElementById(id);

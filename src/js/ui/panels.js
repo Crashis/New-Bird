@@ -325,6 +325,17 @@ function renderDungeonsPanel() {
     else key = 'dungeons.bezos.availableHint';
     hintEl.textContent = t(key);
   }
+
+  // Moon Level card
+  const tickets = (typeof getMoonTickets === 'function') ? getMoonTickets() : 0;
+  const moonBtn = document.getElementById('dungeonMoonStartBtn');
+  const moonStatus = document.getElementById('dungeonMoonStatus');
+  const moonHint = document.getElementById('dungeonMoonHint');
+  if (moonBtn) moonBtn.disabled = tickets <= 0;
+  if (moonStatus) moonStatus.textContent = t('moonLevel.tickets', { count: tickets });
+  if (moonHint) {
+    moonHint.textContent = tickets > 0 ? t('dungeons.moon.availableHint') : t('dungeons.moon.lockedHint');
+  }
 }
 
 function toggleDungeonsPanel(forceOpen) {

@@ -86,11 +86,40 @@ const HEIRLOOM_ROCKET_PURCHASED_KEY = 'heirloomRocketPurchased';
 const BEZOS_BOSS_TICKET_KEY = 'bezosBossTicketUnlocked';
 const BEZOS_BOSS_LAST_WIN_KEY = 'bezosBossLastWinDate';
 const BEZOS_BOSS_BONUS_USED_DATE_KEY = 'bezosBossBonusUsedDate';
+const MOON_TICKETS_KEY = 'nw_flappy_moon_tickets';
 
 let bezosBossTicketUnlocked = false;
 try {
   bezosBossTicketUnlocked = localStorage.getItem(BEZOS_BOSS_TICKET_KEY) === '1';
 } catch (e) {}
+
+let moonTickets = 0;
+try {
+  moonTickets = Math.max(0, parseInt(localStorage.getItem(MOON_TICKETS_KEY) || '0', 10) || 0);
+} catch (e) {}
+
+function getMoonTickets() { return moonTickets; }
+
+function saveMoonTickets() {
+  try { localStorage.setItem(MOON_TICKETS_KEY, String(moonTickets)); } catch (e) {}
+  try { if (window.NWCloudSave && typeof window.NWCloudSave.queueCloudSave === 'function') window.NWCloudSave.queueCloudSave('moonTickets'); } catch (e) {}
+}
+
+function addMoonTickets(amount) {
+  const n = Math.max(0, Math.floor(Number(amount) || 0));
+  if (!n) return;
+  moonTickets += n;
+  saveMoonTickets();
+  if (typeof updateEconomyUi === 'function') updateEconomyUi();
+}
+
+function spendMoonTicket() {
+  if (moonTickets <= 0) return false;
+  moonTickets -= 1;
+  saveMoonTickets();
+  if (typeof updateEconomyUi === 'function') updateEconomyUi();
+  return true;
+}
 
 function isBezosBossTicketUnlocked() { return bezosBossTicketUnlocked === true; }
 

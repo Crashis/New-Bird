@@ -161,6 +161,10 @@ function endBossFightVictory() {
   // interně kontroluje duplicitu a persistuje přes saveAchievements().
   if (typeof unlockAchievement === 'function') {
     unlockAchievement('meeting_survived');
+    // Bonus achievement: vyhráno s víc než 50 % maxHP.
+    if (bossPlayerHp > BOSS_FIGHT_PLAYER_MAX_HP * 0.5) {
+      unlockAchievement('bezos_low_damage');
+    }
   }
   startBossVictoryAnimation();
   // Hra ještě běží kvůli animaci; loop si přepne na panel přes updateBossVictoryAnim.

@@ -40,6 +40,7 @@ const scriptChunks = [
   "./src/js/game/player.js",
   "./src/js/game/gameLoop.js",
   "./src/js/game/bossFight.js",
+  "./src/js/game/moonLevel.js",
   "./src/js/game/input.js",
   "./src/js/ui/fullscreen.js",
   "./src/js/features/pwaInstall.js"

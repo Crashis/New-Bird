@@ -35,6 +35,7 @@ function buySpecial(id) {
   saveErrCubes();
   updateEconomyUi();
   showUnlockToast('Special odemčen', sp.name, 'skin');
+  if (typeof unlockAchievement === 'function') unlockAchievement('bought_any_special');
   return true;
 }
 

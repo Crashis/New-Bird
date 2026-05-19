@@ -175,11 +175,169 @@ async function shareResultMessenger() {
   showShareStatus(ok ? t('share.msgCopied') : t('share.copyFailed'));
 }
 
+// ===== Instagram Stories share =====
+// Generuje 9:16 obrázek se skóre + vtipným callout textem. Na podporovaných
+// zařízeních se obrázek sdílí přes Web Share API (s files). Jinak fallback:
+// stáhnout PNG + ukázat hint, ať ho hráč nahraje do Stories ručně.
+
+function getStoryScoreData() {
+  let finalScore = 0;
+  let best = 0;
+  try {
+    const finalEl = document.getElementById('finalScore');
+    if (finalEl) finalScore = parseInt(finalEl.textContent, 10) || 0;
+  } catch (e) {}
+  try { if (typeof bestScore === 'number') best = bestScore; } catch (e) {}
+  return { score: finalScore, best };
+}
+
+function drawStoryWrappedText(ctx2d, text, x, y, maxWidth, lineHeight) {
+  const words = String(text || '').split(/\s+/);
+  let line = '';
+  let cy = y;
+  for (let i = 0; i < words.length; i++) {
+    const test = line ? line + ' ' + words[i] : words[i];
+    if (ctx2d.measureText(test).width > maxWidth && line) {
+      ctx2d.fillText(line, x, cy);
+      line = words[i];
+      cy += lineHeight;
+    } else {
+      line = test;
+    }
+  }
+  if (line) ctx2d.fillText(line, x, cy);
+  return cy + lineHeight;
+}
+
+async function generateScoreStoryImage(data) {
+  const W = 1080;
+  const H = 1920;
+  const c = document.createElement('canvas');
+  c.width = W;
+  c.height = H;
+  const cx = c.getContext('2d');
+
+  // Pozadí — tmavé gold/copper jako menu.
+  const grad = cx.createLinearGradient(0, 0, 0, H);
+  grad.addColorStop(0, '#1a1208');
+  grad.addColorStop(0.55, '#2a1f10');
+  grad.addColorStop(1, '#0a0806');
+  cx.fillStyle = grad;
+  cx.fillRect(0, 0, W, H);
+
+  // Subtle vignette + gold particles.
+  cx.fillStyle = 'rgba(201,168,76,0.25)';
+  for (let i = 0; i < 80; i++) {
+    const x = Math.random() * W;
+    const y = Math.random() * H;
+    const r = Math.random() * 3 + 1;
+    cx.fillRect(x, y, r, r);
+  }
+
+  // Rámeček.
+  cx.strokeStyle = '#c9a84c';
+  cx.lineWidth = 6;
+  cx.strokeRect(30, 30, W - 60, H - 60);
+
+  // Kicker.
+  cx.fillStyle = '#f0d080';
+  cx.font = 'bold 56px "Cinzel Decorative", Georgia, serif';
+  cx.textAlign = 'center';
+  cx.textBaseline = 'top';
+  cx.fillText(SHARE_GAME_TITLE.toUpperCase(), W / 2, 220);
+
+  // Score label.
+  cx.fillStyle = '#c9a84c';
+  cx.font = 'bold 60px "Cinzel", serif';
+  cx.fillText(t('share.story.scored'), W / 2, 540);
+
+  // Velké skóre.
+  cx.fillStyle = '#fff2a8';
+  cx.font = 'bold 320px "Cinzel Decorative", Georgia, serif';
+  cx.fillText(String(data.score || 0), W / 2, 640);
+
+  // Best score (pokud je).
+  if (data.best > 0) {
+    cx.fillStyle = '#c9a84c';
+    cx.font = 'bold 44px "Cinzel", serif';
+    cx.fillText(t('share.bestLine', { best: data.best }), W / 2, 1080);
+  }
+
+  // Vtipný callout — obtékaný text.
+  cx.fillStyle = '#f0d080';
+  cx.font = 'bold 52px "Cinzel", serif';
+  drawStoryWrappedText(cx, t('share.story.callout'), W / 2, 1340, W - 200, 70);
+
+  // Patička.
+  cx.fillStyle = '#c9a84c';
+  cx.font = 'bold 36px "Cinzel", serif';
+  cx.fillText(t('share.story.footer'), W / 2, H - 160);
+
+  return await new Promise((resolve) => {
+    c.toBlob((blob) => resolve(blob), 'image/png');
+  });
+}
+
+function downloadBlobAsFile(blob, filename) {
+  try {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 4000);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+async function shareInstagramStory() {
+  const data = getStoryScoreData();
+  let blob = null;
+  try {
+    blob = await generateScoreStoryImage(data);
+  } catch (e) {
+    showShareStatus(t('share.story.generateFailed'));
+    return;
+  }
+  if (!blob) {
+    showShareStatus(t('share.story.generateFailed'));
+    return;
+  }
+  const file = new File([blob], 'score-story.png', { type: 'image/png' });
+
+  // Mobile / supported: Web Share API with files.
+  try {
+    if (navigator && typeof navigator.canShare === 'function'
+        && navigator.canShare({ files: [file] })
+        && typeof navigator.share === 'function') {
+      await navigator.share({
+        files: [file],
+        title: SHARE_GAME_TITLE,
+        text: t('share.story.shareText', { score: data.score })
+      });
+      showShareStatus(t('share.story.shared'));
+      return;
+    }
+  } catch (err) {
+    if (err && err.name === 'AbortError') return;
+    // pokračujeme do fallbacku
+  }
+
+  // Fallback — stáhnout obrázek + hláška, ať si ho hráč ručně nahraje.
+  const ok = downloadBlobAsFile(blob, 'score-story.png');
+  showShareStatus(ok ? t('share.story.downloaded') : t('share.story.generateFailed'));
+}
+
 // Expose globally (classic <script> loading pattern used by this project).
 window.buildShareText = buildShareText;
 window.shareResult = shareResult;
 window.copyShareResult = copyShareResult;
 window.shareResultFacebook = shareResultFacebook;
 window.shareResultMessenger = shareResultMessenger;
+window.shareInstagramStory = shareInstagramStory;
 window.showShareSection = showShareSection;
 window.hideShareSection = hideShareSection;

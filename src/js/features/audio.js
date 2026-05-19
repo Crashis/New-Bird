@@ -27,7 +27,8 @@ const MUSIC_TRACKS = {
   phase1: './assets/audio/phase1.mp3',
   phase2: './assets/audio/phase2.mp3',
   phase3: './assets/audio/phase3.mp3',
-  boss:   './assets/audio/spartani.mp3'
+  boss:   './assets/audio/spartani.mp3',
+  moon:   './assets/audio/moon.mp3'
 };
 const MUSIC_VOLUMES = {
   intro:  0.28,
@@ -35,7 +36,8 @@ const MUSIC_VOLUMES = {
   phase1: 0.35,
   phase2: 0.38,
   phase3: 0.40,
-  boss:   0.40
+  boss:   0.40,
+  moon:   0.36
 };
 // Boss fight má 2 fáze; ve 2. fázi se boostuje hlasitost o 30 %.
 let bossMusicPhase = 1;
@@ -110,6 +112,8 @@ function deriveCurrentMusicKey() {
   if (typeof gameState === 'undefined' || gameState !== 'playing') return 'menu';
   // Boss fight používá vlastní hudbu „spartani“ a vlastní phase boost.
   if (typeof currentGameMode !== 'undefined' && currentGameMode === 'bezosBoss') return 'boss';
+  // Moon Level — vlastní soundtrack po celou dobu runu.
+  if (typeof currentGameMode !== 'undefined' && currentGameMode === 'moonLevel') return 'moon';
   if (typeof currentGamePhase !== 'undefined' && currentGamePhase === GAME_PHASES.VOID) return 'phase3';
   if ((typeof eventPhaseActive !== 'undefined' && eventPhaseActive) ||
       (typeof currentGamePhase !== 'undefined' && currentGamePhase === GAME_PHASES.FROST)) {

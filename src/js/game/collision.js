@@ -55,7 +55,8 @@ function update() {
       coin.collected = true;
       const mult = isDoubleYangActive() ? 2 : 1;
       const godiaMult = (typeof getGodiasWalletMultiplier === 'function') ? getGodiasWalletMultiplier() : 1;
-      const earned = coin.value * mult * godiaMult;
+      const moonMult = (typeof getRunCurrencyMultiplier === 'function') ? getRunCurrencyMultiplier() : 1;
+      const earned = coin.value * mult * godiaMult * moonMult;
       addYangs(earned);
       runYangs += earned;
       activeVoiceLine = mult > 1 ? `+${earned} Yangy (Double!)` : `+${earned} Yangy`;

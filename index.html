@@ -170,6 +170,7 @@
           <button class="game-btn share-btn" id="shareCopyBtn" onclick="copyShareResult()" data-i18n="share.copy">📋 Kopírovat výsledek</button>
           <button class="game-btn share-btn" id="shareFbBtn" onclick="shareResultFacebook()" data-i18n="share.fb">📘 Facebook</button>
           <button class="game-btn share-btn" id="shareMsgBtn" onclick="shareResultMessenger()" data-i18n="share.msg">💬 Messenger</button>
+          <button class="game-btn share-btn" id="shareStoryBtn" onclick="shareInstagramStory()" data-i18n="share.story">📸 Sdílet do Stories</button>
         </div>
         <div class="share-status" id="shareStatus" aria-live="polite"></div>
       </div>
@@ -227,6 +228,16 @@
         <div class="shop-item-bottom">
           <span class="shop-level" id="dungeonBezosStatus">🔒</span>
           <button class="game-btn shop-buy-btn" id="dungeonBezosStartBtn" onclick="startBezosBossFight()" disabled data-i18n="dungeons.bezos.start">▶ Start</button>
+        </div>
+      </div>
+
+      <div class="shop-item" id="dungeonMoonCard">
+        <div class="shop-item-title" data-i18n="dungeons.moon.name">🌙 Měsíční level</div>
+        <div class="shop-item-desc" data-i18n="dungeons.moon.desc">Bonusový level na Měsíci. Všechny získané měny během runu se násobí 3×. Vstup za 1 vstupenku z Kola štěstí.</div>
+        <div class="shop-item-desc" id="dungeonMoonHint" data-i18n="dungeons.moon.lockedHint">🌙 Pro vstup potřebuješ vstupenku do Měsíčního levelu.</div>
+        <div class="shop-item-bottom">
+          <span class="shop-level" id="dungeonMoonStatus">🎫 0</span>
+          <button class="game-btn shop-buy-btn" id="dungeonMoonStartBtn" onclick="startMoonLevel()" disabled data-i18n="dungeons.moon.start">▶ Start</button>
         </div>
       </div>
 

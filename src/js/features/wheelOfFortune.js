@@ -6,13 +6,14 @@ const WHEEL_SPIN_DURATION_MS = 3000;
 
 // label: text na výseči/kostce, weight: pravděpodobnost (součet = 1.0)
 const WHEEL_SLICES = [
-  { id: 'nothing',    label: '·',  weight: 0.30 },
-  { id: 'smallYang',  label: '💰', weight: 0.25 },
-  { id: 'bigYang',    label: '💎', weight: 0.18 },
-  { id: 'wallet',     label: '👛', weight: 0.10 },
-  { id: 'dragonCoin', label: '🐲', weight: 0.07 },
-  { id: 'errCube',    label: '🎲', weight: 0.07 },
-  { id: 'jackpot',    label: '🏆', weight: 0.03 }
+  { id: 'nothing',    label: '·',  weight: 0.20 },
+  { id: 'smallYang',  label: '💰', weight: 0.18 },
+  { id: 'bigYang',    label: '💎', weight: 0.13 },
+  { id: 'wallet',     label: '👛', weight: 0.07 },
+  { id: 'dragonCoin', label: '🐲', weight: 0.05 },
+  { id: 'errCube',    label: '🎲', weight: 0.05 },
+  { id: 'jackpot',    label: '🏆', weight: 0.02 },
+  { id: 'moonTicket', label: '🌙', weight: 0.30 }
 ];
 
 let wheelState = 'idle'; // 'idle' | 'spinning' | 'done'
@@ -82,6 +83,9 @@ function applyWheelOutcome(slice) {
       yang += 100; wallets += 3; dragonCoins += 2;
       saveEconomy(); saveDragonCoins();
       return t('wheel.jackpot');
+    case 'moonTicket':
+      if (typeof addMoonTickets === 'function') addMoonTickets(1);
+      return t('wheel.moonTicket');
   }
   return '';
 }

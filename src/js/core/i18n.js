@@ -87,6 +87,15 @@ window.NWI18n = window.NWI18n || {};
       'dungeons.bezos.availableHint': '🎫 Dostupné — meeting s Bezosem čeká.',
       'dungeons.bezos.cooldownHint': '⏳ Dnes už jsi meeting s Bezosem přežil. Další pokus s odměnou bude dostupný po půlnoci.',
       'dungeons.bezos.start': '▶ Start',
+      'dungeons.moon.name': '🌙 Měsíční level',
+      'dungeons.moon.desc': 'Bonusový level na Měsíci. Všechny získané měny během runu se násobí 3×. Vstup za 1 vstupenku z Kola štěstí.',
+      'dungeons.moon.lockedHint': '🌙 Pro vstup potřebuješ vstupenku do Měsíčního levelu. Získej ji v Kole štěstí.',
+      'dungeons.moon.availableHint': '🌙 Vstupenka je tvoje. Měsíc čeká.',
+      'dungeons.moon.start': '▶ Start',
+      'moonLevel.tickets': 'Vstupenky: {count}',
+      'moonLevel.noTicket': 'Nemáš vstupenku. Zato máš sny, a to je taky skoro měna.',
+      'moonLevel.welcomeTitle': 'MĚSÍČNÍ LEVEL',
+      'moonLevel.welcomeSub': 'Vítej na Měsíci. Tady i drobné padají třikrát líp.',
       'dungeons.close': '✕ Zavřít',
       'bossFight.playerHp': 'Player HP',
       'bossFight.bossHp': 'Bezos HP',
@@ -285,6 +294,12 @@ window.NWI18n = window.NWI18n || {};
       'ach.big_better.desc': 'Vsaď u Skořápkáře 100 nebo více yangů najednou.',
       'ach.meeting_survived.title': 'Meeting přežit',
       'ach.meeting_survived.desc': 'Přežij meeting s nejvyšším bossem v Dungeons.',
+      'ach.bought_any_trail.title': 'Nebeská záře',
+      'ach.bought_any_trail.desc': 'Koupil sis stopu za sebou. Teď už aspoň každý uvidí, kudy utíkáš před zodpovědností.',
+      'ach.bought_any_special.title': 'Cítíš se výjimečně',
+      'ach.bought_any_special.desc': 'Koupil sis speciální skin. Gratuluju, teď jsi výjimečný úplně stejně jako každý druhý hráč.',
+      'ach.bezos_low_damage.title': 'Ten tvrdej chleba má',
+      'ach.bezos_low_damage.desc': 'Porazil jsi Bezose a ještě ti zbylo víc než půlka života. Asi ti dneska směna ve skladu fakt sedla.',
 
       // Cheat codes panel
       'cheats.title': '⌨ Cheat Codes',
@@ -589,6 +604,7 @@ window.NWI18n = window.NWI18n || {};
       'wheel.dragonCoin': '+1 Dračí mince!',
       'wheel.errCube': '+1 Err kostka!',
       'wheel.jackpot': '🏆 JACKPOT! +100 Yangů, +3 Peněženky, +2 Dračí mince!',
+      'wheel.moonTicket': '🌙 Vstupenka do Měsíčního levelu! Vyhrál jsi vstupenku na Měsíc. Elon by brečel, Bezos by to zpoplatnil.',
       'wheel.youWon': 'Vyhrál jsi: {msg}',
 
       // Three Chests
@@ -667,6 +683,14 @@ window.NWI18n = window.NWI18n || {};
       'share.head.normal': 'Právě jsem v {title} nahrál skóre {score}! 🏆',
       'share.bestLine': 'Můj rekord: {best}',
       'share.callout': 'Dokážeš mě překonat?',
+      'share.story': '📸 Sdílet do Stories',
+      'share.story.scored': 'Dal jsem skóre:',
+      'share.story.callout': 'Myslíš, že mě překonáš, ty odvážnej rohlíku?',
+      'share.story.footer': 'Boj o Aeternum · New World',
+      'share.story.shareText': 'Dal jsem skóre: {score}',
+      'share.story.shared': 'Příspěvek sdílen.',
+      'share.story.downloaded': 'Obrázek byl stažen. Nahraj ho ručně do Instagram Stories.',
+      'share.story.generateFailed': 'Obrázek se nepodařilo vytvořit.',
 
       // Skins button
       'skins.selectBtn': 'Vybrat',
@@ -752,6 +776,15 @@ window.NWI18n = window.NWI18n || {};
       'dungeons.bezos.availableHint': '🎫 Available — the meeting with Bezos awaits.',
       'dungeons.bezos.cooldownHint': '⏳ You already survived Bezos today. Next attempt with a reward unlocks after midnight.',
       'dungeons.bezos.start': '▶ Start',
+      'dungeons.moon.name': '🌙 Moon Level',
+      'dungeons.moon.desc': 'Bonus level on the Moon. All currencies collected during the run are multiplied by 3×. Entry costs 1 ticket from the Wheel of Fortune.',
+      'dungeons.moon.lockedHint': '🌙 You need a Moon Level Ticket to enter. Win one at the Wheel of Fortune.',
+      'dungeons.moon.availableHint': '🌙 Your ticket is ready. The Moon is waiting.',
+      'dungeons.moon.start': '▶ Start',
+      'moonLevel.tickets': 'Tickets: {count}',
+      'moonLevel.noTicket': 'You do not have a ticket. But you have dreams, and that is almost a currency.',
+      'moonLevel.welcomeTitle': 'MOON LEVEL',
+      'moonLevel.welcomeSub': 'Welcome to the Moon. Even loose change lands three times better here.',
       'dungeons.close': '✕ Close',
       'bossFight.playerHp': 'Player HP',
       'bossFight.bossHp': 'Bezos HP',
@@ -950,6 +983,12 @@ window.NWI18n = window.NWI18n || {};
       'ach.big_better.desc': 'Bet 100 or more yangs in a single Shell Game wager.',
       'ach.meeting_survived.title': 'Meeting Survived',
       'ach.meeting_survived.desc': 'Survive the meeting with the top boss in Dungeons.',
+      'ach.bought_any_trail.title': 'Heavenly Glow',
+      'ach.bought_any_trail.desc': 'You bought a trail. Now everyone can see the exact path of your escape from responsibility.',
+      'ach.bought_any_special.title': 'Feeling Special',
+      'ach.bought_any_special.desc': 'You bought a special skin. Congratulations, now you are special just like everyone else.',
+      'ach.bezos_low_damage.title': 'That Bread Is Tough',
+      'ach.bezos_low_damage.desc': 'You defeated Bezos with more than half your health left. Looks like the warehouse shift actually trained you well.',
 
       // Cheat codes panel
       'cheats.title': '⌨ Cheat Codes',
@@ -1263,6 +1302,7 @@ window.NWI18n = window.NWI18n || {};
       'wheel.dragonCoin': '+1 Dragon Coin!',
       'wheel.errCube': '+1 Err Cube!',
       'wheel.jackpot': '🏆 JACKPOT! +100 Yang, +3 Wallets, +2 Dragon Coins!',
+      'wheel.moonTicket': '🌙 Moon Level Ticket! You won a ticket to the Moon. Elon would cry, Bezos would add a subscription fee.',
       'wheel.youWon': 'You won: {msg}',
 
       // Five Chests
@@ -1340,6 +1380,14 @@ window.NWI18n = window.NWI18n || {};
       'share.head.record': "New record! I just scored {score} in {title}! 🏆",
       'share.head.normal': 'I just scored {score} in {title}! 🏆',
       'share.bestLine': 'My best: {best}',
+      'share.story': '📸 Share to Stories',
+      'share.story.scored': 'I scored:',
+      'share.story.callout': 'Think you can beat me, you brave little bread roll?',
+      'share.story.footer': 'Fight for Aeternum · New World',
+      'share.story.shareText': 'I scored: {score}',
+      'share.story.shared': 'Shared.',
+      'share.story.downloaded': 'Image downloaded. Upload it to Instagram Stories manually.',
+      'share.story.generateFailed': 'Could not generate the image.',
       'share.callout': 'Can you beat me?',
 
       // Skins button
