@@ -107,6 +107,23 @@ function installLeaderboardService() {
   });
 }
 
+// Wait until Firebase has finished restoring a persisted session from
+// localStorage. On a cold page load `auth.currentUser` is `null` until this
+// settles — without this gate we'd race and call signInAnonymously() before
+// the persisted Google user comes back, replacing it with a fresh anon UID.
+function waitForInitialAuthState() {
+  return new Promise(resolve => {
+    const unsubscribe = firebaseSDK.onAuthStateChanged(auth, user => {
+      try { unsubscribe(); } catch (e) {}
+      resolve(user || null);
+    }, error => {
+      try { unsubscribe(); } catch (e) {}
+      warn('initial auth state failed', error);
+      resolve(null);
+    });
+  });
+}
+
 export async function initLeaderboardAuth() {
   if (!auth || !db) {
     warn('Firebase unavailable; online features disabled');
@@ -115,21 +132,25 @@ export async function initLeaderboardAuth() {
 
   installLeaderboardService();
   try {
+    // Keep currentUid in sync for the rest of the session (sign-in / sign-out).
     firebaseSDK.onAuthStateChanged(auth, user => {
       currentUid = user ? user.uid : null;
     });
 
-    if (auth.currentUser) {
-      currentUid = auth.currentUser.uid;
+    const restoredUser = auth.currentUser || await waitForInitialAuthState();
+    if (restoredUser) {
+      currentUid = restoredUser.uid;
       return currentUid;
     }
 
+    // No persisted session — fall back to anonymous so the leaderboard still
+    // works for first-time players.
     const credential = await firebaseSDK.signInAnonymously(auth);
     currentUid = credential && credential.user ? credential.user.uid : null;
     return currentUid;
   } catch (error) {
     currentUid = null;
-    warn('anonymous auth failed', error);
+    warn('auth init failed', error);
     return null;
   }
 }

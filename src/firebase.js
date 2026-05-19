@@ -1,7 +1,9 @@
 import { getApp, getApps, initializeApp } from 'https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js';
 import {
+  browserLocalPersistence,
   getAuth,
   onAuthStateChanged,
+  setPersistence,
   signInAnonymously,
   GoogleAuthProvider,
   linkWithPopup,
@@ -75,6 +77,11 @@ if (hasUsableConfig(resolvedFirebaseConfig)) {
     app = getApps().length ? getApp() : initializeApp(resolvedFirebaseConfig);
     auth = getAuth(app);
     db = getFirestore(app);
+    // Persist the Google/anonymous session in localStorage so the user stays
+    // signed in across reloads and browser restarts.
+    setPersistence(auth, browserLocalPersistence).catch(error => {
+      console.warn('[firebase] setPersistence failed', error);
+    });
   } catch (error) {
     console.warn('[firebase] init failed', error);
   }
@@ -92,6 +99,8 @@ export const firebaseSDK = {
   query,
   runTransaction,
   serverTimestamp,
+  setPersistence,
+  browserLocalPersistence,
   signInAnonymously,
   GoogleAuthProvider,
   linkWithPopup,
