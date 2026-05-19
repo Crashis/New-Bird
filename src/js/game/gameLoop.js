@@ -387,10 +387,9 @@ function drawScore() {
     ctx.fillText(score, canvas.width / 2, 68);
   }
 
-  ctx.shadowBlur = perf ? 0 : 10;
-  ctx.font = 'bold 17px "Cinzel", serif';
-  ctx.fillStyle = '#f0d080';
-  ctx.fillText(t('canvas.yang', { yang, wallets, errCubes }), canvas.width / 2, 98);
+  // Řádek s měnami (Yangy / Peněženky / Err kostky) byl odstraněn z centrálního
+  // HUD – duplicitní vůči hornímu currency baru. Stejné info se aktualizuje
+  // přes updateEconomyUi() v top HUDu.
 
   const invincibleLeft = Math.ceil((invincibleUntil - performance.now()) / 100) / 10;
   let statusY = 130;
