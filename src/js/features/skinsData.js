@@ -381,6 +381,12 @@ const ACHIEVEMENTS = [
     title: 'Ten tvrdej chleba má',
     description: 'Poraz bosse Bezose s více než 50 % HP.',
     rewardYang: 100
+  },
+  {
+    id: 'bought_kotlar_security',
+    title: 'La Casa Nostra',
+    description: 'Najal sis Kotlár Security.',
+    rewardYang: 25
   }
 ];
 

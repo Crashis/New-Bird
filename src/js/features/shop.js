@@ -120,7 +120,11 @@ function getAmazonNerfSpeedMultiplier() {
 }
 
 function getMaxShields() {
-  return maxShields2Owned ? 2 : 1;
+  let max = maxShields2Owned ? 2 : 1;
+  if (typeof isKotlarEquipped === 'function' && isKotlarEquipped()) {
+    max += 1;
+  }
+  return max;
 }
 
 const MAX_SHIELDS_2_COST = {

@@ -224,6 +224,7 @@
       <div class="shop-item" id="dungeonBezosCard">
         <div class="shop-item-title" data-i18n="dungeons.bezos.name">👔 Boss fight: Bezos</div>
         <div class="shop-item-desc" data-i18n="dungeons.bezos.desc">Meeting s nejvyšším bossem. Hráč má 25 HP a raketomet s 5 náboji. Bezos má 100 HP a střílí projektily.</div>
+        <div class="shop-item-desc" data-i18n="dungeons.bezos.autoRocket">V tomhle dungeonu dostaneš raketomet automaticky, takže ho nemusíš mít nasazený jako heirloom.</div>
         <div class="shop-item-desc" id="dungeonBezosHint" data-i18n="dungeons.bezos.lockedHint">🔒 Zamčeno — dosáhni skóre 100 a získej pozvánku na meeting s Bezosem.</div>
         <div class="shop-item-bottom">
           <span class="shop-level" id="dungeonBezosStatus">🔒</span>
@@ -434,7 +435,10 @@
 
     <!-- Settings panel -->
     <div class="shop-panel large-panel" id="settingsPanel">
-      <h2 data-i18n="settings.title">⚙ Settings</h2>
+      <div class="panel-header">
+        <h2 data-i18n="settings.title">⚙ Settings</h2>
+        <button class="game-btn panel-close-btn" onclick="toggleSettingsPanel(false)">×</button>
+      </div>
       <div class="shop-subtitle" data-i18n="settings.subtitle">Tvoje nastavení se ukládá automaticky.</div>
 
       <div class="settings-row">
@@ -602,6 +606,30 @@
           <button class="game-btn shop-buy-btn" id="toggleHeirloomPaysafeBtn">Koupit</button>
         </div>
         <div class="shop-message" id="heirloomPaysafeMessage"></div>
+      </div>
+
+      <!-- Kotlár Security -->
+      <div class="shop-item">
+        <div class="shop-item-title" data-i18n="heirloom.kotlar.name">🛡 Kotlár Security</div>
+        <div class="shop-item-desc" data-i18n="heirloom.kotlar.description">Přidá +1 k maximálnímu počtu štítů. Kotlár Security tě ochrání líp než noční vrátný s rohlíkem v ruce.</div>
+        <div class="shop-item-desc" data-i18n="heirloom.kotlar.price">Cena: 1 000 Yangů · 77 Peněženek · 15 Dračích mincí · 7 Err kostek</div>
+        <div class="shop-item-bottom">
+          <span class="shop-level" id="heirloomKotlarStatus">Zamčeno</span>
+          <button class="game-btn shop-buy-btn" id="toggleHeirloomKotlarBtn">Koupit</button>
+        </div>
+        <div class="shop-message" id="heirloomKotlarMessage"></div>
+      </div>
+
+      <!-- Excalibeer -->
+      <div class="shop-item">
+        <div class="shop-item-title" data-i18n="heirloom.excalibeer.name">🍺 Excalibeer</div>
+        <div class="shop-item-desc" data-i18n="heirloom.excalibeer.description">Zmáčkni Q a Excalibeer sekne před tebou pivním půlměsícem. Odráží nepřátelské projektily zpět a ty pak dávají 2× damage.</div>
+        <div class="shop-item-desc" data-i18n="heirloom.excalibeer.price">Cena: 1 500 Yangů · 50 Peněženek · 20 Dračích mincí · 5 Err kostek</div>
+        <div class="shop-item-bottom">
+          <span class="shop-level" id="heirloomExcalibeerStatus">Zamčeno</span>
+          <button class="game-btn shop-buy-btn" id="toggleHeirloomExcalibeerBtn">Koupit</button>
+        </div>
+        <div class="shop-message" id="heirloomExcalibeerMessage"></div>
       </div>
 
       <!-- Neschopenka -->

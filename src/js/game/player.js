@@ -74,4 +74,8 @@ function drawPlayer() {
 
   if (typeof drawSpecialsOverlay === 'function') drawSpecialsOverlay();
   ctx.restore();
+
+  if (typeof drawKotlarOverlay === 'function') drawKotlarOverlay();
+  if (typeof drawExcalibeerOverlay === 'function') drawExcalibeerOverlay();
+  if (typeof drawExcalibeerSwing === 'function') drawExcalibeerSwing();
 }

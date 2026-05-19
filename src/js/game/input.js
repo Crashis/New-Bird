@@ -8,6 +8,15 @@ function isInteractiveInputTarget(target) {
 function handleKeyboardInput(e) {
   const overlay = document.getElementById('gameOverlay');
   if (!overlay.classList.contains('active')) return;
+  if (e.code === 'KeyQ') {
+    if (isInteractiveInputTarget(e.target)) return;
+    if (gameState !== 'playing') return;
+    if (typeof isBlockingModalOpen === 'function' && isBlockingModalOpen()) return;
+    if (typeof isExcalibeerEquipped !== 'function' || !isExcalibeerEquipped()) return;
+    e.preventDefault();
+    if (typeof activateExcalibeerSwing === 'function') activateExcalibeerSwing();
+    return;
+  }
   if (e.code !== 'Space') return;
   if (isInteractiveInputTarget(e.target)) return;
   e.preventDefault();

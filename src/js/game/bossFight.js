@@ -54,6 +54,7 @@ function resetBossFightState() {
   bossFrameCount = 0;
   bossRewardClaimed = false;
   bossVictoryAnim = null;
+  if (typeof resetExcalibeerRunState === 'function') resetExcalibeerRunState();
   bossState = {
     x: canvas.width - 160,
     y: canvas.height / 2,
@@ -344,12 +345,50 @@ function updateBossFight() {
     !p.hit && p.x > -60 && p.x < canvas.width + 60 && p.y > -60 && p.y < canvas.height + 60
   );
 
-  // ─── Zásah hráče ───
+  // ─── Excalibeer: odraz boss projektilů ───
+  if (typeof tryExcalibeerReflectBossProjectiles === 'function') {
+    tryExcalibeerReflectBossProjectiles();
+  }
+
+  // ─── Zásah hráče / bosse ───
   const now = performance.now();
   const invincible = now < bossInvincibleUntil;
   const shielded = now < bossShieldUntil;
   for (const p of bossProjectiles) {
     if (p.hit) continue;
+
+    // Odražený projektil zasahuje bosse, ne hráče.
+    if (p.reflected && bossState) {
+      if (Math.hypot(bossState.x - p.x, bossState.y - p.y) < bossState.r + p.r) {
+        p.hit = true;
+        const dmg = (typeof p.damage === 'number' ? p.damage : 1) * BOSS_FIGHT_ROCKET_DAMAGE / Math.max(1, BOSS_FIGHT_ROCKET_DAMAGE);
+        // Bezos-projektil má základní damage 1, reflected dává 2× → použijeme BOSS_FIGHT_ROCKET_DAMAGE jako jednotku raketové síly,
+        // ale aby šlo o "lehčí" hit než rocket, mapujeme p.damage (typicky 2) přímo na boss HP.
+        bossState.hp -= (typeof p.damage === 'number' ? p.damage : 2);
+        bossHitFlashUntil = now + 220;
+        if (bossPhase === 1 && bossState.hp <= BOSS_FIGHT_PHASE2_HP) {
+          bossPhase = 2;
+          const overlay = document.getElementById('gameOverlay');
+          if (overlay) {
+            overlay.classList.remove('event-phase', 'phase-corrupted', 'phase-frost');
+            overlay.classList.add('phase-void');
+          }
+          if (typeof showPhaseToast === 'function') {
+            showPhaseToast(t('bossFight.phase2Toast'));
+          }
+          if (typeof setBossFightMusicPhase === 'function') setBossFightMusicPhase(2);
+        }
+        if (bossState.hp <= 0) {
+          bossState.hp = 0;
+          endBossFightVictory();
+          return;
+        }
+        continue;
+      }
+      // Reflected projektil mimo bosse — ignoruje hráče
+      continue;
+    }
+
     if (Math.hypot(player.x - p.x, player.y - p.y) < player.r + p.r) {
       p.hit = true;
       if (invincible) continue;
@@ -529,11 +568,17 @@ function drawBoss() {
 function drawBossProjectiles() {
   for (const p of bossProjectiles) {
     ctx.save();
-    ctx.fillStyle = '#ff5040';
+    if (p.reflected) {
+      ctx.shadowColor = '#fff2a8';
+      ctx.shadowBlur = 14;
+      ctx.fillStyle = '#ffd060';
+    } else {
+      ctx.fillStyle = '#ff5040';
+    }
     ctx.beginPath();
     ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
     ctx.fill();
-    ctx.strokeStyle = '#3a0a0a';
+    ctx.strokeStyle = p.reflected ? '#5a3a18' : '#3a0a0a';
     ctx.lineWidth = 2;
     ctx.stroke();
     ctx.restore();

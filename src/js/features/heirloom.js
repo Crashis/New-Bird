@@ -32,6 +32,22 @@ const HEIRLOOM_NESCHOPENKA_COST_YANGS = 666;
 const HEIRLOOM_NESCHOPENKA_COST_WALLETS = 30;
 const HEIRLOOM_NESCHOPENKA_COST_DRAGON_COINS = 8;
 
+const HEIRLOOM_KOTLAR_PURCHASED_KEY = 'heirloomKotlarPurchased';
+const HEIRLOOM_KOTLAR_EQUIPPED_KEY = 'heirloomKotlarEquipped';
+const HEIRLOOM_KOTLAR_COST_YANGS = 1000;
+const HEIRLOOM_KOTLAR_COST_WALLETS = 77;
+const HEIRLOOM_KOTLAR_COST_DRAGON_COINS = 15;
+const HEIRLOOM_KOTLAR_COST_ERR_CUBES = 7;
+
+const HEIRLOOM_EXCALIBEER_PURCHASED_KEY = 'heirloomExcalibeerPurchased';
+const HEIRLOOM_EXCALIBEER_EQUIPPED_KEY = 'heirloomExcalibeerEquipped';
+const HEIRLOOM_EXCALIBEER_COST_YANGS = 1500;
+const HEIRLOOM_EXCALIBEER_COST_WALLETS = 50;
+const HEIRLOOM_EXCALIBEER_COST_DRAGON_COINS = 20;
+const HEIRLOOM_EXCALIBEER_COST_ERR_CUBES = 5;
+const EXCALIBEER_COOLDOWN_MS = 5000;
+const EXCALIBEER_SWING_DURATION_MS = 320;
+
 const MAX_EQUIPPED_HEIRLOOMS = 2;
 
 let heirloomRocketPurchased = false;
@@ -47,6 +63,14 @@ let heirloomGodiasEquipped = false;
 let heirloomConcertPurchased = false;
 let heirloomPaysafePurchased = false;
 let heirloomNeschopenkaPurchased = false;
+
+let heirloomKotlarPurchased = false;
+let heirloomKotlarEquipped = false;
+
+let heirloomExcalibeerPurchased = false;
+let heirloomExcalibeerEquipped = false;
+let excalibeerLastUsedAt = 0;
+let excalibeerSwing = null; // { startedAt, durationMs, direction }
 
 function loadBool(key, fallback) {
   try {
@@ -83,6 +107,20 @@ function loadHeirloomState() {
   heirloomConcertPurchased = loadBool(HEIRLOOM_CONCERT_PURCHASED_KEY, false);
   heirloomPaysafePurchased = loadBool(HEIRLOOM_PAYSAFE_PURCHASED_KEY, false);
   heirloomNeschopenkaPurchased = loadBool(HEIRLOOM_NESCHOPENKA_PURCHASED_KEY, false);
+
+  heirloomKotlarPurchased = loadBool(HEIRLOOM_KOTLAR_PURCHASED_KEY, false);
+  heirloomKotlarEquipped = loadBool(HEIRLOOM_KOTLAR_EQUIPPED_KEY, false);
+  if (!heirloomKotlarPurchased && heirloomKotlarEquipped) {
+    heirloomKotlarEquipped = false;
+    try { localStorage.setItem(HEIRLOOM_KOTLAR_EQUIPPED_KEY, '0'); } catch (e) {}
+  }
+
+  heirloomExcalibeerPurchased = loadBool(HEIRLOOM_EXCALIBEER_PURCHASED_KEY, false);
+  heirloomExcalibeerEquipped = loadBool(HEIRLOOM_EXCALIBEER_EQUIPPED_KEY, false);
+  if (!heirloomExcalibeerPurchased && heirloomExcalibeerEquipped) {
+    heirloomExcalibeerEquipped = false;
+    try { localStorage.setItem(HEIRLOOM_EXCALIBEER_EQUIPPED_KEY, '0'); } catch (e) {}
+  }
 }
 
 // ===== Neschopenka — passive: +1 Bezos boss attempt per day (only when Bezos is unlocked) =====
@@ -223,6 +261,8 @@ function countEquippedHeirlooms() {
   if (heirloomRocketPurchased && heirloomRocketEquipped) count++;
   if (heirloomPotionPurchased && heirloomPotionEquipped) count++;
   if (heirloomGodiasPurchased && heirloomGodiasEquipped) count++;
+  if (heirloomKotlarPurchased && heirloomKotlarEquipped) count++;
+  if (heirloomExcalibeerPurchased && heirloomExcalibeerEquipped) count++;
   return count;
 }
 
@@ -231,6 +271,278 @@ function showHeirloomMaxMessage() {
   showHeirloomRocketMessage(msg);
   showHeirloomPotionMessage(msg);
   showHeirloomGodiasMessage(msg);
+  showHeirloomKotlarMessage(msg);
+  showHeirloomExcalibeerMessage(msg);
+}
+
+// ===== Kotlár Security =====
+function isKotlarPurchased() { return heirloomKotlarPurchased === true; }
+function isKotlarEquipped() { return heirloomKotlarPurchased === true && heirloomKotlarEquipped === true; }
+
+function getCurrentErrCubes() {
+  return (typeof errCubes === 'number') ? errCubes : 0;
+}
+
+function canAffordHeirloomKotlar() {
+  return getCurrentYangs() >= HEIRLOOM_KOTLAR_COST_YANGS
+    && getCurrentWallets() >= HEIRLOOM_KOTLAR_COST_WALLETS
+    && getCurrentDragonCoins() >= HEIRLOOM_KOTLAR_COST_DRAGON_COINS
+    && getCurrentErrCubes() >= HEIRLOOM_KOTLAR_COST_ERR_CUBES;
+}
+
+function showHeirloomKotlarMessage(message) {
+  const el = document.getElementById('heirloomKotlarMessage');
+  if (el) el.textContent = message || '';
+}
+
+function purchaseHeirloomKotlar() {
+  if (heirloomKotlarPurchased) return;
+  if (!canAffordHeirloomKotlar()) {
+    showHeirloomKotlarMessage(t('heirloom.kotlar.notEnough'));
+    return;
+  }
+  yang -= HEIRLOOM_KOTLAR_COST_YANGS;
+  wallets -= HEIRLOOM_KOTLAR_COST_WALLETS;
+  dragonCoins -= HEIRLOOM_KOTLAR_COST_DRAGON_COINS;
+  if (typeof errCubes === 'number') errCubes -= HEIRLOOM_KOTLAR_COST_ERR_CUBES;
+  if (typeof saveEconomy === 'function') saveEconomy();
+  if (typeof saveDragonCoins === 'function') saveDragonCoins();
+  if (typeof saveErrCubes === 'function') saveErrCubes();
+  heirloomKotlarPurchased = true;
+  heirloomKotlarEquipped = true;
+  try { localStorage.setItem(HEIRLOOM_KOTLAR_PURCHASED_KEY, '1'); } catch (e) {}
+  try { localStorage.setItem(HEIRLOOM_KOTLAR_EQUIPPED_KEY, '1'); } catch (e) {}
+  if (typeof unlockAchievement === 'function') unlockAchievement('bought_kotlar_security');
+  if (typeof showUnlockToast === 'function') {
+    showUnlockToast(t('heirloom.kotlar.unlocked'), t('heirloom.kotlar.description'), 'upgrade');
+  }
+  showHeirloomKotlarMessage(t('heirloom.kotlar.unlocked'));
+  renderHeirloomPanel();
+  if (typeof updateEconomyUi === 'function') updateEconomyUi();
+}
+
+function toggleHeirloomKotlarEquipped() {
+  if (!isKotlarPurchased()) return;
+  if (!heirloomKotlarEquipped && countEquippedHeirlooms() >= MAX_EQUIPPED_HEIRLOOMS) {
+    showHeirloomMaxMessage();
+    return;
+  }
+  heirloomKotlarEquipped = !heirloomKotlarEquipped;
+  try { localStorage.setItem(HEIRLOOM_KOTLAR_EQUIPPED_KEY, heirloomKotlarEquipped ? '1' : '0'); } catch (e) {}
+  // Po sundání: ořízni aktuální shieldCount na nový max
+  if (!heirloomKotlarEquipped && typeof shieldCount === 'number' && typeof getMaxShields === 'function') {
+    const max = getMaxShields();
+    if (shieldCount > max) {
+      shieldCount = max;
+      if (typeof hasShield !== 'undefined') hasShield = shieldCount > 0;
+    }
+  }
+  renderHeirloomPanel();
+}
+
+// ===== Excalibeer =====
+function isExcalibeerPurchased() { return heirloomExcalibeerPurchased === true; }
+function isExcalibeerEquipped() { return heirloomExcalibeerPurchased === true && heirloomExcalibeerEquipped === true; }
+
+function canAffordHeirloomExcalibeer() {
+  return getCurrentYangs() >= HEIRLOOM_EXCALIBEER_COST_YANGS
+    && getCurrentWallets() >= HEIRLOOM_EXCALIBEER_COST_WALLETS
+    && getCurrentDragonCoins() >= HEIRLOOM_EXCALIBEER_COST_DRAGON_COINS
+    && getCurrentErrCubes() >= HEIRLOOM_EXCALIBEER_COST_ERR_CUBES;
+}
+
+function showHeirloomExcalibeerMessage(message) {
+  const el = document.getElementById('heirloomExcalibeerMessage');
+  if (el) el.textContent = message || '';
+}
+
+function purchaseHeirloomExcalibeer() {
+  if (heirloomExcalibeerPurchased) return;
+  if (!canAffordHeirloomExcalibeer()) {
+    showHeirloomExcalibeerMessage(t('heirloom.excalibeer.notEnough'));
+    return;
+  }
+  yang -= HEIRLOOM_EXCALIBEER_COST_YANGS;
+  wallets -= HEIRLOOM_EXCALIBEER_COST_WALLETS;
+  dragonCoins -= HEIRLOOM_EXCALIBEER_COST_DRAGON_COINS;
+  if (typeof errCubes === 'number') errCubes -= HEIRLOOM_EXCALIBEER_COST_ERR_CUBES;
+  if (typeof saveEconomy === 'function') saveEconomy();
+  if (typeof saveDragonCoins === 'function') saveDragonCoins();
+  if (typeof saveErrCubes === 'function') saveErrCubes();
+  heirloomExcalibeerPurchased = true;
+  heirloomExcalibeerEquipped = true;
+  try { localStorage.setItem(HEIRLOOM_EXCALIBEER_PURCHASED_KEY, '1'); } catch (e) {}
+  try { localStorage.setItem(HEIRLOOM_EXCALIBEER_EQUIPPED_KEY, '1'); } catch (e) {}
+  if (typeof showUnlockToast === 'function') {
+    showUnlockToast(t('heirloom.excalibeer.unlocked'), t('heirloom.excalibeer.description'), 'upgrade');
+  }
+  showHeirloomExcalibeerMessage(t('heirloom.excalibeer.unlocked'));
+  renderHeirloomPanel();
+  if (typeof updateEconomyUi === 'function') updateEconomyUi();
+}
+
+function toggleHeirloomExcalibeerEquipped() {
+  if (!isExcalibeerPurchased()) return;
+  if (!heirloomExcalibeerEquipped && countEquippedHeirlooms() >= MAX_EQUIPPED_HEIRLOOMS) {
+    showHeirloomMaxMessage();
+    return;
+  }
+  heirloomExcalibeerEquipped = !heirloomExcalibeerEquipped;
+  try { localStorage.setItem(HEIRLOOM_EXCALIBEER_EQUIPPED_KEY, heirloomExcalibeerEquipped ? '1' : '0'); } catch (e) {}
+  if (!heirloomExcalibeerEquipped) {
+    excalibeerSwing = null;
+  }
+  renderHeirloomPanel();
+}
+
+function activateExcalibeerSwing() {
+  if (!isExcalibeerEquipped()) return;
+  if (gameState !== 'playing') return;
+  if (typeof isBlockingModalOpen === 'function' && isBlockingModalOpen()) return;
+  const now = performance.now();
+  if (now - excalibeerLastUsedAt < EXCALIBEER_COOLDOWN_MS) return;
+  excalibeerLastUsedAt = now;
+  excalibeerSwing = {
+    startedAt: now,
+    durationMs: EXCALIBEER_SWING_DURATION_MS,
+    direction: 1 // doprava — hráč vždy letí vpravo
+  };
+}
+
+function isExcalibeerSwingActive() {
+  if (!excalibeerSwing) return false;
+  return (performance.now() - excalibeerSwing.startedAt) < excalibeerSwing.durationMs;
+}
+
+function getExcalibeerSwingHitbox() {
+  if (!excalibeerSwing) return null;
+  if (typeof player === 'undefined') return null;
+  // Rectangular hitbox in front of player.
+  const radius = player.r * 2.2;
+  const height = player.r * 2.6;
+  return {
+    x: player.x + player.r * 0.4,
+    y: player.y - height / 2,
+    w: radius,
+    h: height
+  };
+}
+
+function isProjectileInsideExcalibeerSwing(projectile) {
+  const hb = getExcalibeerSwingHitbox();
+  if (!hb) return false;
+  return projectile.x >= hb.x && projectile.x <= hb.x + hb.w
+      && projectile.y >= hb.y && projectile.y <= hb.y + hb.h;
+}
+
+function reflectBossProjectile(p) {
+  if (!p || p.reflected) return;
+  p.reflected = true;
+  p.owner = 'player';
+  p.vx = -p.vx;
+  p.vy = -p.vy;
+  const baseDamage = (typeof p.damage === 'number') ? p.damage : 1;
+  p.damage = baseDamage * 2;
+  p.damageMultiplier = 2;
+}
+
+function tryExcalibeerReflectBossProjectiles() {
+  if (!isExcalibeerEquipped()) return;
+  if (!isExcalibeerSwingActive()) return;
+  if (typeof bossProjectiles === 'undefined' || !Array.isArray(bossProjectiles)) return;
+  for (const p of bossProjectiles) {
+    if (p.hit || p.reflected) continue;
+    if (isProjectileInsideExcalibeerSwing(p)) {
+      reflectBossProjectile(p);
+    }
+  }
+}
+
+function drawExcalibeerOverlay() {
+  if (!isExcalibeerEquipped()) return;
+  if (typeof player === 'undefined' || typeof ctx === 'undefined') return;
+  // Lahvička s lehkým glow vedle hráče
+  ctx.save();
+  ctx.globalAlpha = 0.85;
+  const bx = player.x - player.r * 0.7;
+  const by = player.y + player.r * 0.5;
+  ctx.fillStyle = '#caa040';
+  ctx.fillRect(bx - 3, by - 9, 6, 12);
+  ctx.fillStyle = '#5a3a18';
+  ctx.fillRect(bx - 2, by - 12, 4, 4);
+  if (settings && settings.effects && !window.PERF_MOBILE) {
+    ctx.shadowColor = '#fff2a8';
+    ctx.shadowBlur = 10;
+    ctx.fillStyle = 'rgba(255,242,168,0.4)';
+    ctx.fillRect(bx - 3, by - 9, 6, 12);
+  }
+  ctx.restore();
+}
+
+function drawExcalibeerSwing() {
+  if (!excalibeerSwing) return;
+  const now = performance.now();
+  const t01 = (now - excalibeerSwing.startedAt) / excalibeerSwing.durationMs;
+  if (t01 >= 1) { excalibeerSwing = null; return; }
+  if (typeof ctx === 'undefined' || typeof player === 'undefined') return;
+  const hb = getExcalibeerSwingHitbox();
+  if (!hb) return;
+  const cx = player.x;
+  const cy = player.y;
+  const radius = hb.w;
+  const startAngle = -Math.PI / 2.2;
+  const endAngle = Math.PI / 2.2;
+  const sweep = startAngle + (endAngle - startAngle) * t01;
+  ctx.save();
+  ctx.globalAlpha = 0.85 * (1 - t01 * 0.6);
+  ctx.lineWidth = 8;
+  ctx.strokeStyle = '#ffd060';
+  if (settings && settings.effects && !window.PERF_MOBILE) {
+    ctx.shadowColor = '#fff2a8';
+    ctx.shadowBlur = 18;
+  }
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius, startAngle, sweep);
+  ctx.stroke();
+  ctx.lineWidth = 3;
+  ctx.strokeStyle = '#fff2a8';
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius + 2, startAngle, sweep);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawKotlarOverlay() {
+  if (!isKotlarEquipped()) return;
+  if (typeof player === 'undefined' || typeof ctx === 'undefined') return;
+  ctx.save();
+  const sx = player.x + player.r * 0.6;
+  const sy = player.y - player.r * 0.7;
+  ctx.fillStyle = '#80d8ff';
+  ctx.strokeStyle = '#205a90';
+  ctx.lineWidth = 1.4;
+  ctx.beginPath();
+  ctx.moveTo(sx, sy - 7);
+  ctx.lineTo(sx + 6, sy - 4);
+  ctx.lineTo(sx + 6, sy + 2);
+  ctx.lineTo(sx, sy + 8);
+  ctx.lineTo(sx - 6, sy + 2);
+  ctx.lineTo(sx - 6, sy - 4);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+  ctx.restore();
+}
+
+function getExcalibeerCooldownRemainingMs() {
+  if (!isExcalibeerEquipped()) return 0;
+  const elapsed = performance.now() - excalibeerLastUsedAt;
+  return Math.max(0, EXCALIBEER_COOLDOWN_MS - elapsed);
+}
+
+function resetExcalibeerRunState() {
+  excalibeerLastUsedAt = -EXCALIBEER_COOLDOWN_MS; // ready at run start
+  excalibeerSwing = null;
 }
 
 // ===== Run-state reset =====
@@ -241,6 +553,7 @@ function resetRocketRunState() {
   rockets = [];
   rocketExplosions = [];
   potionReviveChance = 0.50;
+  resetExcalibeerRunState();
 }
 
 function maybeRefreshRocketAmmoAtScore() {
@@ -437,6 +750,26 @@ function drawRocketHud() {
   if (heirloomGodiasPurchased && heirloomGodiasEquipped) {
     ctx.fillStyle = '#ffd700';
     ctx.fillText(`👛 ${t('hud.godias')}`, 18, hudY);
+    hudY += lineH;
+  }
+
+  if (isKotlarEquipped()) {
+    ctx.fillStyle = '#80d8ff';
+    ctx.fillText(`🛡 ${t('hud.kotlar')}`, 18, hudY);
+    hudY += lineH;
+  }
+
+  if (isExcalibeerEquipped()) {
+    const cdMs = getExcalibeerCooldownRemainingMs();
+    if (cdMs > 0) {
+      ctx.fillStyle = '#c0c0c0';
+      const sec = (cdMs / 1000).toFixed(1);
+      ctx.fillText(`🍺 ${t('hud.excalibeer.cooldown', { seconds: sec })}`, 18, hudY);
+    } else {
+      ctx.fillStyle = '#ffd060';
+      ctx.fillText(`🍺 ${t('hud.excalibeer.ready')}`, 18, hudY);
+    }
+    hudY += lineH;
   }
 
   ctx.restore();
@@ -765,6 +1098,48 @@ function renderHeirloomPanel() {
       neschBtnEl.onclick = null;
       neschBtnEl.disabled = true;
       neschBtnEl.classList.add('disabled');
+    }
+  }
+
+  // ── Kotlár Security ──
+  const kotlarStatusEl = document.getElementById('heirloomKotlarStatus');
+  const kotlarBtnEl = document.getElementById('toggleHeirloomKotlarBtn');
+  if (!isKotlarPurchased()) {
+    if (kotlarStatusEl) kotlarStatusEl.textContent = t('heirloom.kotlar.locked');
+    if (kotlarBtnEl) {
+      kotlarBtnEl.textContent = t('heirloom.kotlar.unlock');
+      kotlarBtnEl.onclick = purchaseHeirloomKotlar;
+      kotlarBtnEl.disabled = false;
+      kotlarBtnEl.classList.toggle('disabled', !canAffordHeirloomKotlar());
+    }
+  } else {
+    if (kotlarStatusEl) kotlarStatusEl.textContent = isKotlarEquipped() ? t('heirloom.kotlar.equipped') : t('heirloom.kotlar.unequipped');
+    if (kotlarBtnEl) {
+      kotlarBtnEl.textContent = isKotlarEquipped() ? t('heirloom.kotlar.unequipAction') : t('heirloom.kotlar.equipAction');
+      kotlarBtnEl.onclick = toggleHeirloomKotlarEquipped;
+      kotlarBtnEl.disabled = false;
+      kotlarBtnEl.classList.remove('disabled');
+    }
+  }
+
+  // ── Excalibeer ──
+  const excalibeerStatusEl = document.getElementById('heirloomExcalibeerStatus');
+  const excalibeerBtnEl = document.getElementById('toggleHeirloomExcalibeerBtn');
+  if (!isExcalibeerPurchased()) {
+    if (excalibeerStatusEl) excalibeerStatusEl.textContent = t('heirloom.excalibeer.locked');
+    if (excalibeerBtnEl) {
+      excalibeerBtnEl.textContent = t('heirloom.excalibeer.unlock');
+      excalibeerBtnEl.onclick = purchaseHeirloomExcalibeer;
+      excalibeerBtnEl.disabled = false;
+      excalibeerBtnEl.classList.toggle('disabled', !canAffordHeirloomExcalibeer());
+    }
+  } else {
+    if (excalibeerStatusEl) excalibeerStatusEl.textContent = isExcalibeerEquipped() ? t('heirloom.excalibeer.equipped') : t('heirloom.excalibeer.unequipped');
+    if (excalibeerBtnEl) {
+      excalibeerBtnEl.textContent = isExcalibeerEquipped() ? t('heirloom.excalibeer.unequipAction') : t('heirloom.excalibeer.equipAction');
+      excalibeerBtnEl.onclick = toggleHeirloomExcalibeerEquipped;
+      excalibeerBtnEl.disabled = false;
+      excalibeerBtnEl.classList.remove('disabled');
     }
   }
 
