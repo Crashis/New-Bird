@@ -134,7 +134,7 @@
         <button class="game-btn menu-btn" id="menuShellGameBtn" onclick="toggleTavernaPanel()" data-i18n="menu.shellGame">🍺 Taverna</button>
         <button class="game-btn menu-btn" id="menuSkinsBtn" onclick="toggleSkinsPanel()" data-i18n="menu.skins">🎭 Skiny</button>
         <button class="game-btn menu-btn" id="menuAchievementsBtn" onclick="toggleAchievementsPanel()" data-i18n="menu.achievements">🏆 Achievementy</button>
-        <button class="game-btn menu-btn" id="menuCheatBtn" onclick="toggleCheatCodesPanel()" data-i18n="menu.cheats">⌨ Cheat Codes</button>
+        <button class="game-btn menu-btn" id="menuMultiplayerBtn" onclick="toggleMultiplayerPanel()" data-i18n="menu.multiplayer">🌐 Multiplayer</button>
         <button class="game-btn menu-btn" id="heirloomBtn" onclick="toggleHeirloomPanel()" data-i18n="menu.heirloom">🚀 Heirloom</button>
         <button class="game-btn menu-btn" id="menuUpgradesBtn" onclick="toggleUpgradesPanel()" data-i18n="menu.upgrades">⚡ Upgrady</button>
         <button class="game-btn menu-btn" id="menuBattlepassBtn" onclick="toggleBattlepassPanel()" data-i18n="menu.battlepass">🎟️ Battlepass</button>
@@ -418,21 +418,6 @@
       <div id="achievementsList" class="achievements-list"></div>
     </div>
 
-    <!-- Cheat Codes panel -->
-    <div class="shop-panel" id="cheatCodesPanel" style="text-align:center;">
-      <h2 data-i18n="cheats.title">⌨ Cheat Codes</h2>
-      <div class="shop-subtitle" data-i18n="cheats.subtitle">Zadej tajný kód a uvidíme, co Aeternum dovolí.</div>
-      <div class="cheat-content">
-        <input id="cheatCodeInput" class="cheat-input" type="text" autocomplete="off" spellcheck="false" data-i18n-placeholder="cheats.placeholder" placeholder="Zadej cheat code...">
-        <button class="game-btn primary" id="applyCheatCodeBtn" onclick="applyCheatCodeFromInput()" data-i18n="cheats.apply">Použít</button>
-        <p id="cheatCodeStatus" class="cheat-code-status"></p>
-      </div>
-      <div class="settings-footer-quote" data-i18n="cheats.footer">Zadej cheat code a potvrď. Některé věci by se radši neměly testovat v produkci.</div>
-      <div class="game-buttons" style="margin-top:0.6rem;">
-        <button class="game-btn" onclick="toggleCheatCodesPanel(false)" data-i18n="cheats.close">✕ Zavřít</button>
-      </div>
-    </div>
-
     <!-- Settings panel -->
     <div class="shop-panel large-panel" id="settingsPanel">
       <div class="panel-header">
@@ -521,11 +506,99 @@
         <p class="settings-cloud-status" id="settingsResetProgressStatus" aria-live="polite" style="margin-top:0.5rem; display:none;"></p>
       </div>
 
+      <!-- Cheat Codes section (přesunuto z hlavního menu) -->
+      <div class="settings-cheat-codes" id="settingsCheatCodesSection">
+        <h3 class="settings-section-title" data-i18n="cheats.title">⌨ Cheat Codes</h3>
+        <p class="hint" data-i18n="cheats.subtitle" style="margin-bottom:0.5rem;">Zadej tajný kód a uvidíme, co Aeternum dovolí.</p>
+        <div class="cheat-content" style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center;">
+          <input id="cheatCodeInput" class="cheat-input" type="text" autocomplete="off" spellcheck="false" data-i18n-placeholder="cheats.placeholder" placeholder="Zadej cheat code..." style="flex:1; min-width:160px;">
+          <button class="game-btn primary" id="applyCheatCodeBtn" onclick="applyCheatCodeFromInput()" data-i18n="cheats.apply">Použít</button>
+        </div>
+        <p id="cheatCodeStatus" class="cheat-code-status" aria-live="polite" style="margin-top:0.5rem;"></p>
+        <p class="hint" data-i18n="cheats.footer" style="margin-top:0.4rem;">Vyzkoušej třeba <code>admin</code> nebo <code>hesoyam</code>.</p>
+      </div>
+
       <div class="settings-footer-quote" data-i18n="settings.footer">Víc si toho nenastavíš ty mamrde</div>
 
       <div class="game-buttons" style="margin-top:0.6rem;">
         <button class="game-btn" onclick="toggleSettingsPanel(false)" data-i18n="settings.close">✕ Zavřít</button>
       </div>
+    </div>
+
+    <!-- Multiplayer panel (Firebase lobby — Fáze 1) -->
+    <div class="shop-panel large-panel" id="multiplayerPanel">
+      <div class="panel-header">
+        <h2 data-i18n="multiplayer.title">🌐 Multiplayer</h2>
+        <button class="game-btn panel-close-btn" onclick="toggleMultiplayerPanel(false)">×</button>
+      </div>
+      <div class="shop-subtitle" data-i18n="multiplayer.subtitle">Hraj proti kamarádovi v reálném čase. Vytvoř lobby nebo se připoj přes kód.</div>
+
+      <p class="settings-cloud-status" id="multiplayerStatusText" aria-live="polite" style="margin:0.4rem 0;"></p>
+      <p class="settings-cloud-status" id="multiplayerErrorText" aria-live="polite" style="color:#ff9a9a; display:none; margin:0.3rem 0;"></p>
+
+      <!-- Sekce: žádné lobby -->
+      <div id="multiplayerHomeSection">
+        <div class="settings-row" style="flex-direction:column; align-items:stretch; gap:0.5rem;">
+          <div class="label-wrap">
+            <span class="label">Jméno hráče</span>
+            <span class="hint">Zobrazí se druhému hráči v lobby.</span>
+          </div>
+          <input id="multiplayerNameInput" class="cheat-input" type="text" maxlength="20" autocomplete="off" placeholder="Tvoje jméno" style="width:100%;">
+        </div>
+
+        <div class="settings-cloud-buttons" style="margin-top:0.6rem; flex-wrap:wrap; gap:0.5rem;">
+          <button type="button" class="game-btn primary" id="multiplayerCreateBtn">➕ Založit lobby</button>
+        </div>
+
+        <div class="settings-row" style="flex-direction:column; align-items:stretch; gap:0.5rem; margin-top:0.8rem;">
+          <div class="label-wrap">
+            <span class="label">Připojit se přes kód</span>
+            <span class="hint">Vlož 6místný kód, který ti dal host.</span>
+          </div>
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+            <input id="multiplayerCodeInput" class="cheat-input" type="text" maxlength="6" autocomplete="off" spellcheck="false" placeholder="ABC123" style="flex:1; min-width:140px; text-transform:uppercase; letter-spacing:0.15em; text-align:center;">
+            <button type="button" class="game-btn" id="multiplayerJoinBtn">🚪 Připojit</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sekce: v lobby -->
+      <div id="multiplayerLobbySection" style="display:none;">
+        <div class="settings-row" style="margin-top:0.4rem;">
+          <div class="label-wrap">
+            <span class="label">Kód lobby</span>
+            <span class="hint">Pošli kamarádovi, ať se připojí.</span>
+          </div>
+          <div style="display:flex; gap:0.5rem; align-items:center;">
+            <span id="multiplayerLobbyCode" style="font-family:monospace; font-size:1.4rem; letter-spacing:0.25em; color:#f0d080;">------</span>
+            <button type="button" class="game-btn" id="multiplayerCopyCodeBtn" title="Kopírovat kód">📋</button>
+          </div>
+        </div>
+
+        <h3 class="settings-section-title" style="margin-top:0.8rem;">Hráči</h3>
+        <ul id="multiplayerPlayersList" class="multiplayer-players-list" style="list-style:none; padding:0; margin:0;">
+          <!-- vyplněno dynamicky -->
+        </ul>
+
+        <div class="settings-cloud-buttons" style="margin-top:0.8rem; flex-wrap:wrap; gap:0.5rem;">
+          <button type="button" class="game-btn" id="multiplayerReadyBtn" style="display:none;">✔ Ready</button>
+          <button type="button" class="game-btn primary" id="multiplayerStartBtn" style="display:none;" disabled>▶ Start Game</button>
+          <button type="button" class="game-btn danger-btn" id="multiplayerLeaveBtn">✕ Opustit lobby</button>
+        </div>
+      </div>
+
+      <!-- Sekce: výsledek hry -->
+      <div id="multiplayerResultSection" style="display:none;">
+        <h3 class="settings-section-title" id="multiplayerResultTitle" style="margin-top:0.6rem;">Konec hry</h3>
+        <div id="multiplayerResultBody" style="margin:0.4rem 0;"></div>
+        <div class="settings-cloud-buttons" style="margin-top:0.6rem; flex-wrap:wrap; gap:0.5rem;">
+          <button type="button" class="game-btn primary" id="multiplayerRematchBtn">🔁 Rematch</button>
+          <button type="button" class="game-btn" id="multiplayerBackToLobbyBtn">↩ Zpět do lobby</button>
+          <button type="button" class="game-btn danger-btn" id="multiplayerLeaveResultBtn">✕ Odejít</button>
+        </div>
+      </div>
+
+      <div class="settings-footer-quote" style="margin-top:0.8rem;">Multiplayer je v rané fázi. Buďte k sobě hodní.</div>
     </div>
 
     <!-- Heirloom panel -->
@@ -1103,7 +1176,7 @@
     </div>
     <div class="locked-feature">
       <button class="game-btn" onclick="toggleCheatCodesPanel()" title="Cheat Codes" data-i18n="menu.cheats">⌨ Cheat Codes</button>
-      <div class="shop-wip" data-i18n="bottom.cheatsHint">Work in progress</div>
+      <div class="shop-wip" data-i18n="bottom.cheatsHint">Tajné kódy</div>
     </div>
     <div class="locked-feature">
       <button class="game-btn" onclick="toggleTavernaPanel()" title="Taverna" data-i18n="menu.shellGame">🍺 Taverna</button>

@@ -1,10 +1,11 @@
 const ALL_PANEL_IDS = [
-  'shopPanel', 'skinsPanel', 'achievementsPanel', 'cheatCodesPanel',
+  'shopPanel', 'skinsPanel', 'achievementsPanel',
   'settingsPanel', 'shellGamePanel', 'heirloomPanel',
   'tavernaPanel', 'threeChestsPanel', 'dragonDicePanel',
   'drunkArcherPanel', 'battlepassPanel', 'upgradesPanel',
   'pirateMapPanel', 'dragonEggPanel', 'blacksmithPanel', 'wheelOfFortunePanel',
-  'dungeonsPanel', 'leaderboardPanel', 'creditsPanel'
+  'dungeonsPanel', 'leaderboardPanel', 'creditsPanel',
+  'multiplayerPanel'
 ];
 
 function toggleCreditsPanel(forceOpen) {
@@ -83,17 +84,28 @@ function toggleShop(forceOpen) {
   }
 }
 
+// Cheat Codes panel byl přesunut do sekce Settings panelu.
+// toggleCheatCodesPanel zachováváme jako alias – otevře Settings.
 function toggleCheatCodesPanel(forceOpen) {
-  const panel = document.getElementById('cheatCodesPanel');
+  toggleSettingsPanel(forceOpen);
+}
+
+function toggleMultiplayerPanel(forceOpen) {
+  const panel = document.getElementById('multiplayerPanel');
   if (!panel) return;
   const open = typeof forceOpen === 'boolean' ? forceOpen : !panel.classList.contains('active');
   if (open && gameState === 'playing') {
-    activeVoiceLine = t('panel.cheatsBlocked');
+    activeVoiceLine = t('panel.multiplayerBlocked') || 'Multiplayer není dostupný během hry.';
     activeVoiceLineUntil = performance.now() + 2800;
     return;
   }
-  closeOtherPanels('cheatCodesPanel');
+  closeOtherPanels('multiplayerPanel');
   panel.classList.toggle('active', open);
+  if (open && typeof initMultiplayerPanel === 'function') {
+    initMultiplayerPanel();
+  } else if (!open && typeof onMultiplayerPanelClosed === 'function') {
+    onMultiplayerPanelClosed();
+  }
 }
 
 function toggleAchievementsPanel(forceOpen) {
