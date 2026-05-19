@@ -15,6 +15,42 @@
 
   function $(id) { return document.getElementById(id); }
 
+  // Globální helper — používá score.js, gameLoop.js. Vrací true, pokud
+  // má aktuální run běžet v MP režimu (lobby je založené a status hraje).
+  function isMultiplayerActive() {
+    try {
+      if (!service) return false;
+      const st = service.getState();
+      if (!st || !st.lobbyCode || !st.role) return false;
+      const status = st.lobby?.status;
+      return status === 'playing' || status === 'finished';
+    } catch (e) { return false; }
+  }
+  window.isMultiplayerActive = isMultiplayerActive;
+
+  // Čekací overlay po smrti lokálního hráče v MP — místo gameOver panelu.
+  function showMultiplayerWaitingOverlay() {
+    let el = document.getElementById('multiplayerWaitingOverlay');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'multiplayerWaitingOverlay';
+      el.style.cssText = 'position:fixed; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1rem; background:rgba(8,4,2,0.78); z-index:9000; color:#f0d080; font-family:"Cinzel Decorative",serif; text-align:center; padding:2rem;';
+      el.innerHTML = `
+        <div style="font-size:2.2rem;">💀</div>
+        <div style="font-size:1.4rem; max-width:520px;">Ty už jsi skončil. Teď se modli, že kámoš narazí taky.</div>
+        <div style="font-size:0.95rem; opacity:0.75;">Výsledek se ukáže, až umřou oba.</div>
+      `;
+      document.body.appendChild(el);
+    }
+    el.style.display = 'flex';
+  }
+  window.showMultiplayerWaitingOverlay = showMultiplayerWaitingOverlay;
+
+  function hideWaitingOverlay() {
+    const el = document.getElementById('multiplayerWaitingOverlay');
+    if (el) el.style.display = 'none';
+  }
+
   function setStatus(text) {
     const el = $('multiplayerStatusText');
     if (el) el.textContent = text || '';
@@ -219,6 +255,10 @@
     if (eventType === 'change' || eventType === 'left' || eventType === 'lobby-removed') {
       lastLobby = (eventType === 'change') ? payload : null;
       renderPanel(lastLobby);
+      // Po rematchi (waiting/playing) ukliď waiting overlay z předchozí hry.
+      if (lastLobby && (lastLobby.status === 'waiting' || lastLobby.status === 'playing')) {
+        hideWaitingOverlay();
+      }
     }
     if (eventType === 'game-started' && payload && payload.status === 'playing') {
       maybeAutoStartLocalGame(payload);
@@ -227,6 +267,7 @@
       lastResultShown = true;
       stopProgressTicker();
       window.__nwMultiplayerLocalStarted = false;
+      hideWaitingOverlay();
       // Auto-otevři panel s výsledkem (skryje gameOver panel).
       try {
         const gameOver = document.getElementById('gameOverPanel');
@@ -234,8 +275,9 @@
         if (typeof toggleMultiplayerPanel === 'function') toggleMultiplayerPanel(true);
       } catch (e) {}
     }
-    if (eventType === 'lobby-removed') {
-      setError('Lobby byla zavřena.');
+    if (eventType === 'lobby-removed' || eventType === 'left') {
+      hideWaitingOverlay();
+      if (eventType === 'lobby-removed') setError('Lobby byla zavřena.');
     }
   }
 

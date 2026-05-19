@@ -37,7 +37,10 @@ function addScore(amount) {
   }
 
   // Win trigger fires exactly once when the score crosses WIN_SCORE.
-  if (before < WIN_SCORE && score >= WIN_SCORE && !endlessMode) {
+  // V multiplayeru se hra na skóre 20 NEZASTAVUje – běží dál, dokud hráč
+  // neumře. Vyhodnocení vítěze řeší multiplayerService po smrti obou.
+  const mpActive = (typeof isMultiplayerActive === 'function') && isMultiplayerActive();
+  if (before < WIN_SCORE && score >= WIN_SCORE && !endlessMode && !mpActive) {
     awardShield();
     winGame();
   }

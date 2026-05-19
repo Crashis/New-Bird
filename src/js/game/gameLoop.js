@@ -148,6 +148,21 @@ function endGame() {
   const deathPool = (window.NWI18n && window.NWI18n.getDeathQuotes()) || DEATH_QUOTES;
   document.getElementById('deathQuote').textContent =
     deathPool[Math.floor(Math.random() * deathPool.length)];
+
+  // Multiplayer: nezobrazuj singleplayer game-over panel. Místo toho dej
+  // hráči čekací overlay. Výsledek otevře multiplayerService teprve, až
+  // umře i druhý hráč (status -> 'finished').
+  const mpActive = (typeof isMultiplayerActive === 'function') && isMultiplayerActive();
+  if (mpActive) {
+    try {
+      if (window.NWMultiplayer && typeof window.NWMultiplayer.markPlayerDied === 'function') {
+        window.NWMultiplayer.markPlayerDied();
+      }
+    } catch (e) {}
+    if (typeof showMultiplayerWaitingOverlay === 'function') showMultiplayerWaitingOverlay();
+    return;
+  }
+
   const gameOverPanel = document.getElementById('gameOverPanel');
   gameOverPanel.classList.add('active');
   document.body.classList.add('modal-open');

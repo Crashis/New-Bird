@@ -528,10 +528,10 @@
     <!-- Multiplayer panel (Firebase lobby — Fáze 1) -->
     <div class="shop-panel large-panel" id="multiplayerPanel">
       <div class="panel-header">
-        <h2 data-i18n="multiplayer.title">🌐 Multiplayer</h2>
+        <h2 data-i18n="multiplayer.title">Multiplayer</h2>
         <button class="game-btn panel-close-btn" onclick="toggleMultiplayerPanel(false)">×</button>
       </div>
-      <div class="shop-subtitle" data-i18n="multiplayer.subtitle">Hraj proti kamarádovi v reálném čase. Vytvoř lobby nebo se připoj přes kód.</div>
+      <div class="shop-subtitle" data-i18n="multiplayer.subtitle">Ukaž kámošům, co v tobě je. A když ne, aspoň umři stylově.</div>
 
       <p class="settings-cloud-status" id="multiplayerStatusText" aria-live="polite" style="margin:0.4rem 0;"></p>
       <p class="settings-cloud-status" id="multiplayerErrorText" aria-live="polite" style="color:#ff9a9a; display:none; margin:0.3rem 0;"></p>
@@ -593,7 +593,7 @@
         <div id="multiplayerResultBody" style="margin:0.4rem 0;"></div>
         <div class="settings-cloud-buttons" style="margin-top:0.6rem; flex-wrap:wrap; gap:0.5rem;">
           <button type="button" class="game-btn primary" id="multiplayerRematchBtn">🔁 Rematch</button>
-          <button type="button" class="game-btn" id="multiplayerBackToLobbyBtn">↩ Zpět do lobby</button>
+          <button type="button" class="game-btn" id="multiplayerBackToLobbyBtn" style="display:none;">↩ Zpět do lobby</button>
           <button type="button" class="game-btn danger-btn" id="multiplayerLeaveResultBtn">✕ Odejít</button>
         </div>
       </div>
