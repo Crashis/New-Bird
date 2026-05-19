@@ -286,6 +286,13 @@
   // Public (přes globální okno) – volá panels.js
   // ──────────────────────────────────────────────────────────────
 
+  function setHomeButtonsDisabled(disabled) {
+    const createBtn = $('multiplayerCreateBtn');
+    const joinBtn = $('multiplayerJoinBtn');
+    if (createBtn) createBtn.disabled = !!disabled;
+    if (joinBtn) joinBtn.disabled = !!disabled;
+  }
+
   window.initMultiplayerPanel = async function initMultiplayerPanel() {
     setError('');
     bindOnce();
@@ -293,22 +300,43 @@
     const nameInput = $('multiplayerNameInput');
     if (nameInput && !nameInput.value) nameInput.value = getDefaultName();
 
+    renderPanel(null);
+    setStatus('Připojuji k multiplayeru…');
+    setHomeButtonsDisabled(true);
+
     const svc = await ensureService();
     if (!svc) {
       renderPanel(null);
+      setHomeButtonsDisabled(true);
       setStatus('Firebase modul se nepodařilo načíst – multiplayer nedostupný.');
       return;
     }
-    const uid = getUid();
+
+    // Aktivně zajisti auth (Google nebo anonymous) – nečekej, až ho někdo jiný udělá.
+    let uid = getUid();
+    if (!uid && typeof svc.ensureMultiplayerAuth === 'function') {
+      try {
+        uid = await svc.ensureMultiplayerAuth();
+      } catch (e) {
+        console.error('[multiplayer] ensureAuth failed', e);
+        renderPanel(null);
+        setHomeButtonsDisabled(true);
+        setStatus('');
+        setError(e?.message || 'Nepodařilo se přihlásit k multiplayeru. Zkontroluj Firebase Authentication / Anonymous sign-in.');
+        return;
+      }
+    }
     if (!uid) {
       renderPanel(null);
-      setStatus('Pro multiplayer potřebuješ být přihlášený (anonymně to stačí).');
+      setHomeButtonsDisabled(true);
+      setError('Nepodařilo se přihlásit k multiplayeru. Zkontroluj Firebase Authentication / Anonymous sign-in.');
       return;
     }
     svc.initMultiplayer(uid);
     if (!unsubscribeChange) {
       unsubscribeChange = svc.onChange(handleChange);
     }
+    setHomeButtonsDisabled(false);
     renderPanel(svc.getState().lobby || lastLobby);
   };
 

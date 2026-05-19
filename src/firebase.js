@@ -89,6 +89,60 @@ if (hasUsableConfig(resolvedFirebaseConfig)) {
   console.warn('[firebase] config is missing; online leaderboard disabled');
 }
 
+// Promise sdílená napříč voláními, aby se anonymous sign-in nikdy nespustil 2×
+// paralelně. Vrací aktuálního usera, případně se anonymně přihlásí.
+let ensureAuthPromise = null;
+export function ensureAuth() {
+  if (!auth) {
+    return Promise.reject(new Error('Firebase auth není k dispozici (chybí konfigurace).'));
+  }
+  if (auth.currentUser) return Promise.resolve(auth.currentUser);
+  if (ensureAuthPromise) return ensureAuthPromise;
+
+  ensureAuthPromise = new Promise((resolve, reject) => {
+    let settled = false;
+    const finish = (fn, value) => { if (!settled) { settled = true; fn(value); } };
+
+    // Čekej na obnovený session z localStorage.
+    const unsub = onAuthStateChanged(
+      auth,
+      async (user) => {
+        try { unsub(); } catch (e) {}
+        if (user) {
+          console.log('[firebase] auth restored:', user.uid, user.isAnonymous ? '(anon)' : '(google)');
+          return finish(resolve, user);
+        }
+        try {
+          console.log('[firebase] no session, signing in anonymously…');
+          const cred = await signInAnonymously(auth);
+          console.log('[firebase] anonymous sign-in success:', cred.user?.uid);
+          finish(resolve, cred.user);
+        } catch (err) {
+          console.error('[firebase] anonymous sign-in failed', err);
+          finish(reject, err);
+        }
+      },
+      (err) => {
+        try { unsub(); } catch (e) {}
+        console.error('[firebase] onAuthStateChanged error', err);
+        finish(reject, err);
+      }
+    );
+  }).catch((err) => {
+    ensureAuthPromise = null; // umožni další pokus
+    throw err;
+  });
+
+  return ensureAuthPromise;
+}
+
+if (auth) {
+  onAuthStateChanged(auth, (user) => {
+    console.log('[firebase] auth state changed:', user ? user.uid : '(none)');
+    if (!user) ensureAuthPromise = null;
+  });
+}
+
 export const firebaseSDK = {
   collection,
   doc,

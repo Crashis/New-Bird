@@ -21,7 +21,7 @@ import {
   Timestamp
 } from 'https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js';
 
-import { db, auth } from '../../firebase.js';
+import { db, auth, ensureAuth } from '../../firebase.js';
 
 const LOBBIES_COLLECTION = 'lobbies';
 const HEARTBEAT_INTERVAL_MS = 4000;     // jak často píšeme lastSeen
@@ -111,8 +111,27 @@ export function initMultiplayer(uid) {
   return !!state.uid;
 }
 
+// Zaručí, že máme přihlášeného usera (Google nebo anonymous) ještě před každou
+// multiplayer akcí. Když to selže, vrátíme srozumitelnou chybu nahoru do UI.
+export async function ensureMultiplayerAuth() {
+  if (!isAvailable()) {
+    throw new Error('Firebase není nakonfigurováno – multiplayer nedostupný.');
+  }
+  try {
+    const user = await ensureAuth();
+    if (!user || !user.uid) throw new Error('Auth vrátil prázdného uživatele.');
+    state.uid = user.uid;
+    return user.uid;
+  } catch (err) {
+    console.error('[mp] ensureAuth failed', err);
+    throw new Error('Nepodařilo se přihlásit k multiplayeru. Zkontroluj Firebase Authentication / Anonymous sign-in.');
+  }
+}
+
 export async function createLobby({ name }) {
-  if (!isAvailable() || !state.uid) throw new Error('Multiplayer nedostupný (chybí přihlášení).');
+  if (!isAvailable()) throw new Error('Firebase není nakonfigurováno – multiplayer nedostupný.');
+  if (!state.uid) await ensureMultiplayerAuth();
+  console.log('[mp] createLobby start, uid=', state.uid);
 
   // Pokus o max. několik kolizí kódu.
   let lastError = null;
@@ -142,10 +161,16 @@ export async function createLobby({ name }) {
       state.role = 'host';
       attachListener(code);
       startHeartbeat();
+      console.log('[mp] createLobby success:', code);
       return code;
     } catch (e) {
       lastError = e;
       if (e && e.message === 'CODE_TAKEN') continue;
+      if (e && e.code === 'permission-denied') {
+        console.error('[mp] Firestore permission denied on createLobby:', e.message);
+        throw new Error('Firestore permission denied: ' + (e.message || 'zkontroluj firestore.rules pro kolekci lobbies.'));
+      }
+      console.error('[mp] createLobby failed', e);
       throw e;
     }
   }
@@ -153,11 +178,14 @@ export async function createLobby({ name }) {
 }
 
 export async function joinLobby({ code, name }) {
-  if (!isAvailable() || !state.uid) throw new Error('Multiplayer nedostupný (chybí přihlášení).');
+  if (!isAvailable()) throw new Error('Firebase není nakonfigurováno – multiplayer nedostupný.');
+  if (!state.uid) await ensureMultiplayerAuth();
+  console.log('[mp] joinLobby start, uid=', state.uid, 'code=', code);
   const normalized = String(code || '').trim().toUpperCase();
   if (normalized.length !== 6) throw new Error('Kód lobby musí mít 6 znaků.');
 
   const ref = lobbyRef(normalized);
+  try {
   await runTransaction(db, async (tx) => {
     const snap = await tx.get(ref);
     if (!snap.exists()) throw new Error('Lobby s tímto kódem neexistuje.');
@@ -184,11 +212,20 @@ export async function joinLobby({ code, name }) {
       updatedAt: serverTimestamp()
     });
   });
+  } catch (e) {
+    if (e && e.code === 'permission-denied') {
+      console.error('[mp] Firestore permission denied on joinLobby:', e.message);
+      throw new Error('Firestore permission denied: ' + (e.message || 'zkontroluj firestore.rules.'));
+    }
+    console.error('[mp] joinLobby failed', e);
+    throw e;
+  }
 
   state.lobbyCode = normalized;
   state.role = 'guest';
   attachListener(normalized);
   startHeartbeat();
+  console.log('[mp] joinLobby success:', normalized);
   return normalized;
 }
 
@@ -466,6 +503,7 @@ function teardown() {
 if (typeof window !== 'undefined') {
   window.NWMultiplayer = {
     initMultiplayer,
+    ensureMultiplayerAuth,
     createLobby,
     joinLobby,
     setReady,
