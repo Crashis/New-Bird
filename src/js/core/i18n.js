@@ -190,7 +190,7 @@ window.NWI18n = window.NWI18n || {};
       'heirloom.excalibeer.name': '🍺 Excalibeer',
       'heirloom.excalibeer.description': 'Zmáčkni Q a Excalibeer sekne před tebou pivním půlměsícem. Odráží nepřátelské projektily zpět a ty pak dávají 2× damage.',
       'heirloom.excalibeer.short': 'Q: odraz projektilů, 2× damage',
-      'heirloom.excalibeer.price': 'Cena: 1 500 Yangů · 50 Peněženek · 20 Dračích mincí · 5 Err kostek',
+      'heirloom.excalibeer.price': 'Cena: 2 000 Yangů · 80 Peněženek · 30 Dračích mincí · 10 Err kostek',
       'heirloom.excalibeer.equipped': 'Nasazeno',
       'heirloom.excalibeer.unequipped': 'Sundáno',
       'heirloom.excalibeer.equipAction': 'Nasadit',
@@ -198,7 +198,7 @@ window.NWI18n = window.NWI18n || {};
       'heirloom.excalibeer.locked': 'Zamčeno',
       'heirloom.excalibeer.unlock': 'Koupit',
       'heirloom.excalibeer.unlocked': '🍺 Excalibeer odemčen! Stiskni Q a sekni pivem.',
-      'heirloom.excalibeer.notEnough': 'Nedostatek měn. Potřebuješ 1 500 Yangů, 50 Peněženek, 20 Dračích mincí a 5 Err kostek.',
+      'heirloom.excalibeer.notEnough': 'Nedostatek měn. Potřebuješ 2 000 Yangů, 80 Peněženek, 30 Dračích mincí a 10 Err kostek.',
 
       'hud.kotlar': 'Kotlár Security: +1 štít',
       'hud.excalibeer.ready': 'Excalibeer připraveno (Q)',
@@ -332,6 +332,8 @@ window.NWI18n = window.NWI18n || {};
       'ach.bezos_low_damage.desc': 'Porazil jsi Bezose a ještě ti zbylo víc než půlka života. Asi ti dneska směna ve skladu fakt sedla.',
       'ach.bought_kotlar_security.title': 'La Casa Nostra',
       'ach.bought_kotlar_security.desc': 'Najal sis Kotlár Security. Od teď tě hlídá rodina, štít a velmi podezřelá faktura.',
+      'ach.equipped_excalibeer.title': 'Pivní král Artuš',
+      'ach.equipped_excalibeer.desc': 'Nasadil sis Excalibeer. Artuš by záviděl, Merlin by to zaklínal a hospoda by ti dala vlastní stůl.',
 
       'dungeons.bezos.autoRocket': 'V tomhle dungeonu dostaneš raketomet automaticky, takže ho nemusíš mít nasazený jako heirloom.',
 
@@ -913,7 +915,7 @@ window.NWI18n = window.NWI18n || {};
       'heirloom.excalibeer.name': '🍺 Excalibeer',
       'heirloom.excalibeer.description': 'Press Q and Excalibeer swings a beer-shaped crescent in front of you. It reflects enemy projectiles back and makes them deal 2× damage.',
       'heirloom.excalibeer.short': 'Q: reflect projectiles, 2× damage',
-      'heirloom.excalibeer.price': 'Cost: 1,500 Yangs · 50 Wallets · 20 Dragon Coins · 5 Err Cubes',
+      'heirloom.excalibeer.price': 'Cost: 2,000 Yangs · 80 Wallets · 30 Dragon Coins · 10 Err Cubes',
       'heirloom.excalibeer.equipped': 'Equipped',
       'heirloom.excalibeer.unequipped': 'Unequipped',
       'heirloom.excalibeer.equipAction': 'Equip',
@@ -921,7 +923,7 @@ window.NWI18n = window.NWI18n || {};
       'heirloom.excalibeer.locked': 'Locked',
       'heirloom.excalibeer.unlock': 'Buy',
       'heirloom.excalibeer.unlocked': '🍺 Excalibeer unlocked! Press Q to swing beer.',
-      'heirloom.excalibeer.notEnough': 'Not enough currency. Need 1,500 Yangs, 50 Wallets, 20 Dragon Coins and 5 Err Cubes.',
+      'heirloom.excalibeer.notEnough': 'Not enough currency. Need 2,000 Yangs, 80 Wallets, 30 Dragon Coins and 10 Err Cubes.',
 
       'hud.kotlar': 'Kotlár Security: +1 shield',
       'hud.excalibeer.ready': 'Excalibeer ready (Q)',
@@ -1055,6 +1057,8 @@ window.NWI18n = window.NWI18n || {};
       'ach.bezos_low_damage.desc': 'You defeated Bezos with more than half your health left. Looks like the warehouse shift actually trained you well.',
       'ach.bought_kotlar_security.title': 'La Casa Nostra',
       'ach.bought_kotlar_security.desc': 'You hired Kotlár Security. From now on, you are protected by family, a shield, and a very suspicious invoice.',
+      'ach.equipped_excalibeer.title': 'The Beer King Arthur',
+      'ach.equipped_excalibeer.desc': 'You equipped Excalibeer. Arthur would be jealous, Merlin would cast a spell, and the pub would reserve you a table.',
 
       'dungeons.bezos.autoRocket': 'In this dungeon, you get the rocket launcher automatically, so you do not need to equip it as a heirloom.',
 

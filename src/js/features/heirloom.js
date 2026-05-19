@@ -41,10 +41,10 @@ const HEIRLOOM_KOTLAR_COST_ERR_CUBES = 7;
 
 const HEIRLOOM_EXCALIBEER_PURCHASED_KEY = 'heirloomExcalibeerPurchased';
 const HEIRLOOM_EXCALIBEER_EQUIPPED_KEY = 'heirloomExcalibeerEquipped';
-const HEIRLOOM_EXCALIBEER_COST_YANGS = 1500;
-const HEIRLOOM_EXCALIBEER_COST_WALLETS = 50;
-const HEIRLOOM_EXCALIBEER_COST_DRAGON_COINS = 20;
-const HEIRLOOM_EXCALIBEER_COST_ERR_CUBES = 5;
+const HEIRLOOM_EXCALIBEER_COST_YANGS = 2000;
+const HEIRLOOM_EXCALIBEER_COST_WALLETS = 80;
+const HEIRLOOM_EXCALIBEER_COST_DRAGON_COINS = 30;
+const HEIRLOOM_EXCALIBEER_COST_ERR_CUBES = 10;
 const EXCALIBEER_COOLDOWN_MS = 5000;
 const EXCALIBEER_SWING_DURATION_MS = 320;
 
@@ -391,6 +391,8 @@ function toggleHeirloomExcalibeerEquipped() {
   try { localStorage.setItem(HEIRLOOM_EXCALIBEER_EQUIPPED_KEY, heirloomExcalibeerEquipped ? '1' : '0'); } catch (e) {}
   if (!heirloomExcalibeerEquipped) {
     excalibeerSwing = null;
+  } else {
+    if (typeof unlockAchievement === 'function') unlockAchievement('equipped_excalibeer');
   }
   renderHeirloomPanel();
 }

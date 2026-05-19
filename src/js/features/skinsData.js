@@ -387,6 +387,12 @@ const ACHIEVEMENTS = [
     title: 'La Casa Nostra',
     description: 'Najal sis Kotlár Security.',
     rewardYang: 25
+  },
+  {
+    id: 'equipped_excalibeer',
+    title: 'Pivní král Artuš',
+    description: 'Nasadil sis Excalibeer.',
+    rewardYang: 100
   }
 ];
 

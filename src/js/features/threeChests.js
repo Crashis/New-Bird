@@ -4,11 +4,11 @@ const THREE_CHESTS_DATE_KEY = 'threeChestsLastPlayedDate';
 const CHEST_ENTRY_COST = 10;
 
 const THREE_CHESTS_REWARDS = [
-  { yang: 150, wallets: 10, dragonCoins: 5  },
-  { yang: 100, wallets: 6,  dragonCoins: 3  },
-  { yang: 75,  wallets: 3,  dragonCoins: 2  },
-  { yang: 66,  wallets: 2,  dragonCoins: 1  },
-  { yang: 50,  wallets: 0,  dragonCoins: 0  },
+  { yang: 225, wallets: 15, dragonCoins: 8  },
+  { yang: 150, wallets: 9,  dragonCoins: 5  },
+  { yang: 113, wallets: 5,  dragonCoins: 3  },
+  { yang: 99,  wallets: 3,  dragonCoins: 2  },
+  { yang: 75,  wallets: 0,  dragonCoins: 0  },
 ];
 
 let threeChestsState = 'idle'; // 'idle' | 'active' | 'done'
