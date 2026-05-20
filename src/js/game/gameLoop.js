@@ -95,6 +95,7 @@ function startGameNow() {
   hasShield = shieldCount > 0;
   walletAwardedThisRun = false;
   shieldPhaseUntil = 0;
+  shieldRegenProgressFrames = 0;
   activeVoiceLine = null;
   activeVoiceLineUntil = 0;
   if (typeof resetRocketRunState === 'function') resetRocketRunState();
@@ -233,6 +234,10 @@ function applyMilestoneSafeGap() {
   pipesSincePowerup = 0;
   pipesSinceYang = 0;
   shieldPhaseUntil = 0;
+  // POZN: shieldRegenProgressFrames se tu schválně NEresetuje. Cooldown se
+  // zastavuje automaticky tím, že update() během milestone dialogu neběží,
+  // takže po odkliknutí pokračuje tam, kde skončil. Reset patří jen do
+  // startGameNow / openGame (nový run / change of mode / game over).
   doubleYangUntil = 0;
   amazonNerfUntil = 0;
   amazonNerfSpeedMult = 1.0;
@@ -266,7 +271,11 @@ function drawBackground() {
   }
   // Dark sky gradient — barva závisí na aktuální fázi.
   const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
-  if (currentGamePhase === GAME_PHASES.VOID) {
+  if (currentGamePhase === GAME_PHASES.GREEN) {
+    grad.addColorStop(0, '#06200e');
+    grad.addColorStop(0.5, '#031208');
+    grad.addColorStop(1, '#010904');
+  } else if (currentGamePhase === GAME_PHASES.VOID) {
     grad.addColorStop(0, '#1a0628');
     grad.addColorStop(0.5, '#0c0214');
     grad.addColorStop(1, '#06010a');
@@ -290,7 +299,8 @@ function drawBackground() {
   const perfMobile = window.PERF_MOBILE;
   if (settings.effects && !perfMobile) {
     let overlayColor = null;
-    if (currentGamePhase === GAME_PHASES.VOID) overlayColor = '160, 60, 220';
+    if (currentGamePhase === GAME_PHASES.GREEN) overlayColor = '60, 200, 90';
+    else if (currentGamePhase === GAME_PHASES.VOID) overlayColor = '160, 60, 220';
     else if (currentGamePhase === GAME_PHASES.FROST) overlayColor = '60, 120, 220';
     else if (eventPhaseActive) overlayColor = '140, 20, 20';
     if (overlayColor) {
@@ -546,6 +556,7 @@ function openGame() {
   shieldCount = 0;
   walletAwardedThisRun = false;
   shieldPhaseUntil = 0;
+  shieldRegenProgressFrames = 0;
   activeVoiceLine = null;
   activeVoiceLineUntil = 0;
   setNextVoiceLineScore();
@@ -623,6 +634,33 @@ function continueFromBezos() {
   }, { safeGap: true });
 }
 
+function triggerGreenMilestone() {
+  if (score200MilestoneShown) return;
+  score200MilestoneShown = true;
+  pauseForMilestone('greenPanel', 'milestone.green.title', 'milestone.green.subtitle', 'milestone.green.quote');
+  // Hláška se přehraje speech synthesis + zobrazí na canvasu po pokračování.
+  if (settings.voiceLines && 'speechSynthesis' in window) {
+    try {
+      window.speechSynthesis.cancel();
+      const line = t('milestone.green.voice');
+      const utter = new SpeechSynthesisUtterance(line);
+      utter.lang = window.NWI18n && window.NWI18n.getCurrentLanguage() === 'en' ? 'en-US' : 'cs-CZ';
+      utter.rate = 0.95;
+      utter.pitch = 0.7;
+      utter.volume = 0.6;
+      window.speechSynthesis.speak(utter);
+    } catch (e) {}
+  }
+}
+
+function continueFromGreen() {
+  resumeFromMilestone('greenPanel', () => {
+    if (typeof activateGreenPhase === 'function') activateGreenPhase();
+    activeVoiceLine = t('milestone.green.voice');
+    activeVoiceLineUntil = performance.now() + 3600;
+  }, { safeGap: true });
+}
+
 function triggerFinalMilestone() {
   if (score500FinalShown) return;
   score500FinalShown = true;
@@ -637,7 +675,7 @@ function continueFromFinal() {
 // při kterém nesmí hra reagovat na klik/tap/space pro skok.
 function isBlockingModalOpen() {
   if (document.body.classList.contains('modal-open')) return true;
-  const ids = ['gameOverPanel', 'winPanel', 'bezosPanel', 'finalPanel', 'bossWinPanel', 'bossLossPanel'];
+  const ids = ['gameOverPanel', 'winPanel', 'bezosPanel', 'greenPanel', 'finalPanel', 'bossWinPanel', 'bossLossPanel'];
   for (const id of ids) {
     const el = document.getElementById(id);
     if (el && el.classList.contains('active')) return true;
@@ -659,7 +697,7 @@ function closeGame() {
   closeAllPanels();
   resetEventPhase();
   document.body.classList.remove('modal-open');
-  ['gameOverPanel', 'winPanel', 'bezosPanel', 'finalPanel'].forEach(id => {
+  ['gameOverPanel', 'winPanel', 'bezosPanel', 'greenPanel', 'finalPanel'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.classList.remove('active');
   });

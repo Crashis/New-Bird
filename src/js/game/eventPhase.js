@@ -56,11 +56,24 @@ function resetEventPhase() {
   score60PhaseActivated = false;
   dragonCoinAwardedThisRun = false;
   score100MilestoneShown = false;
+  score200MilestoneShown = false;
   score500FinalShown = false;
   const overlay = document.getElementById('gameOverlay');
   if (overlay) {
-    overlay.classList.remove('event-phase', 'phase-corrupted', 'phase-frost', 'phase-void');
+    overlay.classList.remove('event-phase', 'phase-corrupted', 'phase-frost', 'phase-void', 'phase-green');
   }
+  applyEventPhaseMusic();
+}
+
+// Score 200 — zelená fáze, vizuální změna (rychlost zůstává).
+function activateGreenPhase() {
+  currentGamePhase = GAME_PHASES.GREEN;
+  const overlay = document.getElementById('gameOverlay');
+  if (overlay) {
+    overlay.classList.remove('event-phase', 'phase-corrupted', 'phase-frost', 'phase-void');
+    overlay.classList.add('phase-green');
+  }
+  showPhaseToast(t('milestone.green.toast'));
   applyEventPhaseMusic();
 }
 

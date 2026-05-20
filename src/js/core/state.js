@@ -31,6 +31,8 @@ let walletAwardedThisRun = false;
 let doubleYangLevel = 0;
 let crownBonusLevel = 0;
 let maxShields2Owned = false;
+let shieldRegenLevel = 0;
+let shieldRegenProgressFrames = 0; // tickne jen v update() – tj. v aktivním gameplay
 let doubleYangUntil = 0;
 let amazonNerfUntil = 0;
 let amazonNerfSpeedMult = 1.0;
@@ -51,15 +53,18 @@ const GAME_PHASES = {
   NORMAL: 'normal',
   CORRUPTED: 'corrupted', // score 20
   FROST: 'frost',         // score 60
-  VOID: 'void'            // score 100
+  VOID: 'void',           // score 100
+  GREEN: 'green'          // score 200
 };
 const FROST_PHASE_TRIGGER_SCORE = 60;
 const BEZOS_MILESTONE_SCORE = 100;
+const GREEN_PHASE_TRIGGER_SCORE = 200;
 const FINAL_MILESTONE_SCORE = 500;
 
 let currentGamePhase = GAME_PHASES.NORMAL;
 let score60PhaseActivated = false;
 let score100MilestoneShown = false;
+let score200MilestoneShown = false;
 let score500FinalShown = false;
 
 const settings = {
@@ -87,11 +92,32 @@ const BEZOS_BOSS_TICKET_KEY = 'bezosBossTicketUnlocked';
 const BEZOS_BOSS_LAST_WIN_KEY = 'bezosBossLastWinDate';
 const BEZOS_BOSS_BONUS_USED_DATE_KEY = 'bezosBossBonusUsedDate';
 const MOON_TICKETS_KEY = 'nw_flappy_moon_tickets';
+const LYZAR_BOSS_TICKET_KEY = 'lyzarBossTicketUnlocked';
+const LYZAR_BOSS_LAST_WIN_KEY = 'lyzarBossLastWinDate';
 
 let bezosBossTicketUnlocked = false;
 try {
   bezosBossTicketUnlocked = localStorage.getItem(BEZOS_BOSS_TICKET_KEY) === '1';
 } catch (e) {}
+
+let lyzarBossTicketUnlocked = false;
+try {
+  lyzarBossTicketUnlocked = localStorage.getItem(LYZAR_BOSS_TICKET_KEY) === '1';
+} catch (e) {}
+
+function isLyzarBossTicketUnlocked() { return lyzarBossTicketUnlocked === true; }
+function unlockLyzarBossTicket() {
+  if (lyzarBossTicketUnlocked) return;
+  lyzarBossTicketUnlocked = true;
+  try { localStorage.setItem(LYZAR_BOSS_TICKET_KEY, '1'); } catch (e) {}
+}
+function getLyzarBossLastWinDate() {
+  try { return localStorage.getItem(LYZAR_BOSS_LAST_WIN_KEY) || ''; } catch (e) { return ''; }
+}
+// Lyžař boss je zatím ve vývoji — denní reset připravený pro budoucí gameplay.
+function wasLyzarBossWonToday() {
+  return getLyzarBossLastWinDate() === getTodayLocalDateString();
+}
 
 let moonTickets = 0;
 try {
@@ -182,6 +208,7 @@ try {
   doubleYangLevel = Math.min(DOUBLE_YANG_MAX_LEVEL, Math.max(0, parseInt(localStorage.getItem('nw_flappy_upgrade_double_yang') || '0', 10) || 0));
   crownBonusLevel = Math.min(CROWN_BONUS_MAX_LEVEL, Math.max(0, parseInt(localStorage.getItem('nw_flappy_upgrade_crown_bonus') || '0', 10) || 0));
   maxShields2Owned = localStorage.getItem('nw_flappy_upgrade_max_shields_2') === '1';
+  shieldRegenLevel = Math.min(SHIELD_REGEN_MAX_LEVEL, Math.max(0, parseInt(localStorage.getItem('nw_flappy_upgrade_shield_regen') || '0', 10) || 0));
 } catch (e) {}
 
 unlockedAchievements = loadAchievements();
@@ -322,6 +349,7 @@ function saveEconomy() {
     localStorage.setItem('nw_flappy_upgrade_double_yang', String(doubleYangLevel));
     localStorage.setItem('nw_flappy_upgrade_crown_bonus', String(crownBonusLevel));
     localStorage.setItem('nw_flappy_upgrade_max_shields_2', maxShields2Owned ? '1' : '0');
+    localStorage.setItem('nw_flappy_upgrade_shield_regen', String(shieldRegenLevel));
   } catch (e) {}
   try { if (window.NWCloudSave && typeof window.NWCloudSave.queueCloudSave === 'function') window.NWCloudSave.queueCloudSave('economy'); } catch (e) {}
 }

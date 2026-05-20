@@ -46,6 +46,48 @@ function getCrownBonusCost(level) {
   return CROWN_BONUS_COSTS[level];
 }
 
+function getShieldRegenCost(level) {
+  if (level >= SHIELD_REGEN_MAX_LEVEL) return null;
+  return SHIELD_REGEN_COSTS[level];
+}
+
+function getShieldRegenSeconds() {
+  if (shieldRegenLevel <= 0) return 0;
+  return SHIELD_REGEN_SECONDS[Math.min(SHIELD_REGEN_MAX_LEVEL, shieldRegenLevel) - 1];
+}
+
+function getShieldRegenCooldownFrames() {
+  const sec = getShieldRegenSeconds();
+  return sec > 0 ? Math.round(sec * 60) : 0;
+}
+
+// Regenerace je výslovně mimo boss fighty / speciální módy.
+function isShieldRegenAllowedInCurrentMode() {
+  if (typeof isBossFightActive === 'function' && isBossFightActive()) return false;
+  // 'normal' a 'moonLevel' regeneraci dovolují, jakýkoli další speciální mód ne.
+  if (typeof currentGameMode === 'string'
+      && currentGameMode !== 'normal'
+      && currentGameMode !== 'moonLevel') {
+    return false;
+  }
+  return true;
+}
+
+function buyShieldRegenUpgrade() {
+  if (shieldRegenLevel >= SHIELD_REGEN_MAX_LEVEL) return;
+  const cost = getShieldRegenCost(shieldRegenLevel);
+  if (!spendYang(cost)) {
+    showShopMessage(t('shop.noYangFor', { cost }));
+    return;
+  }
+  shieldRegenLevel++;
+  saveEconomy();
+  queueShopUpgradeCloudSave();
+  updateEconomyUi();
+  showShopMessage(t('shop.shieldRegenUp', { sec: getShieldRegenSeconds().toFixed(1) }));
+  showUnlockToast(t('toast.upgradeUnlocked'), t('toast.upgradeSubtitle'), 'upgrade');
+}
+
 function buyInvincibilityUpgrade() {
   if (invincibilityLevel >= INVINCIBILITY_MAX_LEVEL) return;
   const cost = getInvincibilityCost(invincibilityLevel);

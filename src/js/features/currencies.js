@@ -111,6 +111,24 @@ function updateEconomyUi() {
     cbBtn.classList.toggle('disabled', cbBtn.disabled);
   }
 
+  const srLevel = document.getElementById('shieldRegenLevel');
+  const srBtn = document.getElementById('buyShieldRegenBtn');
+  if (srLevel) {
+    const sec = getShieldRegenSeconds();
+    srLevel.textContent = t('economy.shieldRegenLevel', {
+      cur: shieldRegenLevel,
+      max: SHIELD_REGEN_MAX_LEVEL,
+      sec: sec > 0 ? sec.toFixed(1) : '—'
+    });
+  }
+  if (srBtn) {
+    const cost = getShieldRegenCost(shieldRegenLevel);
+    const atMax = shieldRegenLevel >= SHIELD_REGEN_MAX_LEVEL;
+    srBtn.textContent = atMax ? t('economy.maximum') : t('economy.buyFor', { cost });
+    srBtn.disabled = atMax || yang < cost;
+    srBtn.classList.toggle('disabled', srBtn.disabled);
+  }
+
   const ms2Level = document.getElementById('maxShields2Level');
   const ms2Btn = document.getElementById('buyMaxShields2Btn');
   if (ms2Level) ms2Level.textContent = maxShields2Owned ? t('economy.owned') : t('economy.notOwned');

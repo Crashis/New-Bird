@@ -322,6 +322,16 @@ function toggleBlacksmithPanel(forceOpen) {
 
 // ── Dungeons ─────────────────────────────────────────────
 
+// Lyžař z Apricy — placeholder pro budoucí boss fight. Spuštění zatím nedělá nic
+// kromě hlášky, tlačítko je disabled (necháváme stub pro případ programové aktivace).
+function startLyzarBossFight() {
+  activeVoiceLine = t('dungeons.lyzar.wipToast');
+  activeVoiceLineUntil = performance.now() + 2800;
+  if (typeof showUnlockToast === 'function') {
+    showUnlockToast(t('dungeons.lyzar.name'), t('dungeons.lyzar.wipNote'), 'upgrade');
+  }
+}
+
 function renderDungeonsPanel() {
   const unlocked = (typeof isBezosBossTicketUnlocked === 'function') && isBezosBossTicketUnlocked();
   const wonToday = (typeof wasBezosBossWonToday === 'function') && wasBezosBossWonToday();
@@ -336,6 +346,20 @@ function renderDungeonsPanel() {
     else if (wonToday) key = 'dungeons.bezos.cooldownHint';
     else key = 'dungeons.bezos.availableHint';
     hintEl.textContent = t(key);
+  }
+
+  // Lyžař boss card (zatím ve vývoji)
+  const lyzarUnlocked = (typeof isLyzarBossTicketUnlocked === 'function') && isLyzarBossTicketUnlocked();
+  const lyzarBtn = document.getElementById('dungeonLyzarStartBtn');
+  const lyzarStatus = document.getElementById('dungeonLyzarStatus');
+  const lyzarHint = document.getElementById('dungeonLyzarHint');
+  // Tlačítko zůstává disabled vždy — boss fight je ještě ve vývoji.
+  if (lyzarBtn) lyzarBtn.disabled = true;
+  if (lyzarStatus) lyzarStatus.textContent = !lyzarUnlocked ? '🔒' : '🛠️';
+  if (lyzarHint) {
+    lyzarHint.textContent = !lyzarUnlocked
+      ? t('dungeons.lyzar.lockedHint')
+      : t('dungeons.lyzar.wipNote');
   }
 
   // Moon Level card

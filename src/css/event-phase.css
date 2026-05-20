@@ -140,6 +140,32 @@
     50% { box-shadow: 0 0 80px rgba(200,100,240,0.75), inset 0 0 38px rgba(60,4,80,0.7); }
   }
 
+  /* ===== PHASE 5 — GREEN (score 200) ===== */
+  .game-overlay.phase-green {
+    background: rgba(4,18,8,0.97);
+  }
+  .game-overlay.phase-green .game-header {
+    color: #9af0a0;
+    text-shadow: 0 0 22px rgba(60,200,90,0.7);
+    animation: greenHeaderPulse 2.4s ease-in-out infinite;
+  }
+  .game-overlay.phase-green #gameCanvas {
+    border-color: #1a6a2a;
+    box-shadow:
+      0 0 48px rgba(60,200,90,0.5),
+      inset 0 0 30px rgba(10,60,20,0.6);
+    animation: greenCanvasPulse 2.8s ease-in-out infinite;
+  }
+  .game-overlay.phase-green .game-stats span strong { color: #b0ffb8; }
+  @keyframes greenHeaderPulse {
+    0%, 100% { text-shadow: 0 0 18px rgba(60,200,90,0.55); }
+    50% { text-shadow: 0 0 32px rgba(140,240,140,0.95); }
+  }
+  @keyframes greenCanvasPulse {
+    0%, 100% { box-shadow: 0 0 48px rgba(60,200,90,0.4), inset 0 0 30px rgba(10,60,20,0.55); }
+    50% { box-shadow: 0 0 72px rgba(140,240,140,0.7), inset 0 0 36px rgba(20,80,40,0.7); }
+  }
+
   /* ===== Milestone modal disabled state (anti-double-tap) ===== */
   .milestone-panel .game-btn[disabled],
   .game-over-panel .game-btn[disabled],
@@ -152,6 +178,8 @@
   /* Bezos vs Final milestone tinting */
   .milestone-bezos { border-color: #d6a6ff !important; box-shadow: 0 0 60px rgba(160,60,220,0.6), inset 0 0 30px rgba(160,60,220,0.1) !important; }
   .milestone-bezos h2 { color: #d6a6ff !important; text-shadow: 0 0 25px rgba(200,100,240,0.85) !important; }
+  .milestone-green { border-color: #9af0a0 !important; box-shadow: 0 0 60px rgba(60,200,90,0.6), inset 0 0 30px rgba(60,200,90,0.1) !important; }
+  .milestone-green h2 { color: #9af0a0 !important; text-shadow: 0 0 25px rgba(140,240,140,0.85) !important; }
   .milestone-final { border-color: #f0d080 !important; }
   .milestone-final h2 { color: #f0d080 !important; }
 

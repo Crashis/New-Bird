@@ -1,6 +1,40 @@
 function update() {
   frameCount++;
 
+  // ── Shield regeneration tick ────────────────────────────────────────────
+  // Cooldown se počítá jen tady (v aktivním gameplay tiku). Když je hra
+  // pauznutá / běží dialog / je otevřený panel, update() neběží, takže se
+  // cooldown přirozeně zastaví. V boss fightu se update() nikdy nezavolá,
+  // proto regenerace v boss fightu nefunguje by-design.
+  if (shieldRegenLevel > 0
+      && typeof isShieldRegenAllowedInCurrentMode === 'function'
+      && isShieldRegenAllowedInCurrentMode()) {
+    const maxS = getMaxShields();
+    if (shieldCount < maxS) {
+      shieldRegenProgressFrames++;
+      const cdFrames = getShieldRegenCooldownFrames();
+      if (cdFrames > 0 && shieldRegenProgressFrames >= cdFrames) {
+        shieldRegenProgressFrames = 0;
+        shieldCount = Math.min(maxS, shieldCount + 1);
+        hasShield = shieldCount > 0;
+        for (let i = 0; i < 28; i++) {
+          particles.push({
+            x: player.x, y: player.y,
+            vx: (Math.random() - 0.5) * 5,
+            vy: (Math.random() - 0.5) * 5,
+            life: 45 + Math.random() * 20,
+            size: 2 + Math.random() * 2,
+            color: Math.random() > 0.5 ? '#80d8ff' : '#a0e8ff'
+          });
+        }
+        activeVoiceLine = t('event.shieldRegen');
+        activeVoiceLineUntil = performance.now() + 2400;
+      }
+    } else {
+      shieldRegenProgressFrames = 0;
+    }
+  }
+
   // Player physics (dynamic gravity + terminal velocity cap)
   player.vy += getGravity();
   if (player.vy > MAX_FALL_SPEED) player.vy = MAX_FALL_SPEED;

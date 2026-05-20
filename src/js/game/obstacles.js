@@ -413,11 +413,15 @@ function drawAmazonBlade(x, y, w, h, pointingDown) {
   const phase = currentGamePhase;
   const isFrost = phase === GAME_PHASES.FROST;
   const isVoid = phase === GAME_PHASES.VOID;
+  const isGreen = phase === GAME_PHASES.GREEN;
+  const isMoon = (typeof isMoonLevelActive === 'function') && isMoonLevelActive();
 
   // Glow halo around the blade body — color závisí na fázi (na mobilu vypnuto).
   if (settings.effects && !window.PERF_MOBILE) {
     let glow = null;
-    if (isVoid) glow = 'rgba(180, 80, 230, 0.55)';
+    if (isMoon) glow = 'rgba(180, 200, 220, 0.45)';
+    else if (isGreen) glow = 'rgba(60, 220, 90, 0.55)';
+    else if (isVoid) glow = 'rgba(180, 80, 230, 0.55)';
     else if (isFrost) glow = 'rgba(80, 160, 255, 0.55)';
     else if (ev) glow = 'rgba(200, 30, 30, 0.55)';
     if (glow) {
@@ -432,7 +436,20 @@ function drawAmazonBlade(x, y, w, h, pointingDown) {
 
   // Main blade body — barva podle fáze.
   const grad = ctx.createLinearGradient(x, 0, x + w, 0);
-  if (isVoid) {
+  if (isMoon) {
+    // Moon-themed sloupy — chladná šedá s lehce modravým nádechem, aby ladily s pozadím.
+    grad.addColorStop(0, '#1a1d22');
+    grad.addColorStop(0.3, '#363b44');
+    grad.addColorStop(0.5, '#5a626c');
+    grad.addColorStop(0.7, '#363b44');
+    grad.addColorStop(1, '#1a1d22');
+  } else if (isGreen) {
+    grad.addColorStop(0, '#042210');
+    grad.addColorStop(0.3, '#0a4a22');
+    grad.addColorStop(0.5, '#168a3a');
+    grad.addColorStop(0.7, '#0a4a22');
+    grad.addColorStop(1, '#042210');
+  } else if (isVoid) {
     grad.addColorStop(0, '#100422');
     grad.addColorStop(0.3, '#2a0d4a');
     grad.addColorStop(0.5, '#451670');
@@ -462,7 +479,9 @@ function drawAmazonBlade(x, y, w, h, pointingDown) {
 
   // Edges — gold normally, jiná barva v každé fázi.
   let edge = '#c9a84c';
-  if (isVoid) edge = '#b070e0';
+  if (isMoon) edge = '#c0c8d4';
+  else if (isGreen) edge = '#58e070';
+  else if (isVoid) edge = '#b070e0';
   else if (isFrost) edge = '#5aa8ff';
   else if (ev) edge = '#a82828';
   ctx.fillStyle = edge;
@@ -475,7 +494,7 @@ function drawAmazonBlade(x, y, w, h, pointingDown) {
   ctx.strokeRect(x, y, w, h);
 
   // Decorative diamond pattern (New World style)
-  ctx.fillStyle = isVoid ? '#c890ff' : isFrost ? '#80c8ff' : ev ? '#c84040' : '#c9a84c';
+  ctx.fillStyle = isMoon ? '#dde2ec' : isGreen ? '#a8ffb8' : isVoid ? '#c890ff' : isFrost ? '#80c8ff' : ev ? '#c84040' : '#c9a84c';
   const diamondSpacing = 50;
   const startOffset = pointingDown ? h % diamondSpacing : 0;
   for (let dy = startOffset + 20; dy < h - 20; dy += diamondSpacing) {

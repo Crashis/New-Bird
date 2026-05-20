@@ -63,6 +63,15 @@ function addScore(amount) {
     if (typeof unlockBezosBossTicket === 'function') unlockBezosBossTicket();
   }
 
+  // Score 200: zelená fáze — pauza + modal + unlock dungeonu Lyžaře.
+  if (before < GREEN_PHASE_TRIGGER_SCORE && score >= GREEN_PHASE_TRIGGER_SCORE && !score200MilestoneShown) {
+    if (typeof triggerGreenMilestone === 'function') triggerGreenMilestone();
+  }
+  if (score >= GREEN_PHASE_TRIGGER_SCORE) {
+    unlockAchievement('green_death');
+    if (typeof unlockLyzarBossTicket === 'function') unlockLyzarBossTicket();
+  }
+
   // Score 500: final milestone — pauza + modal.
   if (before < FINAL_MILESTONE_SCORE && score >= FINAL_MILESTONE_SCORE && !score500FinalShown) {
     triggerFinalMilestone();
@@ -115,7 +124,13 @@ function showVoiceLine() {
     ? (window.NWI18n && window.NWI18n.getEventVoiceLines())
     : (window.NWI18n && window.NWI18n.getVoiceLines());
   let pool = enPool || csPool;
-  if (typeof isConcertTicketPurchased === 'function' && isConcertTicketPurchased() && !eventPhaseActive) {
+  // Heirloom Petra Spáleného — přidá koncertní hlášku do poolu náhodných hlášek
+  // ve VŠECH fázích (i event/frost/void/green), takže ji hráč může slyšet po
+  // celou dobu runu. Předtím byla filtrovaná `!eventPhaseActive`, čímž se po
+  // dosažení skóre 20 přestala přehrávat. Audio je čistě speech-synthesis, žádný
+  // MP3 soubor není potřeba (kdyby se v budoucnu doplnil, ulož ho jako
+  // `assets/audio/concert-petr-spaleny.mp3` a přidej fallback v showVoiceLine).
+  if (typeof isConcertTicketPurchased === 'function' && isConcertTicketPurchased()) {
     const concertLine = (typeof getConcertVoiceLine === 'function') ? getConcertVoiceLine() : 'Koncert Petra Spálenýho';
     pool = pool.concat([concertLine]);
   }

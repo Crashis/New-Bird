@@ -24,11 +24,13 @@ function getMoonLevelYangSpawnBonus() {
 }
 
 function getMoonLevelPhaseColor(score) {
-  if (score >= 500) return '#333333';
-  if (score >= 100) return '#555555';
-  if (score >= 60)  return '#777777';
-  if (score >= 20)  return '#9a9a9a';
-  return '#b8b8b8';
+  // Tmavší šedá paleta — méně blízká bílé, lépe ladí s novými šedo-modravými sloupy.
+  if (score >= 500) return '#1d1d1d';
+  if (score >= 200) return '#2a2a2a';
+  if (score >= 100) return '#3a3a3a';
+  if (score >= 60)  return '#4a4a4a';
+  if (score >= 20)  return '#5e5e5e';
+  return '#727272';
 }
 
 function drawMoonBackground() {

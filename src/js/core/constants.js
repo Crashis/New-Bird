@@ -33,6 +33,13 @@ const DOUBLE_YANG_COSTS = [100, 150, 250, 350, 450, 550, 650, 750, 850, 950];
 // extended levels 3–5 continue with +1 score per level and +50 cost step.
 const CROWN_BONUS_MAX_LEVEL = 5;
 const CROWN_BONUS_COSTS = [100, 150, 200, 250, 300];
+
+// Shield Regeneration — obnoví štít po cooldownu aktivního hraní. Funguje pouze
+// v základní hře a v Měsíčním levelu (boss fighty mají vlastní logiku).
+const SHIELD_REGEN_MAX_LEVEL = 3;
+const SHIELD_REGEN_COSTS = [500, 750, 1000];
+// Cooldown v sekundách aktivního gameplay času (60 fps → frames = sec * 60).
+const SHIELD_REGEN_SECONDS = [30, 27.5, 25];
 const AMAZON_NERF_DURATION_MS = 5000;
 const AMAZON_NERF_SLOW_MULT = 0.85;
 const AMAZON_NERF_SPEED_MULT = 1.15;

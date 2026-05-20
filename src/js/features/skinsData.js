@@ -335,6 +335,13 @@ const ACHIEVEMENTS = [
     rewardWallets: 10
   },
   {
+    id: 'green_death',
+    title: 'Zelená smrt',
+    description: 'Dosáhni 200 bodů. Tady už to není prdel, tady už Amazon posílá fakturu za duši.',
+    rewardYang: 200,
+    rewardWallets: 15
+  },
+  {
     id: 'unlock_all_regular_skins',
     title: 'Šatník Aeterna',
     description: 'Odemkni všechny běžné skiny.',
