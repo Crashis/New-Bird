@@ -139,6 +139,7 @@
         <button class="game-btn menu-btn" id="menuUpgradesBtn" onclick="toggleUpgradesPanel()" data-i18n="menu.upgrades">⚡ Upgrady</button>
         <button class="game-btn menu-btn" id="menuBattlepassBtn" onclick="toggleBattlepassPanel()" data-i18n="menu.battlepass">🎟️ Battlepass</button>
         <button class="game-btn menu-btn" id="menuDungeonsBtn" onclick="toggleDungeonsPanel()" data-i18n="menu.dungeons">🏰 Dungeons</button>
+        <button class="game-btn menu-btn" id="menuGuideBtn" onclick="toggleGuidePanel()" data-i18n="menu.guide">📚 Průvodce</button>
         <button class="game-btn menu-btn" id="menuLeaderboardBtn" onclick="toggleLeaderboardPanel()" data-i18n="menu.leaderboard">🏆 Leaderboard</button>
         <span class="menu-secondary-break" aria-hidden="true"></span>
         <button class="game-btn menu-btn menu-btn-secondary" id="menuSettingsBtn" onclick="toggleSettingsPanel()" data-i18n="menu.settings">⚙ Settings</button>
@@ -1192,6 +1193,30 @@
         <button class="game-btn primary drunk-archer-shoot-btn" id="drunkArcherShootBtn" onclick="shootDrunkArcher()" disabled data-i18n="drunkArcher.shootBtn">Vystřelit</button>
         <button class="game-btn" onclick="backToTaverna()" data-i18n="taverna.back">← Taverna</button>
         <button class="game-btn" onclick="toggleDrunkArcherPanel(false)" data-i18n="taverna.close">✕ Zavřít</button>
+      </div>
+    </div>
+
+    <!-- Guide panel -->
+    <div class="shop-panel large-panel guide-panel" id="guidePanel">
+      <div class="panel-header">
+        <h2 data-i18n="guide.title">📚 Průvodce Aeternem</h2>
+        <button class="game-btn panel-close-btn" id="closeGuideBtn" onclick="toggleGuidePanel(false)">×</button>
+      </div>
+      <div class="shop-subtitle" data-i18n="guide.subtitle">Vše, co potřebuješ vědět, než tě Amazon zase vypne.</div>
+
+      <div class="guide-tabs" role="tablist">
+        <button class="guide-tab active" data-guide-tab="basics" onclick="setGuideTab('basics')" data-i18n="guide.tabs.basics">Základy</button>
+        <button class="guide-tab" data-guide-tab="milestones" onclick="setGuideTab('milestones')" data-i18n="guide.tabs.milestones">Milníky</button>
+        <button class="guide-tab" data-guide-tab="phases" onclick="setGuideTab('phases')" data-i18n="guide.tabs.phases">Fáze</button>
+        <button class="guide-tab" data-guide-tab="currencies" onclick="setGuideTab('currencies')" data-i18n="guide.tabs.currencies">Měny</button>
+        <button class="guide-tab" data-guide-tab="tips" onclick="setGuideTab('tips')" data-i18n="guide.tabs.tips">Tipy</button>
+        <button class="guide-tab" data-guide-tab="systems" onclick="setGuideTab('systems')" data-i18n="guide.tabs.systems">Systémy</button>
+      </div>
+
+      <div class="guide-body" id="guideBody"></div>
+
+      <div class="game-buttons" style="margin-top:0.6rem;">
+        <button class="game-btn" onclick="toggleGuidePanel(false)" data-i18n="guide.close">✕ Zavřít</button>
       </div>
     </div>
 

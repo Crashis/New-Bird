@@ -5,7 +5,7 @@ const ALL_PANEL_IDS = [
   'drunkArcherPanel', 'battlepassPanel', 'upgradesPanel',
   'pirateMapPanel', 'dragonEggPanel', 'blacksmithPanel', 'wheelOfFortunePanel',
   'dungeonsPanel', 'leaderboardPanel', 'creditsPanel',
-  'multiplayerPanel'
+  'multiplayerPanel', 'guidePanel'
 ];
 
 function toggleCreditsPanel(forceOpen) {
@@ -386,6 +386,127 @@ function toggleDungeonsPanel(forceOpen) {
   closeOtherPanels('dungeonsPanel');
   panel.classList.toggle('active', open);
   if (open) renderDungeonsPanel();
+}
+
+// ── Guide / Průvodce ─────────────────────────────────────
+
+let currentGuideTab = 'basics';
+
+function setGuideTab(tab) {
+  const valid = ['basics', 'milestones', 'phases', 'currencies', 'tips', 'systems'];
+  if (valid.indexOf(tab) === -1) return;
+  currentGuideTab = tab;
+  const tabs = document.querySelectorAll('.guide-tab');
+  for (let i = 0; i < tabs.length; i++) {
+    tabs[i].classList.toggle('active', tabs[i].dataset.guideTab === tab);
+  }
+  renderGuidePanel();
+}
+
+function renderGuidePanel() {
+  const body = document.getElementById('guideBody');
+  if (!body) return;
+  const SHIELD = (typeof EVENT_PHASE_TRIGGER_SCORE !== 'undefined') ? EVENT_PHASE_TRIGGER_SCORE : 20;
+  const FROST  = (typeof FROST_PHASE_TRIGGER_SCORE  !== 'undefined') ? FROST_PHASE_TRIGGER_SCORE  : 60;
+  const BEZOS  = (typeof BEZOS_MILESTONE_SCORE      !== 'undefined') ? BEZOS_MILESTONE_SCORE      : 100;
+  const GREEN  = (typeof GREEN_PHASE_TRIGGER_SCORE  !== 'undefined') ? GREEN_PHASE_TRIGGER_SCORE  : 200;
+  const DESERT = (typeof DESERT_PHASE_TRIGGER_SCORE !== 'undefined') ? DESERT_PHASE_TRIGGER_SCORE : 300;
+  const FINAL  = (typeof FINAL_MILESTONE_SCORE      !== 'undefined') ? FINAL_MILESTONE_SCORE      : 500;
+  const WIN    = (typeof WIN_SCORE                  !== 'undefined') ? WIN_SCORE                  : 20;
+
+  function card(titleKey, inner) {
+    return '<div class="guide-card"><h3 class="guide-card-title">' + t(titleKey) + '</h3>' + inner + '</div>';
+  }
+
+  let html = '';
+  if (currentGuideTab === 'basics') {
+    html += card('guide.basics.title',
+      '<p class="guide-p">' + t('guide.basics.body') + '</p>' +
+      '<ul class="guide-list">' +
+        '<li>' + t('guide.basics.goal') + '</li>' +
+        '<li>' + t('guide.basics.unlock') + '</li>' +
+        '<li>' + t('guide.basics.win', { score: WIN }) + '</li>' +
+      '</ul>'
+    );
+  } else if (currentGuideTab === 'milestones') {
+    const rows = [
+      ['guide.milestones.shield', SHIELD],
+      ['guide.milestones.frost',  FROST],
+      ['guide.milestones.bezos',  BEZOS],
+      ['guide.milestones.green',  GREEN],
+      ['guide.milestones.desert', DESERT],
+      ['guide.milestones.final',  FINAL]
+    ];
+    let inner = '<ul class="guide-milestone-list">';
+    for (let i = 0; i < rows.length; i++) {
+      inner += '<li><strong>' + rows[i][1] + '</strong> — ' + t(rows[i][0], { score: rows[i][1] }) + '</li>';
+    }
+    inner += '</ul>';
+    html += card('guide.milestones.title', inner);
+  } else if (currentGuideTab === 'phases') {
+    const phases = [
+      ['guide.phases.start.name',     'guide.phases.start.body',     null],
+      ['guide.phases.corrupted.name', 'guide.phases.corrupted.body', SHIELD],
+      ['guide.phases.frost.name',     'guide.phases.frost.body',     FROST],
+      ['guide.phases.void.name',      'guide.phases.void.body',      BEZOS],
+      ['guide.phases.green.name',     'guide.phases.green.body',     GREEN],
+      ['guide.phases.desert.name',    'guide.phases.desert.body',    DESERT],
+      ['guide.phases.final.name',     'guide.phases.final.body',     FINAL]
+    ];
+    let inner = '';
+    for (let i = 0; i < phases.length; i++) {
+      const params = phases[i][2] != null ? { score: phases[i][2] } : {};
+      inner += '<div class="guide-phase-card">' +
+                 '<div class="guide-phase-name">' + t(phases[i][0], params) + '</div>' +
+                 '<div class="guide-phase-body">' + t(phases[i][1], params) + '</div>' +
+               '</div>';
+    }
+    html += card('guide.phases.title', inner);
+  } else if (currentGuideTab === 'currencies') {
+    const keys = ['yang', 'wallets', 'dragonCoins', 'errCubes'];
+    let inner = '<div class="guide-currency-grid">';
+    for (let i = 0; i < keys.length; i++) {
+      inner += '<div class="guide-currency-card">' +
+                 '<div class="guide-currency-name">' + t('guide.currencies.' + keys[i] + '.name') + '</div>' +
+                 '<div class="guide-currency-body">' + t('guide.currencies.' + keys[i] + '.body') + '</div>' +
+               '</div>';
+    }
+    inner += '</div>';
+    inner += '<p class="guide-p guide-currency-note">' + t('guide.currencies.runRewards') + '</p>';
+    html += card('guide.currencies.title', inner);
+  } else if (currentGuideTab === 'tips') {
+    let inner = '<ul class="guide-tip-list">';
+    inner += '<li>' + t('guide.tips.1', { score: SHIELD }) + '</li>';
+    inner += '<li>' + t('guide.tips.2', { bezos: BEZOS, green: GREEN, desert: DESERT }) + '</li>';
+    for (let i = 3; i <= 6; i++) inner += '<li>' + t('guide.tips.' + i) + '</li>';
+    inner += '</ul>';
+    html += card('guide.tips.title', inner);
+  } else if (currentGuideTab === 'systems') {
+    const systems = ['shop', 'upgrades', 'heirloom', 'achievements', 'taverna', 'dungeons', 'multiplayer'];
+    let inner = '';
+    for (let i = 0; i < systems.length; i++) {
+      inner += '<div class="guide-system-card">' +
+                 '<div class="guide-system-name">' + t('guide.systems.' + systems[i] + '.name') + '</div>' +
+                 '<div class="guide-system-body">' + t('guide.systems.' + systems[i] + '.body') + '</div>' +
+               '</div>';
+    }
+    html += card('guide.systems.title', inner);
+  }
+  body.innerHTML = html;
+}
+
+function toggleGuidePanel(forceOpen) {
+  const panel = document.getElementById('guidePanel');
+  if (!panel) return;
+  const open = typeof forceOpen === 'boolean' ? forceOpen : !panel.classList.contains('active');
+  if (open && gameState === 'playing') {
+    activeVoiceLine = t('panel.guideBlocked') || t('panel.settingsBlocked');
+    activeVoiceLineUntil = performance.now() + 2800;
+    return;
+  }
+  closeOtherPanels('guidePanel');
+  panel.classList.toggle('active', open);
+  if (open) renderGuidePanel();
 }
 
 function toggleWheelOfFortunePanel(forceOpen) {
