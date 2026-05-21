@@ -147,6 +147,7 @@ function applyPowerup(coin) {
       const _moonMult = (typeof getRunCurrencyMultiplier === 'function') ? getRunCurrencyMultiplier() : 1;
       const earned = 1 * _godiaMult * _moonMult;
       wallets += earned;
+      if (typeof trackRunReward === 'function') trackRunReward('wallets', earned);
       if (typeof saveEconomy === 'function') saveEconomy();
       if (typeof updateEconomyUi === 'function') updateEconomyUi();
       activeVoiceLine = `+${earned} Peněženka!`;

@@ -138,7 +138,7 @@ function breakDragonEgg() {
 
   if (w < 3) {
     if (Math.random() < 0.5) {
-      yang += 10;
+      yang += 20;
       msg = t('dragonEgg.weakCrack');
       kind = 'win';
     } else {
@@ -147,7 +147,7 @@ function breakDragonEgg() {
     }
   } else if (w < 7) {
     if (Math.random() < 0.6) {
-      yang += 20;
+      yang += 40;
       msg = t('dragonEgg.solidCrack');
       kind = 'win';
     } else {
@@ -155,7 +155,7 @@ function breakDragonEgg() {
       kind = 'info';
     }
   } else {
-    const reward = 30 + Math.floor(Math.random() * 21); // 30–50
+    const reward = 60 + Math.floor(Math.random() * 41); // 60–100 (zdvojnásobeno z 30–50)
     yang += reward;
     const extras = [];
     if (Math.random() < 0.20) { wallets += 1; extras.push(t('dragonEgg.extraWallet')); }

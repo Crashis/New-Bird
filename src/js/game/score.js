@@ -72,6 +72,11 @@ function addScore(amount) {
     if (typeof unlockLyzarBossTicket === 'function') unlockLyzarBossTicket();
   }
 
+  // Score 300: pouštní fáze (Myší poušť) — pauza + modal.
+  if (before < DESERT_PHASE_TRIGGER_SCORE && score >= DESERT_PHASE_TRIGGER_SCORE && !score300MilestoneShown) {
+    if (typeof triggerDesertMilestone === 'function') triggerDesertMilestone();
+  }
+
   // Score 500: final milestone — pauza + modal.
   if (before < FINAL_MILESTONE_SCORE && score >= FINAL_MILESTONE_SCORE && !score500FinalShown) {
     triggerFinalMilestone();

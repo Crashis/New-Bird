@@ -57,10 +57,11 @@ function resetEventPhase() {
   dragonCoinAwardedThisRun = false;
   score100MilestoneShown = false;
   score200MilestoneShown = false;
+  score300MilestoneShown = false;
   score500FinalShown = false;
   const overlay = document.getElementById('gameOverlay');
   if (overlay) {
-    overlay.classList.remove('event-phase', 'phase-corrupted', 'phase-frost', 'phase-void', 'phase-green');
+    overlay.classList.remove('event-phase', 'phase-corrupted', 'phase-frost', 'phase-void', 'phase-green', 'phase-desert');
   }
   applyEventPhaseMusic();
 }
@@ -70,10 +71,22 @@ function activateGreenPhase() {
   currentGamePhase = GAME_PHASES.GREEN;
   const overlay = document.getElementById('gameOverlay');
   if (overlay) {
-    overlay.classList.remove('event-phase', 'phase-corrupted', 'phase-frost', 'phase-void');
+    overlay.classList.remove('event-phase', 'phase-corrupted', 'phase-frost', 'phase-void', 'phase-desert');
     overlay.classList.add('phase-green');
   }
   showPhaseToast(t('milestone.green.toast'));
+  applyEventPhaseMusic();
+}
+
+// Score 300 — pouštní fáze (Myší poušť), vizuální změna.
+function activateDesertPhase() {
+  currentGamePhase = GAME_PHASES.DESERT;
+  const overlay = document.getElementById('gameOverlay');
+  if (overlay) {
+    overlay.classList.remove('event-phase', 'phase-corrupted', 'phase-frost', 'phase-void', 'phase-green');
+    overlay.classList.add('phase-desert');
+  }
+  showPhaseToast(t('milestone.desert.toast'));
   applyEventPhaseMusic();
 }
 

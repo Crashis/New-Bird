@@ -161,6 +161,17 @@
         <button class="game-btn" onclick="returnToMainMenu()" data-i18n="gameover.end">✕ Konec</button>
       </div>
 
+      <!-- Run rewards summary -->
+      <div class="run-rewards" id="runRewards">
+        <div class="run-rewards-title" data-i18n="runRewards.title">Získáno v tomto runu</div>
+        <div class="run-rewards-grid">
+          <div class="run-rewards-row"><span class="run-rewards-icon">🟡</span><span class="run-rewards-label" data-i18n="runRewards.yang">Yangy</span><span class="run-rewards-val" id="runRewardYang">0</span></div>
+          <div class="run-rewards-row"><span class="run-rewards-icon">👛</span><span class="run-rewards-label" data-i18n="runRewards.wallets">Peněženky</span><span class="run-rewards-val" id="runRewardWallets">0</span></div>
+          <div class="run-rewards-row"><span class="run-rewards-icon">🐉</span><span class="run-rewards-label" data-i18n="runRewards.dragonCoins">Dračí mince</span><span class="run-rewards-val" id="runRewardDragonCoins">0</span></div>
+          <div class="run-rewards-row"><span class="run-rewards-icon">🧊</span><span class="run-rewards-label" data-i18n="runRewards.errCubes">ERR kostky</span><span class="run-rewards-val" id="runRewardErrCubes">0</span></div>
+        </div>
+      </div>
+
       <!-- Share section -->
       <div class="share-section" id="shareSection">
         <div class="share-title" data-i18n="share.title">Sdílej svůj výsledek</div>
@@ -198,6 +209,17 @@
       <p class="win-quote" data-milestone-quote data-i18n="milestone.bezos.quote">Vstupenka na boss fight uložena. Najdi ji v menu „Dungeons“.</p>
       <div class="game-buttons">
         <button class="game-btn primary" onclick="continueFromBezos()" data-i18n="milestone.continue">▶ Pokračovat</button>
+      </div>
+    </div>
+
+    <!-- Desert milestone (score 300) -->
+    <div class="win-panel milestone-panel milestone-desert" id="desertPanel">
+      <h2 data-milestone-title data-i18n="milestone.desert.title">MYŠÍ POUŠŤ</h2>
+      <div class="win-subtitle" data-milestone-subtitle data-i18n="milestone.desert.subtitle">Dosáhl jsi skóre 300. Zaslužte si své myši, hráči!</div>
+      <div class="final-score" data-milestone-score>300</div>
+      <p class="win-quote" data-milestone-quote data-i18n="milestone.desert.quote">Poušť neodpouští. Ani myši.</p>
+      <div class="game-buttons">
+        <button class="game-btn primary" onclick="continueFromDesert()" data-i18n="milestone.continue">▶ Pokračovat</button>
       </div>
     </div>
 

@@ -8,7 +8,9 @@ function isAchievementUnlocked(id) {
 
 function addYangs(amount, checkAfter = true) {
   if (!Number.isFinite(amount) || amount <= 0) return;
-  yang += Math.floor(amount);
+  const n = Math.floor(amount);
+  yang += n;
+  if (typeof trackRunReward === 'function') trackRunReward('yang', n);
   saveEconomy();
   updateEconomyUi();
   if (checkAfter) checkAchievements();

@@ -61,29 +61,30 @@ function applyWheelOutcome(slice) {
     case 'nothing':
       return t('wheel.nothing');
     case 'smallYang': {
-      const r = 10 + Math.floor(Math.random() * 11); // 10–20
+      const r = Math.round((10 + Math.floor(Math.random() * 11)) * 1.3); // 10–20 ×1.3
       yang += r; saveEconomy();
       return t('wheel.smallYang', { amount: r });
     }
     case 'bigYang': {
-      const r = 30 + Math.floor(Math.random() * 31); // 30–60
+      const r = Math.round((30 + Math.floor(Math.random() * 31)) * 1.3); // 30–60 ×1.3
       yang += r; saveEconomy();
       return t('wheel.bigYang', { amount: r });
     }
     case 'wallet':
-      wallets += 1; saveEconomy();
+      wallets += Math.round(1 * 1.3); saveEconomy();
       return t('wheel.wallet');
     case 'dragonCoin':
-      dragonCoins += 1; saveDragonCoins();
+      dragonCoins += Math.round(1 * 1.3); saveDragonCoins();
       return t('wheel.dragonCoin');
     case 'errCube':
-      errCubes += 1; saveErrCubes();
+      errCubes += Math.round(1 * 1.3); saveErrCubes();
       return t('wheel.errCube');
     case 'jackpot':
-      yang += 100; wallets += 3; dragonCoins += 2;
+      yang += Math.round(100 * 1.3); wallets += Math.round(3 * 1.3); dragonCoins += Math.round(2 * 1.3);
       saveEconomy(); saveDragonCoins();
       return t('wheel.jackpot');
     case 'moonTicket':
+      // Dungeon vstupenka — zůstává max 1 ks po jednom zatočení (bez navýšení).
       if (typeof addMoonTickets === 'function') addMoonTickets(1);
       return t('wheel.moonTicket');
   }

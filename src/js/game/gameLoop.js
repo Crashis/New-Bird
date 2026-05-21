@@ -91,6 +91,7 @@ function startGameNow() {
   amazonNerfUntil = 0;
   amazonNerfSpeedMult = 1.0;
   runYangs = 0;
+  if (typeof resetCurrentRunRewards === 'function') resetCurrentRunRewards();
   shieldCount = shieldStartOwned ? 1 : 0;
   hasShield = shieldCount > 0;
   walletAwardedThisRun = false;
@@ -111,6 +112,10 @@ function startGameNow() {
   document.getElementById('winPanel').classList.remove('active');
   const bezosPanel = document.getElementById('bezosPanel');
   if (bezosPanel) bezosPanel.classList.remove('active');
+  const greenPanel = document.getElementById('greenPanel');
+  if (greenPanel) greenPanel.classList.remove('active');
+  const desertPanel = document.getElementById('desertPanel');
+  if (desertPanel) desertPanel.classList.remove('active');
   const finalPanel = document.getElementById('finalPanel');
   if (finalPanel) finalPanel.classList.remove('active');
   document.body.classList.remove('modal-open');
@@ -164,6 +169,18 @@ function endGame() {
     return;
   }
 
+  // Přehled run rewardů — měny získané v právě skončeném runu.
+  if (currentRunRewards) {
+    const ry = document.getElementById('runRewardYang');
+    const rw = document.getElementById('runRewardWallets');
+    const rd = document.getElementById('runRewardDragonCoins');
+    const re = document.getElementById('runRewardErrCubes');
+    if (ry) ry.textContent = String(currentRunRewards.yang || 0);
+    if (rw) rw.textContent = String(currentRunRewards.wallets || 0);
+    if (rd) rd.textContent = String(currentRunRewards.dragonCoins || 0);
+    if (re) re.textContent = String(currentRunRewards.errCubes || 0);
+  }
+
   const gameOverPanel = document.getElementById('gameOverPanel');
   gameOverPanel.classList.add('active');
   document.body.classList.add('modal-open');
@@ -194,6 +211,10 @@ function winGame() {
     walletAwardedThisRun = true;
     const _walletMult = (typeof getGodiasWalletMultiplier === 'function') ? getGodiasWalletMultiplier() : 1;
     wallets += _walletMult;
+    // Wallet odměna za zvládnutí milníku score 20 — patří do run rewardů,
+    // přestože gameState je už 'over'. trackRunReward filtruje na 'playing',
+    // takže přičítáme přímo.
+    if (currentRunRewards) currentRunRewards.wallets += Math.max(0, Math.floor(_walletMult));
     saveEconomy();
     showUnlockToast(t('event.walletWon'), t('event.walletWonSub'), 'wallet');
     activeVoiceLine = t('event.walletVoice');
@@ -271,7 +292,11 @@ function drawBackground() {
   }
   // Dark sky gradient — barva závisí na aktuální fázi.
   const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
-  if (currentGamePhase === GAME_PHASES.GREEN) {
+  if (currentGamePhase === GAME_PHASES.DESERT) {
+    grad.addColorStop(0, '#2a1205');
+    grad.addColorStop(0.5, '#1c0f06');
+    grad.addColorStop(1, '#0e0703');
+  } else if (currentGamePhase === GAME_PHASES.GREEN) {
     grad.addColorStop(0, '#06200e');
     grad.addColorStop(0.5, '#031208');
     grad.addColorStop(1, '#010904');
@@ -299,7 +324,8 @@ function drawBackground() {
   const perfMobile = window.PERF_MOBILE;
   if (settings.effects && !perfMobile) {
     let overlayColor = null;
-    if (currentGamePhase === GAME_PHASES.GREEN) overlayColor = '60, 200, 90';
+    if (currentGamePhase === GAME_PHASES.DESERT) overlayColor = '180, 90, 20';
+    else if (currentGamePhase === GAME_PHASES.GREEN) overlayColor = '60, 200, 90';
     else if (currentGamePhase === GAME_PHASES.VOID) overlayColor = '160, 60, 220';
     else if (currentGamePhase === GAME_PHASES.FROST) overlayColor = '60, 120, 220';
     else if (eventPhaseActive) overlayColor = '140, 20, 20';
@@ -661,6 +687,32 @@ function continueFromGreen() {
   }, { safeGap: true });
 }
 
+function triggerDesertMilestone() {
+  if (score300MilestoneShown) return;
+  score300MilestoneShown = true;
+  pauseForMilestone('desertPanel', 'milestone.desert.title', 'milestone.desert.subtitle', 'milestone.desert.quote');
+  if (settings.voiceLines && 'speechSynthesis' in window) {
+    try {
+      window.speechSynthesis.cancel();
+      const line = t('milestone.desert.voice');
+      const utter = new SpeechSynthesisUtterance(line);
+      utter.lang = window.NWI18n && window.NWI18n.getCurrentLanguage() === 'en' ? 'en-US' : 'cs-CZ';
+      utter.rate = 0.95;
+      utter.pitch = 0.72;
+      utter.volume = 0.6;
+      window.speechSynthesis.speak(utter);
+    } catch (e) {}
+  }
+}
+
+function continueFromDesert() {
+  resumeFromMilestone('desertPanel', () => {
+    if (typeof activateDesertPhase === 'function') activateDesertPhase();
+    activeVoiceLine = t('milestone.desert.voice');
+    activeVoiceLineUntil = performance.now() + 3600;
+  }, { safeGap: true });
+}
+
 function triggerFinalMilestone() {
   if (score500FinalShown) return;
   score500FinalShown = true;
@@ -675,7 +727,7 @@ function continueFromFinal() {
 // při kterém nesmí hra reagovat na klik/tap/space pro skok.
 function isBlockingModalOpen() {
   if (document.body.classList.contains('modal-open')) return true;
-  const ids = ['gameOverPanel', 'winPanel', 'bezosPanel', 'greenPanel', 'finalPanel', 'bossWinPanel', 'bossLossPanel'];
+  const ids = ['gameOverPanel', 'winPanel', 'bezosPanel', 'greenPanel', 'desertPanel', 'finalPanel', 'bossWinPanel', 'bossLossPanel'];
   for (const id of ids) {
     const el = document.getElementById(id);
     if (el && el.classList.contains('active')) return true;
@@ -697,7 +749,7 @@ function closeGame() {
   closeAllPanels();
   resetEventPhase();
   document.body.classList.remove('modal-open');
-  ['gameOverPanel', 'winPanel', 'bezosPanel', 'greenPanel', 'finalPanel'].forEach(id => {
+  ['gameOverPanel', 'winPanel', 'bezosPanel', 'greenPanel', 'desertPanel', 'finalPanel'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.classList.remove('active');
   });

@@ -54,18 +54,34 @@ const GAME_PHASES = {
   CORRUPTED: 'corrupted', // score 20
   FROST: 'frost',         // score 60
   VOID: 'void',           // score 100
-  GREEN: 'green'          // score 200
+  GREEN: 'green',         // score 200
+  DESERT: 'desert'        // score 300
 };
 const FROST_PHASE_TRIGGER_SCORE = 60;
 const BEZOS_MILESTONE_SCORE = 100;
 const GREEN_PHASE_TRIGGER_SCORE = 200;
+const DESERT_PHASE_TRIGGER_SCORE = 300;
 const FINAL_MILESTONE_SCORE = 500;
 
 let currentGamePhase = GAME_PHASES.NORMAL;
 let score60PhaseActivated = false;
 let score100MilestoneShown = false;
 let score200MilestoneShown = false;
+let score300MilestoneShown = false;
 let score500FinalShown = false;
+
+// Měny získané v právě probíhajícím runu (resetuje se v startGameNow).
+let currentRunRewards = { yang: 0, wallets: 0, dragonCoins: 0, errCubes: 0 };
+function resetCurrentRunRewards() {
+  currentRunRewards = { yang: 0, wallets: 0, dragonCoins: 0, errCubes: 0 };
+}
+function trackRunReward(type, amount) {
+  const n = Math.max(0, Math.floor(Number(amount) || 0));
+  if (!n) return;
+  if (typeof gameState !== 'undefined' && gameState !== 'playing') return;
+  if (currentRunRewards[type] === undefined) return;
+  currentRunRewards[type] += n;
+}
 
 const settings = {
   sfx: true,
@@ -301,6 +317,7 @@ function addErrCubes(amount) {
   const n = Math.max(0, Math.floor(Number(amount) || 0));
   if (!n) return;
   errCubes += n;
+  trackRunReward('errCubes', n);
   saveErrCubes();
   if (typeof updateEconomyUi === 'function') updateEconomyUi();
 }
@@ -309,6 +326,7 @@ function addDragonCoins(amount) {
   const n = Math.max(0, Math.floor(Number(amount) || 0));
   if (!n) return;
   dragonCoins += n;
+  trackRunReward('dragonCoins', n);
   saveDragonCoins();
   if (typeof updateEconomyUi === 'function') updateEconomyUi();
 }

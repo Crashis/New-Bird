@@ -166,6 +166,80 @@
     50% { box-shadow: 0 0 72px rgba(140,240,140,0.7), inset 0 0 36px rgba(20,80,40,0.7); }
   }
 
+  /* ===== PHASE 6 — DESERT (score 300, Myší poušť) ===== */
+  .game-overlay.phase-desert {
+    background: rgba(28,15,6,0.97);
+  }
+  .game-overlay.phase-desert .game-header {
+    color: #f0b070;
+    text-shadow: 0 0 22px rgba(180,90,20,0.7);
+    animation: desertHeaderPulse 2.4s ease-in-out infinite;
+  }
+  .game-overlay.phase-desert #gameCanvas {
+    border-color: #92400e;
+    box-shadow:
+      0 0 48px rgba(180,90,20,0.5),
+      inset 0 0 30px rgba(60,30,8,0.6);
+    animation: desertCanvasPulse 2.8s ease-in-out infinite;
+  }
+  .game-overlay.phase-desert .game-stats span strong { color: #ffd29a; }
+  @keyframes desertHeaderPulse {
+    0%, 100% { text-shadow: 0 0 18px rgba(180,90,20,0.55); }
+    50% { text-shadow: 0 0 32px rgba(240,170,60,0.95); }
+  }
+  @keyframes desertCanvasPulse {
+    0%, 100% { box-shadow: 0 0 48px rgba(180,90,20,0.4), inset 0 0 30px rgba(60,30,8,0.55); }
+    50% { box-shadow: 0 0 72px rgba(217,119,6,0.7), inset 0 0 36px rgba(80,40,12,0.7); }
+  }
+  .milestone-panel.milestone-desert {
+    background: linear-gradient(135deg, rgba(42,18,5,0.97), rgba(28,15,6,0.97));
+    border: 2px solid #b45309;
+    box-shadow: 0 0 40px rgba(180,83,9,0.55), inset 0 0 24px rgba(60,30,8,0.6);
+  }
+  .milestone-panel.milestone-desert h2 {
+    color: #f0b070;
+    text-shadow: 0 0 18px rgba(217,119,6,0.7);
+  }
+
+  /* ===== Run rewards summary on game over panel ===== */
+  .run-rewards {
+    margin-top: 14px;
+    padding: 10px 14px;
+    border: 1px solid rgba(201,168,76,0.35);
+    border-radius: 8px;
+    background: rgba(20,14,6,0.55);
+    box-shadow: inset 0 0 12px rgba(60,40,10,0.4);
+  }
+  .run-rewards-title {
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #f0d080;
+    text-align: center;
+    margin-bottom: 8px;
+    text-shadow: 0 0 10px rgba(201,168,76,0.4);
+  }
+  .run-rewards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 14px;
+  }
+  .run-rewards-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.92rem;
+    color: #e8d8b0;
+  }
+  .run-rewards-icon { font-size: 1.05rem; }
+  .run-rewards-label { flex: 1; opacity: 0.85; }
+  .run-rewards-val {
+    font-weight: 700;
+    color: #f0d080;
+    min-width: 2ch;
+    text-align: right;
+  }
+
   /* ===== Milestone modal disabled state (anti-double-tap) ===== */
   .milestone-panel .game-btn[disabled],
   .game-over-panel .game-btn[disabled],
