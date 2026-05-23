@@ -152,13 +152,21 @@
 
 .skins-detail .detail-preview {
   position: relative;
-  width: 110px;
-  height: 110px;
+  width: 150px;
+  height: 150px;
   margin: 0 auto;
   border: 2px solid var(--gold-dark);
   border-radius: 50%;
   background: #1a1510;
   overflow: hidden;
+  box-shadow: 0 0 18px rgba(201, 168, 76, 0.35), inset 0 0 12px rgba(0, 0, 0, 0.55);
+}
+
+@media (min-width: 720px) {
+  .skins-detail .detail-preview {
+    width: 180px;
+    height: 180px;
+  }
 }
 
 .skins-detail .detail-preview img {
@@ -198,6 +206,62 @@
   font-size: 0.7rem;
   letter-spacing: 0.06em;
   text-align: center;
+}
+
+.skins-detail .detail-effect {
+  align-self: center;
+  max-width: 100%;
+  border: 1px solid var(--gold-dark);
+  border-radius: 3px;
+  background: rgba(201, 168, 76, 0.08);
+  color: var(--gold-light);
+  font-family: 'Lato', sans-serif;
+  font-size: 0.74rem;
+  line-height: 1.35;
+  padding: 0.3rem 0.55rem;
+  text-align: center;
+}
+
+.skins-detail .detail-buff-debuff {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  align-items: center;
+  width: 100%;
+}
+
+.skins-detail .detail-buff,
+.skins-detail .detail-debuff {
+  max-width: 100%;
+  border: 1px solid;
+  border-radius: 3px;
+  font-family: 'Lato', sans-serif;
+  font-size: 0.74rem;
+  line-height: 1.35;
+  padding: 0.25rem 0.55rem;
+  text-align: center;
+}
+
+.skins-detail .detail-buff {
+  border-color: rgba(120, 200, 120, 0.55);
+  background: rgba(120, 200, 120, 0.08);
+  color: #b8e2a6;
+}
+
+.skins-detail .detail-debuff {
+  border-color: rgba(209, 90, 78, 0.55);
+  background: rgba(209, 90, 78, 0.08);
+  color: #e6a89e;
+}
+
+.skins-detail .detail-empty-effect {
+  align-self: center;
+  color: var(--text-muted);
+  font-family: 'Lato', sans-serif;
+  font-size: 0.7rem;
+  font-style: italic;
+  letter-spacing: 0.04em;
+  opacity: 0.75;
 }
 
 .skins-detail .detail-status {
@@ -282,6 +346,11 @@
     width: calc(100vw - 3rem);
     max-width: calc(100vw - 3rem);
     min-height: min(82svh, 620px);
+  }
+
+  .skins-detail .detail-preview {
+    width: 130px;
+    height: 130px;
   }
 
   .skin-tab,

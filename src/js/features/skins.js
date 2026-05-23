@@ -164,6 +164,10 @@ function renderSkinDetail(host, item) {
   meta.textContent = (item.category === 'player') ? '' : 'Kosmetický efekt — bez vlivu na gameplay';
   host.appendChild(meta);
 
+  if (item.category === 'player') {
+    appendSkinEffectInfo(host, item);
+  }
+
   const status = document.createElement('div');
   const itemStatus = getSkinItemStatus(item);
   status.className = 'detail-status' + (itemStatus.kind === 'locked' ? ' locked' : '');
@@ -203,6 +207,46 @@ function renderSkinDetail(host, item) {
   actions.className = 'detail-actions';
   appendDetailActions(actions, item);
   host.appendChild(actions);
+}
+
+function appendSkinEffectInfo(host, item) {
+  const trans = (typeof window !== 'undefined' && window.NWI18n) ? window.NWI18n.getSkinTranslation(item.id) : null;
+  const effectText = (trans && trans.effect) ? trans.effect : item.effectDescription;
+  const buffText = (trans && trans.buff) ? trans.buff : item.buffText;
+  const debuffText = (trans && trans.debuff) ? trans.debuff : item.debuffText;
+
+  if (!effectText && !buffText && !debuffText) {
+    const empty = document.createElement('div');
+    empty.className = 'detail-empty-effect';
+    empty.textContent = t('skins.noEffects') || 'Žádné speciální efekty';
+    host.appendChild(empty);
+    return;
+  }
+
+  if (effectText) {
+    const eff = document.createElement('div');
+    eff.className = 'detail-effect';
+    eff.textContent = t('skins.effect', { text: effectText });
+    host.appendChild(eff);
+  }
+
+  if (buffText || debuffText) {
+    const wrap = document.createElement('div');
+    wrap.className = 'detail-buff-debuff';
+    if (buffText) {
+      const b = document.createElement('div');
+      b.className = 'detail-buff';
+      b.textContent = t('skins.buff', { text: buffText });
+      wrap.appendChild(b);
+    }
+    if (debuffText) {
+      const d = document.createElement('div');
+      d.className = 'detail-debuff';
+      d.textContent = t('skins.debuff', { text: debuffText });
+      wrap.appendChild(d);
+    }
+    host.appendChild(wrap);
+  }
 }
 
 function appendCostPills(host, cost) {
@@ -280,9 +324,9 @@ function buildDetailPreview(item) {
     return img;
   }
   const c = document.createElement('canvas');
-  c.width = 110; c.height = 110;
+  c.width = 180; c.height = 180;
   const cx = c.getContext('2d');
-  drawMiniPreview(cx, item, 55, 55, 42);
+  drawMiniPreview(cx, item, 90, 90, 70);
   return c;
 }
 

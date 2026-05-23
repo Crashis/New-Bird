@@ -511,12 +511,13 @@ function toggleGuidePanel(forceOpen) {
 
 // ── Pets ─────────────────────────────────────────────────
 
+const PET_PRICE = { yang: 300, dragonCoins: 5, wallets: 10 };
 const PETS_LIST = [
-  { id: 'dog',     icon: '🐶', nameKey: 'pets.dog.name',     bonusKey: 'pets.dog.bonus' },
-  { id: 'cat',     icon: '🐱', nameKey: 'pets.cat.name',     bonusKey: 'pets.cat.bonus' },
-  { id: 'parrot',  icon: '🦜', nameKey: 'pets.parrot.name',  bonusKey: 'pets.parrot.bonus' },
-  { id: 'hamster', icon: '🐹', nameKey: 'pets.hamster.name', bonusKey: 'pets.hamster.bonus' },
-  { id: 'mouse',   icon: '🐭', nameKey: 'pets.mouse.name',   bonusKey: 'pets.mouse.bonus' }
+  { id: 'dog',     icon: '🐶', nameKey: 'pets.dog.name',     bonusKey: 'pets.dog.bonus',     price: PET_PRICE },
+  { id: 'cat',     icon: '🐱', nameKey: 'pets.cat.name',     bonusKey: 'pets.cat.bonus',     price: PET_PRICE },
+  { id: 'parrot',  icon: '🦜', nameKey: 'pets.parrot.name',  bonusKey: 'pets.parrot.bonus',  price: PET_PRICE },
+  { id: 'hamster', icon: '🐹', nameKey: 'pets.hamster.name', bonusKey: 'pets.hamster.bonus', price: PET_PRICE },
+  { id: 'mouse',   icon: '🐭', nameKey: 'pets.mouse.name',   bonusKey: 'pets.mouse.bonus',   price: PET_PRICE }
 ];
 const PETS_SELECTED_KEY = 'nw_selectedPet';
 
@@ -539,10 +540,16 @@ function renderPetsPanel() {
   for (const pet of PETS_LIST) {
     const card = document.createElement('div');
     card.className = 'pet-card' + (selected === pet.id ? ' selected' : '');
+    const priceText = t('pets.price.format', {
+      yang: pet.price.yang,
+      dragon: pet.price.dragonCoins,
+      wallets: pet.price.wallets
+    });
     card.innerHTML =
       '<div class="pet-icon">' + pet.icon + '</div>' +
       '<div class="pet-name">' + t(pet.nameKey) + '</div>' +
       '<div class="pet-bonus">' + t(pet.bonusKey) + '</div>' +
+      '<div class="pet-price">' + priceText + '</div>' +
       '<button class="game-btn pet-select-btn" data-pet-id="' + pet.id + '">' +
         (selected === pet.id ? t('pets.deselect') : t('pets.select')) +
       '</button>';

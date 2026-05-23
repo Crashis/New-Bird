@@ -68,6 +68,7 @@ window.NWI18n = window.NWI18n || {};
       'pets.hamster.bonus': 'Drobný bonus k rychlosti — připravuje se',
       'pets.mouse.name': 'Myš',
       'pets.mouse.bonus': 'Levnější drobné upgrady — připravuje se',
+      'pets.price.format': '{yang} yangů • {dragon} dračích mincí • {wallets} peněženek',
       'panel.petsBlocked': 'Pets otevřeš až mimo aktivní let.',
 
       // Guide / Průvodce
@@ -412,8 +413,9 @@ window.NWI18n = window.NWI18n || {};
       'skins.buy': 'Koupit za {price} Peněženky',
       'skins.notEnough': 'Nedostatek Peněženek',
       'skins.effect': 'Efekt: {text}',
-      'skins.buff': 'Buff: {text}',
-      'skins.debuff': 'Debuff: {text}',
+      'skins.buff': 'Výhoda: {text}',
+      'skins.debuff': 'Nevýhoda: {text}',
+      'skins.noEffects': 'Žádné speciální efekty',
       'skins.notEnoughMsg': 'Potřebuješ {price} Peněženky. Aeternum levně nedává.',
       'skins.unlockedToast': '{name} je tvůj. Teď už aspoň vypadáš draze.',
 
@@ -1015,6 +1017,7 @@ window.NWI18n = window.NWI18n || {};
       'pets.hamster.bonus': 'Small speed bonus — coming soon',
       'pets.mouse.name': 'Mouse',
       'pets.mouse.bonus': 'Cheaper small upgrades — coming soon',
+      'pets.price.format': '{yang} yangs • {dragon} dragon coins • {wallets} wallets',
       'panel.petsBlocked': 'Open Pets outside an active run.',
       'leaderboard.title': '🏆 Leaderboard',
       'leaderboard.subtitle': 'Top 10 heroes by best score.',
@@ -1282,8 +1285,9 @@ window.NWI18n = window.NWI18n || {};
       'skins.buy': 'Buy for {price} Wallets',
       'skins.notEnough': 'Not enough Wallets',
       'skins.effect': 'Effect: {text}',
-      'skins.buff': 'Buff: {text}',
-      'skins.debuff': 'Debuff: {text}',
+      'skins.buff': 'Pro: {text}',
+      'skins.debuff': 'Con: {text}',
+      'skins.noEffects': 'No special effects',
       'skins.notEnoughMsg': 'You need {price} Wallets. Aeternum does not come cheap.',
       'skins.unlockedToast': '{name} is yours. At least you look expensive now.',
 

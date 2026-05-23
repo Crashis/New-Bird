@@ -361,8 +361,22 @@
   color: #b89a6a;
   font-size: 0.82rem;
   font-style: italic;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.4rem;
   line-height: 1.3;
+}
+.pet-card .pet-price {
+  display: inline-block;
+  border: 1px solid #5a4220;
+  border-radius: 4px;
+  background: rgba(60, 38, 12, 0.55);
+  color: #f0d080;
+  font-family: 'Cinzel', serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  padding: 0.2rem 0.45rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.25;
+  word-spacing: 0.05em;
 }
 .pet-card .pet-select-btn {
   font-size: 0.8rem;
