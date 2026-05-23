@@ -5,7 +5,7 @@ const ALL_PANEL_IDS = [
   'drunkArcherPanel', 'battlepassPanel', 'upgradesPanel',
   'pirateMapPanel', 'dragonEggPanel', 'blacksmithPanel', 'wheelOfFortunePanel',
   'dungeonsPanel', 'leaderboardPanel', 'creditsPanel',
-  'multiplayerPanel', 'guidePanel'
+  'multiplayerPanel', 'guidePanel', 'petsPanel'
 ];
 
 function toggleCreditsPanel(forceOpen) {
@@ -507,6 +507,63 @@ function toggleGuidePanel(forceOpen) {
   closeOtherPanels('guidePanel');
   panel.classList.toggle('active', open);
   if (open) renderGuidePanel();
+}
+
+// ── Pets ─────────────────────────────────────────────────
+
+const PETS_LIST = [
+  { id: 'dog',     icon: '🐶', nameKey: 'pets.dog.name',     bonusKey: 'pets.dog.bonus' },
+  { id: 'cat',     icon: '🐱', nameKey: 'pets.cat.name',     bonusKey: 'pets.cat.bonus' },
+  { id: 'parrot',  icon: '🦜', nameKey: 'pets.parrot.name',  bonusKey: 'pets.parrot.bonus' },
+  { id: 'hamster', icon: '🐹', nameKey: 'pets.hamster.name', bonusKey: 'pets.hamster.bonus' },
+  { id: 'mouse',   icon: '🐭', nameKey: 'pets.mouse.name',   bonusKey: 'pets.mouse.bonus' }
+];
+const PETS_SELECTED_KEY = 'nw_selectedPet';
+
+function getSelectedPet() {
+  try { return localStorage.getItem(PETS_SELECTED_KEY) || null; } catch (e) { return null; }
+}
+function setSelectedPet(id) {
+  try {
+    if (id) localStorage.setItem(PETS_SELECTED_KEY, id);
+    else localStorage.removeItem(PETS_SELECTED_KEY);
+  } catch (e) {}
+  renderPetsPanel();
+}
+
+function renderPetsPanel() {
+  const list = document.getElementById('petsList');
+  if (!list) return;
+  const selected = getSelectedPet();
+  list.innerHTML = '';
+  for (const pet of PETS_LIST) {
+    const card = document.createElement('div');
+    card.className = 'pet-card' + (selected === pet.id ? ' selected' : '');
+    card.innerHTML =
+      '<div class="pet-icon">' + pet.icon + '</div>' +
+      '<div class="pet-name">' + t(pet.nameKey) + '</div>' +
+      '<div class="pet-bonus">' + t(pet.bonusKey) + '</div>' +
+      '<button class="game-btn pet-select-btn" data-pet-id="' + pet.id + '">' +
+        (selected === pet.id ? t('pets.deselect') : t('pets.select')) +
+      '</button>';
+    const btn = card.querySelector('.pet-select-btn');
+    btn.onclick = () => setSelectedPet(selected === pet.id ? null : pet.id);
+    list.appendChild(card);
+  }
+}
+
+function togglePetsPanel(forceOpen) {
+  const panel = document.getElementById('petsPanel');
+  if (!panel) return;
+  const open = typeof forceOpen === 'boolean' ? forceOpen : !panel.classList.contains('active');
+  if (open && gameState === 'playing') {
+    activeVoiceLine = t('panel.petsBlocked') || t('panel.settingsBlocked');
+    activeVoiceLineUntil = performance.now() + 2800;
+    return;
+  }
+  closeOtherPanels('petsPanel');
+  panel.classList.toggle('active', open);
+  if (open) renderPetsPanel();
 }
 
 function toggleWheelOfFortunePanel(forceOpen) {

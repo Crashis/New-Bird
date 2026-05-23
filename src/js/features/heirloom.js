@@ -39,6 +39,12 @@ const HEIRLOOM_KOTLAR_COST_WALLETS = 77;
 const HEIRLOOM_KOTLAR_COST_DRAGON_COINS = 15;
 const HEIRLOOM_KOTLAR_COST_ERR_CUBES = 7;
 
+const HEIRLOOM_REKLAMACE_PURCHASED_KEY = 'heirloomReklamacePurchased';
+const HEIRLOOM_REKLAMACE_COST_YANGS = 888;
+const HEIRLOOM_REKLAMACE_COST_WALLETS = 18;
+const HEIRLOOM_REKLAMACE_COST_ERR_CUBES = 10;
+const HEIRLOOM_REKLAMACE_CASHBACK_PCT = 0.25;
+
 const HEIRLOOM_EXCALIBEER_PURCHASED_KEY = 'heirloomExcalibeerPurchased';
 const HEIRLOOM_EXCALIBEER_EQUIPPED_KEY = 'heirloomExcalibeerEquipped';
 const HEIRLOOM_EXCALIBEER_COST_YANGS = 2000;
@@ -66,6 +72,8 @@ let heirloomNeschopenkaPurchased = false;
 
 let heirloomKotlarPurchased = false;
 let heirloomKotlarEquipped = false;
+
+let heirloomReklamacePurchased = false;
 
 let heirloomExcalibeerPurchased = false;
 let heirloomExcalibeerEquipped = false;
@@ -115,6 +123,8 @@ function loadHeirloomState() {
     try { localStorage.setItem(HEIRLOOM_KOTLAR_EQUIPPED_KEY, '0'); } catch (e) {}
   }
 
+  heirloomReklamacePurchased = loadBool(HEIRLOOM_REKLAMACE_PURCHASED_KEY, false);
+
   heirloomExcalibeerPurchased = loadBool(HEIRLOOM_EXCALIBEER_PURCHASED_KEY, false);
   heirloomExcalibeerEquipped = loadBool(HEIRLOOM_EXCALIBEER_EQUIPPED_KEY, false);
   if (!heirloomExcalibeerPurchased && heirloomExcalibeerEquipped) {
@@ -156,6 +166,76 @@ function purchaseHeirloomNeschopenka() {
   showHeirloomNeschopenkaMessage(t('heirloom.neschopenka.unlocked'));
   renderHeirloomPanel();
   if (typeof updateEconomyUi === 'function') updateEconomyUi();
+}
+
+// ===== Reklamační formulář — 25% cashback z prohraných miniher =====
+function isHeirloomReklamacePurchased() { return heirloomReklamacePurchased === true; }
+
+function canAffordHeirloomReklamace() {
+  return getCurrentYangs() >= HEIRLOOM_REKLAMACE_COST_YANGS
+    && getCurrentWallets() >= HEIRLOOM_REKLAMACE_COST_WALLETS
+    && getCurrentErrCubes() >= HEIRLOOM_REKLAMACE_COST_ERR_CUBES;
+}
+
+function showHeirloomReklamaceMessage(message) {
+  const el = document.getElementById('heirloomReklamaceMessage');
+  if (el) el.textContent = message || '';
+}
+
+function purchaseHeirloomReklamace() {
+  if (heirloomReklamacePurchased) return;
+  if (!canAffordHeirloomReklamace()) {
+    showHeirloomReklamaceMessage(t('heirloom.reklamace.notEnough'));
+    return;
+  }
+  yang -= HEIRLOOM_REKLAMACE_COST_YANGS;
+  wallets -= HEIRLOOM_REKLAMACE_COST_WALLETS;
+  if (typeof errCubes === 'number') errCubes -= HEIRLOOM_REKLAMACE_COST_ERR_CUBES;
+  if (typeof saveEconomy === 'function') saveEconomy();
+  if (typeof saveErrCubes === 'function') saveErrCubes();
+  heirloomReklamacePurchased = true;
+  try { localStorage.setItem(HEIRLOOM_REKLAMACE_PURCHASED_KEY, '1'); } catch (e) {}
+  if (typeof showUnlockToast === 'function') {
+    showUnlockToast(t('heirloom.reklamace.unlocked'), t('heirloom.reklamace.description'), 'upgrade');
+  }
+  showHeirloomReklamaceMessage(t('heirloom.reklamace.unlocked'));
+  renderHeirloomPanel();
+  if (typeof updateEconomyUi === 'function') updateEconomyUi();
+}
+
+// Společný cashback helper — volá se z minihier po prohře.
+// cost: { yang?, wallets?, dragonCoins?, errCubes? } — částky, které hráč právě prohrál.
+// Vrací zpět 25 % každé měny (Math.round), pouze pokud je heirloom koupený.
+function applyMinigameCashbackOnLoss(cost) {
+  if (!isHeirloomReklamacePurchased()) return null;
+  if (!cost || typeof cost !== 'object') return null;
+  const pct = HEIRLOOM_REKLAMACE_CASHBACK_PCT;
+  const refund = {
+    yang: Math.round((cost.yang || 0) * pct),
+    wallets: Math.round((cost.wallets || 0) * pct),
+    dragonCoins: Math.round((cost.dragonCoins || 0) * pct),
+    errCubes: Math.round((cost.errCubes || 0) * pct)
+  };
+  let any = false;
+  if (refund.yang > 0 && typeof yang === 'number') { yang += refund.yang; any = true; }
+  if (refund.wallets > 0 && typeof wallets === 'number') { wallets += refund.wallets; any = true; }
+  if (refund.dragonCoins > 0 && typeof dragonCoins === 'number') { dragonCoins += refund.dragonCoins; any = true; }
+  if (refund.errCubes > 0 && typeof errCubes === 'number') { errCubes += refund.errCubes; any = true; }
+  if (!any) return null;
+  if (typeof saveEconomy === 'function') saveEconomy();
+  if (refund.dragonCoins > 0 && typeof saveDragonCoins === 'function') saveDragonCoins();
+  if (refund.errCubes > 0 && typeof saveErrCubes === 'function') saveErrCubes();
+  if (typeof updateEconomyUi === 'function') updateEconomyUi();
+  const parts = [];
+  if (refund.yang > 0) parts.push(refund.yang + ' Y');
+  if (refund.wallets > 0) parts.push(refund.wallets + ' P');
+  if (refund.dragonCoins > 0) parts.push(refund.dragonCoins + ' DC');
+  if (refund.errCubes > 0) parts.push(refund.errCubes + ' ERR');
+  const summary = parts.join(' · ');
+  if (typeof showUnlockToast === 'function') {
+    showUnlockToast(t('heirloom.reklamace.cashbackTitle'), t('heirloom.reklamace.cashbackMsg', { refund: summary }), 'upgrade');
+  }
+  return refund;
 }
 
 // ===== Concert Ticket (Petr Spálený) — passive: unlocks voice line =====
@@ -1100,6 +1180,27 @@ function renderHeirloomPanel() {
       neschBtnEl.onclick = null;
       neschBtnEl.disabled = true;
       neschBtnEl.classList.add('disabled');
+    }
+  }
+
+  // ── Reklamační formulář ──
+  const reklamaceStatusEl = document.getElementById('heirloomReklamaceStatus');
+  const reklamaceBtnEl = document.getElementById('toggleHeirloomReklamaceBtn');
+  if (!isHeirloomReklamacePurchased()) {
+    if (reklamaceStatusEl) reklamaceStatusEl.textContent = t('heirloom.reklamace.locked');
+    if (reklamaceBtnEl) {
+      reklamaceBtnEl.textContent = t('heirloom.reklamace.unlock');
+      reklamaceBtnEl.onclick = purchaseHeirloomReklamace;
+      reklamaceBtnEl.disabled = false;
+      reklamaceBtnEl.classList.toggle('disabled', !canAffordHeirloomReklamace());
+    }
+  } else {
+    if (reklamaceStatusEl) reklamaceStatusEl.textContent = t('heirloom.reklamace.purchased');
+    if (reklamaceBtnEl) {
+      reklamaceBtnEl.textContent = t('heirloom.reklamace.purchased');
+      reklamaceBtnEl.onclick = null;
+      reklamaceBtnEl.disabled = true;
+      reklamaceBtnEl.classList.add('disabled');
     }
   }
 

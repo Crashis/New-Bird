@@ -145,6 +145,9 @@ function applyDrunkArcherReward(kind) {
     msg = buildDrunkArcherRewardText(t('drunkArcher.nice'), yangReward, walletBonus, dragonCoinBonus);
   } else {
     msg = t('drunkArcher.missed');
+    if (typeof applyMinigameCashbackOnLoss === 'function') {
+      applyMinigameCashbackOnLoss({ errCubes: DRUNK_ARCHER_ENTRY_COST });
+    }
   }
 
   if (yangReward > 0) yang += yangReward;

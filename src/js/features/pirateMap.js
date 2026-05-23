@@ -142,6 +142,9 @@ function openPirateMapTile(index) {
     saveEconomy();
     msg = window.t('pirateMap.trap', { amount: lost });
     kind = 'lose';
+    if (typeof applyMinigameCashbackOnLoss === 'function') {
+      applyMinigameCashbackOnLoss({ errCubes: PIRATE_MAP_ENTRY_COST, yang: lost });
+    }
   } else if (t === 'err') {
     errCubes += 1;
     saveErrCubes();

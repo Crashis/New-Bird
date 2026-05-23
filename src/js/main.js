@@ -34,6 +34,7 @@ const scriptChunks = [
   "./src/js/features/wheelOfFortune.js",
   "./src/js/features/share.js",
   "./src/js/features/multiplayer.js",
+  "./src/js/features/godiasEasterEgg.js",
   "./src/js/game/eventPhase.js",
   "./src/js/game/score.js",
   "./src/js/game/obstacles.js",

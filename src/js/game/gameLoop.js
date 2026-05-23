@@ -100,6 +100,7 @@ function startGameNow() {
   activeVoiceLine = null;
   activeVoiceLineUntil = 0;
   if (typeof resetRocketRunState === 'function') resetRocketRunState();
+  if (typeof resetGodiasEasterEgg === 'function') resetGodiasEasterEgg();
   unlockAchievement('first_run');
   checkAchievements();
   setNextVoiceLineScore();
@@ -491,6 +492,7 @@ function drawScore() {
 
 function draw() {
   drawBackground();
+  if (typeof updateAndDrawGodiasEasterEgg === 'function') updateAndDrawGodiasEasterEgg();
   for (const p of pipes) {
     if (p.destroyed) continue;
     drawPipe(p);

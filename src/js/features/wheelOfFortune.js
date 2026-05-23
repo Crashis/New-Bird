@@ -59,6 +59,9 @@ function pickWheelOutcome() {
 function applyWheelOutcome(slice) {
   switch (slice.id) {
     case 'nothing':
+      if (typeof applyMinigameCashbackOnLoss === 'function') {
+        applyMinigameCashbackOnLoss({ yang: WHEEL_ENTRY_COST });
+      }
       return t('wheel.nothing');
     case 'smallYang': {
       const r = Math.round((10 + Math.floor(Math.random() * 11)) * 1.3); // 10–20 ×1.3

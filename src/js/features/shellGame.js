@@ -87,8 +87,13 @@ function playShellGameChoice(choice) {
     setShellGameStatus('shellGame.win');
     saveEconomy();
   } else if (result === 'lose') {
+    const lostBet = shellGameActiveBet;
     shellGameActiveBet = 0;
     setShellGameStatus('shellGame.lose');
+    if (typeof applyMinigameCashbackOnLoss === 'function') {
+      applyMinigameCashbackOnLoss({ yang: lostBet });
+    }
+    saveEconomy();
   } else {
     // Draw — keep the active bet, allow another choice.
     setShellGameStatus('shellGame.draw');

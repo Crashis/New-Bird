@@ -156,6 +156,9 @@ function rollDragonDice() {
           t('dragonDice.lose', { finalNum: finalNum, typeName: typeName }),
           'lose'
         );
+        if (typeof applyMinigameCashbackOnLoss === 'function') {
+          applyMinigameCashbackOnLoss({ dragonCoins: bet });
+        }
       }
 
       dragonDiceRolling = false;
