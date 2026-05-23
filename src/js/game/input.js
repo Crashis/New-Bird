@@ -1,13 +1,34 @@
 function isInteractiveInputTarget(target) {
   return !!(target && target.closest && target.closest(
-    'button, input, select, textarea, label, .game-start-panel, .shop-panel, .game-over-panel, .win-panel'
+    'button, input, select, textarea, label, [contenteditable=""], [contenteditable="true"], .game-start-panel, .shop-panel, .game-over-panel, .win-panel'
   ));
+}
+
+function tryFireRocket() {
+  if (gameState !== 'playing') return;
+  if (typeof isBlockingModalOpen === 'function' && isBlockingModalOpen()) return;
+  // Boss fight: vlastní raketomet, oddělený od normálního heirloomu.
+  if (typeof isBossFightActive === 'function' && isBossFightActive()) {
+    if (typeof fireBossRocket === 'function') fireBossRocket();
+    return;
+  }
+  if (typeof isRocketLauncherEquipped === 'function' && !isRocketLauncherEquipped()) return;
+  if (typeof fireRocket === 'function') fireRocket();
 }
 
 // Input handling
 function handleKeyboardInput(e) {
   const overlay = document.getElementById('gameOverlay');
   if (!overlay.classList.contains('active')) return;
+  if (e.code === 'KeyE') {
+    if (e.repeat) return;
+    if (isInteractiveInputTarget(e.target)) return;
+    if (gameState !== 'playing') return;
+    if (typeof isBlockingModalOpen === 'function' && isBlockingModalOpen()) return;
+    e.preventDefault();
+    tryFireRocket();
+    return;
+  }
   if (e.code === 'KeyQ') {
     if (isInteractiveInputTarget(e.target)) return;
     if (gameState !== 'playing') return;
@@ -28,10 +49,6 @@ function handleKeyboardInput(e) {
 function handlePointerJump(e) {
   const overlay = document.getElementById('gameOverlay');
   if (!overlay.classList.contains('active')) return;
-  if (e.button !== undefined && e.button === 2) {
-    // Right click — rocket fire (handled separately on mousedown)
-    return;
-  }
   if (e.button !== undefined && e.button !== 0) return;
   if (isInteractiveInputTarget(e.target)) return;
   e.preventDefault();
@@ -40,29 +57,8 @@ function handlePointerJump(e) {
   jump();
 }
 
-function handleRocketFire(e) {
-  const overlay = document.getElementById('gameOverlay');
-  if (!overlay.classList.contains('active')) return;
-  if (e.button !== 2) return;
-  e.preventDefault();
-  e.stopPropagation();
-  if (gameState !== 'playing') return;
-  if (typeof isBlockingModalOpen === 'function' && isBlockingModalOpen()) return;
-  // Boss fight: vlastní raketomet, oddělený od normálního heirloomu.
-  if (typeof isBossFightActive === 'function' && isBossFightActive()) {
-    if (typeof fireBossRocket === 'function') fireBossRocket();
-    return;
-  }
-  if (typeof isRocketLauncherEquipped === 'function' && !isRocketLauncherEquipped()) return;
-  if (typeof fireRocket === 'function') fireRocket();
-}
-
 document.addEventListener('keydown', handleKeyboardInput);
 canvas.addEventListener('pointerdown', handlePointerJump, { passive: false });
-canvas.addEventListener('mousedown', handleRocketFire);
-canvas.addEventListener('contextmenu', (e) => {
-  if (gameState === 'playing') e.preventDefault();
-});
 
 // Escape key closes game
 document.addEventListener('keydown', (e) => {

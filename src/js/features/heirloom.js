@@ -1,5 +1,5 @@
 // Heirloom — universal equippable items, shared by every skin. Max 2 equipped at once.
-// Rocket launcher: right-click fires; 1 ammo per run; refills once at score 100.
+// Rocket launcher: E key fires; 1 ammo per run; refills once at score 100.
 // Lektvar Aeternum: on death, chance to revive (50% → 40 → 30 → 20 → 10%, min 10%).
 // Godiasova peněženka: all earned in-game currencies ×3.
 
