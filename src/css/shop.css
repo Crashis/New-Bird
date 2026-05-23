@@ -101,6 +101,30 @@
     margin-bottom: 0.6rem;
   }
 
+  /* Credits panel — výraznější, čitelnější seznam */
+  #creditsPanel .shop-item {
+    padding: 1.1rem 1.2rem;
+  }
+
+  #creditsPanel .shop-item-desc {
+    color: var(--gold-light);
+    font-family: 'Cinzel', serif;
+    font-size: 1rem; /* ~16px */
+    line-height: 1.7;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.85rem;
+    text-shadow: 0 0 6px rgba(201,168,76,0.18);
+  }
+
+  #creditsPanel .shop-item-desc:last-child {
+    margin-bottom: 0;
+  }
+
+  #creditsPanel .shop-subtitle {
+    font-size: 0.82rem;
+    line-height: 1.6;
+  }
+
   .shop-item-bottom {
     display: flex;
     align-items: center;
