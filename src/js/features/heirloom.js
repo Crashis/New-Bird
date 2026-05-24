@@ -325,7 +325,10 @@ function saveHeirloomState() {
 }
 
 let rocketAmmo = 1;
-let rocketAmmoRestoredAt100 = false;
+// Počet už udělených obnov munice za překročené prahy (každý prah = +1 raketa).
+// Slouží jako "rocketRegenScoreBank", aby se za stejnou hranici nedalo dostat
+// raketu opakovaně, ani při skoku skóre o víc než jeden práh.
+let rocketRegenCount = 0;
 let rockets = [];
 let rocketExplosions = [];
 
@@ -631,7 +634,7 @@ function resetExcalibeerRunState() {
 function resetRocketRunState() {
   const startAmmo = (typeof getRocketStartingAmmo === 'function') ? getRocketStartingAmmo() : 1;
   rocketAmmo = isRocketLauncherEquipped() ? startAmmo : 0;
-  rocketAmmoRestoredAt100 = false;
+  rocketRegenCount = 0;
   rockets = [];
   rocketExplosions = [];
   potionReviveChance = 0.50;
@@ -640,12 +643,25 @@ function resetRocketRunState() {
 
 function maybeRefreshRocketAmmoAtScore() {
   if (!isRocketLauncherEquipped()) return;
-  if (rocketAmmoRestoredAt100) return;
   const threshold = (typeof getRocketReloadScoreRequirement === 'function') ? getRocketReloadScoreRequirement() : 100;
+  if (!(threshold > 0)) return;
   if (typeof score !== 'number' || score < threshold) return;
-  rocketAmmoRestoredAt100 = true;
-  if (rocketAmmo < 1) rocketAmmo = 1;
-  if (typeof showUnlockToast === 'function') {
+  // Kolik prahů celkem hráč dosáhl — odečteme už udělené, ať se za stejný práh
+  // raketa nepřičte víckrát (a aby skok o víc bodů najednou dodal víc raket).
+  const targetCount = Math.floor(score / threshold);
+  if (targetCount <= rocketRegenCount) return;
+  const maxAmmo = (typeof getRocketStartingAmmo === 'function')
+    ? Math.max(1, getRocketStartingAmmo())
+    : 1;
+  let restored = 0;
+  while (rocketRegenCount < targetCount) {
+    rocketRegenCount++;
+    if (rocketAmmo < maxAmmo) {
+      rocketAmmo++;
+      restored++;
+    }
+  }
+  if (restored > 0 && typeof showUnlockToast === 'function') {
     showUnlockToast(t('toast.rocketRestored.title'), t('toast.rocketRestored.subtitle'), 'upgrade');
   }
 }
@@ -1055,7 +1071,7 @@ function toggleHeirloomRocketEquipped() {
   if (!heirloomRocketEquipped) {
     rockets = [];
     rocketAmmo = 0;
-  } else if (gameState === 'playing' && rocketAmmo < 1 && !rocketAmmoRestoredAt100) {
+  } else if (gameState === 'playing' && rocketAmmo < 1 && rocketRegenCount === 0) {
     rocketAmmo = (typeof getRocketStartingAmmo === 'function') ? getRocketStartingAmmo() : 1;
   }
   renderHeirloomPanel();

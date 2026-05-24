@@ -11,10 +11,20 @@ function update() {
       && isShieldRegenAllowedInCurrentMode()) {
     const maxS = getMaxShields();
     if (shieldCount < maxS) {
-      shieldRegenProgressFrames++;
-      const cdFrames = getShieldRegenCooldownFrames();
-      if (cdFrames > 0 && shieldRegenProgressFrames >= cdFrames) {
-        shieldRegenProgressFrames = 0;
+      // Reálný čas v ms — nezávislé na FPS i na zrychlování hry.
+      // Když update() po dlouhé pauze (dialog, milestone) opět tikne, dt by
+      // mohlo být obrovské. Cap na 50 ms (jeden frame při 20 fps) zajistí,
+      // že pauza cooldown nezrychlí.
+      const now = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
+      if (!shieldRegenLastTickMs || now - shieldRegenLastTickMs > 250) {
+        shieldRegenLastTickMs = now;
+      }
+      const dt = Math.min(50, now - shieldRegenLastTickMs);
+      shieldRegenLastTickMs = now;
+      shieldRegenElapsedMs += dt;
+      const cdMs = (typeof getShieldRegenCooldownMs === 'function') ? getShieldRegenCooldownMs() : 0;
+      if (cdMs > 0 && shieldRegenElapsedMs >= cdMs) {
+        shieldRegenElapsedMs = 0;
         shieldCount = Math.min(maxS, shieldCount + 1);
         hasShield = shieldCount > 0;
         for (let i = 0; i < 28; i++) {
@@ -31,7 +41,8 @@ function update() {
         activeVoiceLineUntil = performance.now() + 2400;
       }
     } else {
-      shieldRegenProgressFrames = 0;
+      shieldRegenElapsedMs = 0;
+      shieldRegenLastTickMs = 0;
     }
   }
 

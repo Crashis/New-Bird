@@ -61,6 +61,11 @@ function getShieldRegenCooldownFrames() {
   return sec > 0 ? Math.round(sec * 60) : 0;
 }
 
+function getShieldRegenCooldownMs() {
+  const sec = getShieldRegenSeconds();
+  return sec > 0 ? sec * 1000 : 0;
+}
+
 // Regenerace je výslovně mimo boss fighty / speciální módy.
 function isShieldRegenAllowedInCurrentMode() {
   if (typeof isBossFightActive === 'function' && isBossFightActive()) return false;

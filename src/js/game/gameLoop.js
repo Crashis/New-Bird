@@ -96,7 +96,8 @@ function startGameNow() {
   hasShield = shieldCount > 0;
   walletAwardedThisRun = false;
   shieldPhaseUntil = 0;
-  shieldRegenProgressFrames = 0;
+  shieldRegenElapsedMs = 0;
+  shieldRegenLastTickMs = 0;
   activeVoiceLine = null;
   activeVoiceLineUntil = 0;
   if (typeof resetRocketRunState === 'function') resetRocketRunState();
@@ -256,10 +257,11 @@ function applyMilestoneSafeGap() {
   pipesSincePowerup = 0;
   pipesSinceYang = 0;
   shieldPhaseUntil = 0;
-  // POZN: shieldRegenProgressFrames se tu schválně NEresetuje. Cooldown se
+  // POZN: shieldRegenElapsedMs se tu schválně NEresetuje. Cooldown se
   // zastavuje automaticky tím, že update() během milestone dialogu neběží,
-  // takže po odkliknutí pokračuje tam, kde skončil. Reset patří jen do
-  // startGameNow / openGame (nový run / change of mode / game over).
+  // takže po odkliknutí pokračuje tam, kde skončil. shieldRegenLastTickMs
+  // se navíc po >250 ms mezeře resetuje uvnitř update(), takže dt po dialogu
+  // nezpůsobí žádný skok. Reset patří jen do startGameNow / openGame.
   doubleYangUntil = 0;
   amazonNerfUntil = 0;
   amazonNerfSpeedMult = 1.0;
@@ -584,7 +586,8 @@ function openGame() {
   shieldCount = 0;
   walletAwardedThisRun = false;
   shieldPhaseUntil = 0;
-  shieldRegenProgressFrames = 0;
+  shieldRegenElapsedMs = 0;
+  shieldRegenLastTickMs = 0;
   activeVoiceLine = null;
   activeVoiceLineUntil = 0;
   setNextVoiceLineScore();

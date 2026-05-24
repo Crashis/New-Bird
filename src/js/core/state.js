@@ -32,7 +32,11 @@ let doubleYangLevel = 0;
 let crownBonusLevel = 0;
 let maxShields2Owned = false;
 let shieldRegenLevel = 0;
-let shieldRegenProgressFrames = 0; // tickne jen v update() – tj. v aktivním gameplay
+// Cooldown štítu se počítá v ms reálného času. Tikne jen v update() (aktivní
+// gameplay), takže pauza / dialog cooldown přirozeně zastaví. Nezávisí na FPS
+// monitoru ani na zrychlování hry — pouze na uplynulém čase mezi tiky.
+let shieldRegenElapsedMs = 0;
+let shieldRegenLastTickMs = 0;
 let doubleYangUntil = 0;
 let amazonNerfUntil = 0;
 let amazonNerfSpeedMult = 1.0;
